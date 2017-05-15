@@ -32,6 +32,7 @@ permalink: /blog/:year/:month/:day/:title
 exclude:
   - Gemfile
   - Gemfile.lock
+  - _config_dev.yml
 sass:
   sass_dir: _sass
 #include: ['_pages']
