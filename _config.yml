@@ -23,6 +23,7 @@ baseurl: "/a-DelaCruz.github.io" # the subpath of your site, e.g. /blog
 url: "http://a-DelaCruz.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 
 permalink: /blog/:year/:month/:day/:title
+excerpt_separator: "<!-- more -->"
 
 # Build settings
 #markdown: kramdown
@@ -43,4 +44,4 @@ defaults:
   - scope:
       path: "assets/img"
     values:
-      image: true
+      image: true 

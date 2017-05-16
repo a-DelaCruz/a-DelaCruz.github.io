@@ -2,9 +2,13 @@
 layout: default
 ---
 
-	<ul class="post">
+
+	<ul class="post-blog">
 	{% for post in site.posts %}
-	    <li><span>{{ post.date | date_to_string }}</span>  
-		<a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></li>
-	  {% endfor %}
+	    <li ><span>{{ post.date | date_to_string }}</span>  
+		<a class="blog-title" href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></li>
+	{{ post.excerpt }}
+
+
+	{% endfor %}
 	</ul>

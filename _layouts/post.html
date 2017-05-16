@@ -3,9 +3,9 @@ layout: default
 comments: active
 ---
 
-<div class="comments">
+<div class="post-org">
 
-	<h1>{{ page.title }}</h1>
+	<h2>{{ page.title }}</h2>
 	<p class="meta">{{ page.date | date_to_string }}</p>
 
 	<div class="post">
@@ -13,7 +13,7 @@ comments: active
 	</div>
 
 <!-- Comments -->
-<div>
+<div class="comments">
 	{% include comments.html %}
 </div>
 

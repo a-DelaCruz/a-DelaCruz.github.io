@@ -20,9 +20,10 @@ description: > # this means to ignore newlines until "baseurl:"
   line in _config.yml. It will appear in your document head meta (for
   Google search results) and in your feed.xml site description.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://localhost:4000/" # the base hostname & protocol for your site, e.g. http://example.com
+url: "http://localhost:4000" # the base hostname & protocol for your site, e.g. http://example.com
 
 permalink: /blog/:year/:month/:day/:title
+excerpt_separator: "<!-- more -->"
 
 # Build settings
 #markdown: kramdown
@@ -32,6 +33,7 @@ permalink: /blog/:year/:month/:day/:title
 exclude:
   - Gemfile
   - Gemfile.lock
+  - _config_dev.yml
 sass:
   sass_dir: _sass
 #include: ['_pages']
@@ -42,4 +44,4 @@ defaults:
   - scope:
       path: "assets/img"
     values:
-      image: true
+      image: true 
