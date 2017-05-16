@@ -1,29 +1,15 @@
 <!DOCTYPE html>
-	<html>
-		<head>
-			<title>{{ page.title }}</title>
-			<!-- link to main stylesheet -->
-			<link rel="stylesheet" type="text/css" href="/css/main.css">
-		</head>
-		<body>
-			<nav>
-	    		<ul>
-	        		<li><a href="/">Home</a></li>
-		        	<li><a href="/about">About</a></li>
-	        		<li><a href="/contact">Contact</a></li>
-	        		<li><a href="/blog">Blog</a></li>
-	    		</ul>
-			</nav>
-			<div class="container">
-			
+<html>
+{% include head.html %}
+{% include google_analytics.html %}
+<body>
+	{% include header.html %}
+	<main>
+		<article>
 			{{ content }}
-			
-			</div><!-- /.container -->
-			<footer>
-	    		<ul>
-	        		<li><a href="mailto:delacruzallanjay@gmail.com">email</a></li>
-	        		<li><a href="https://github.com/a-DelaCruz">github.com/a-DelaCruz</a></li>
-				</ul>
-			</footer>
-		</body>
-	</html>
+		</article>
+	</main>
+		
+</body>
+
+</html>
