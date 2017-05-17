@@ -8,46 +8,45 @@ excerpt_separator: <!--more-->
 	I recently tried if it is possible to compile this on Windows 10 Bash Creators update... And it did compile.
 	The only drawback for now is that i can not chroot to Ubuntu base rootfs and could not mount .img file created by dd. 
 	So for now i'll use a virtual machine for creating .img file with partitions.
-<br>
-<br>
+</p>
+<p>
 <strong>	Cross-build prerequisite:</strong>
 <pre>	gcc-arch64-linux-gnu    g++-5                  ncurses-dev
 	make                    git                    bc          
 	u-boot-tools            device-tree-compiler   pkg-config-aarch64-linux-gnu
 	libncurses5-dev
 </pre>
+</p>
 <!--more-->
 
-<br>
-	Assuming there is already a Cross-build environment: Built on Ubuntu Server 16.04.02
-<br>
 
-<br>
-<strong>	Prerequisites:</strong>
-<pre>	Ubuntu Base <a href="http://cdimage.ubuntu.com/ubuntu-base/releases/16.04.2/release/ubuntu-base-16.04.2-base.arm64.tar.gz">Rootfs</a> <small>(install additional package using <sup><b>apt-get</b></sup>)</small>
+<p>	Assuming there is already a Cross-build environment: Built on Ubuntu Server 16.04.02
+</p>
+<p><strong>	Prerequisites:</strong>
+<pre>	Ubuntu Base <a href="http://cdimage.ubuntu.com/ubuntu-base/releases/16.04.2/release/ubuntu-base-16.04.2-base-arm64.tar.gz">Rootfs</a> <small>(install additional package using <sup><b>apt-get</b></sup>)</small>
 	Raspberry pi <a href="https://github.com/raspberrypi/linux.git">kernel</a> <small>(Have not tried using <b>Upstream kernel</b>)</small>
 	Raspberry pi <a href="https://github.com/raspberrypi/firmware/tree/master/boot">firmware</a> <small>(<b>bootcode.bin, start.elf, fixup.dat</b> and the rest of <b>start_</b> and <b>fixup_</b>)</small>
 	<a href="http://www.denx.de/wiki/U-Boot/WebHome">U-boot</a>
 </pre>
+</p>
 
 <br>
-<br>
-<strong>	µSD card:</strong><small><b>(assuming you already know how to partition it)</b></small>
-<br>
 
-<br>
-	Your µSD card<small>(boot partition)</small> should contain the following:
+<p><strong>µSD card:</strong><small><b>(assuming you already know how to partition it)</b></small>
+</p>
+
+<p>	Your µSD card<small>(boot partition)</small> should contain the following:
+</p>
 <pre>	bootcode.bin
 	start.elf <i>(and the rest of the <strong>start_</strong> file)</i>
 	fixup.dat <i>(and the rest of the <strong>fixup_</strong> file)</i>
 	config.txt
 	cmdline.txt
 </pre>
-<br>
 
 <br>
-	For the <strong>config.txt</strong> and <strong>cmdline.txt</strong>, we have to create them and include this lines.
-<br>
+<p>	For the <strong>config.txt</strong> and <strong>cmdline.txt</strong>, we have to create them and include this lines.
+</p>
 
 <br>
 <em>	config.txt:  </em>
@@ -60,7 +59,6 @@ excerpt_separator: <!--more-->
 	dtparam=i2c_arm=on
 	dtparam=spi=on
 </pre>
-<br>
 
 <br>
 <em>	cmdline.txt:</em>
@@ -70,13 +68,12 @@ excerpt_separator: <!--more-->
 
 <br>
 <strong>	U-Boot:</strong>
-<br>
 
 <br>
-	Get the source code by cloning the U-Boot git repository or download the tar file.
+<p>	Get the source code by cloning the U-Boot git repository or download the tar file.
 <pre>	git clone depth 1 branch v2017.03 single-branch git://git.denx.de/u-boot.git
 	ftp://ftp.denx.de/pub/u-boot/u-boot-2017.03.tar.bz2
-</pre>
+</pre></p>
 <br>
 
 <br>
@@ -99,11 +96,13 @@ excerpt_separator: <!--more-->
 <br>
 
 <br>
-	After it has been built. Locate <sup><b>u-boot.bin</b></sup> as this is the file we need. 
+<p>	After it has been built. Locate <sup><b>u-boot.bin</b></sup> as this is the file we need. 
 	Copy it to your µSD card and rename it to <sup><b>kernel8.img</b></sup> or keep its name as it is and <sup><b>uncomment the line kernel=u-boot.bin</b></sup> in <sup><b>config.txt</b></sup>. 
 	Boot it up to confirm that its working.
+</p>
 <br>
 
+<br>
 
 <br>
 
@@ -128,13 +127,13 @@ excerpt_separator: <!--more-->
 <br>
 
 <br>
-	Locate <sup><b>Image</b></sup> (no need to convert for U-Boot use it as it is for 64bit) file at <sup><b>arch/arm64/boot/</b></sup> 
+<p>	Locate <sup><b>Image</b></sup> (no need to convert for U-Boot use it as it is for 64bit) file at <sup><b>arch/arm64/boot/</b></sup> 
 	and the <sup><b>bcm2710-rpi-3-b.dtb</b></sup> at <sup><b>arch/arm/boot/dts/</b></sup>. Im having trouble using 
 	<sub><b>bcm2837-rpi-3-b.dtb</b></sub>. So for now use <sup><b>bcm2710-rpi-3-b.dtb</b></sup> instead. 
 	Copy the <sup><b>Image</b></sup> and <sup><b>bcm2710-rpi-3-b.dtb</b></sup> files to your <i>µSD card boot partition</i>. 
 	At this point, you can test it if it will boot the kernel but we need to have a <i>boot script</i> that U-Boot needs. 
 	Were using the <sup><b>boot.script</b></sup> from this file: <a href="https://www.finnie.org/software/raspberrypi/ubuntu-rpi3/20160517-raspi3-arm64-firmware-kernel.tar.xz"><b>20160517-raspi3-arm64-firmware-kernel.tar.xz</b></a>. 
-<br>
+<br></p>
 
 <br>
 	Modify and create the <sup><b>boot.scr</b></sup> from it.
@@ -157,11 +156,11 @@ excerpt_separator: <!--more-->
 <br>
 
 <br>
-	Since we dont have a <sub><b>Ramdisk</b></sub> yet, comment that line and replace <sup><b>${ramdisk_addr_r}:${initrdsize}</b></sup> with <sup><b>-</b></sup>.
+<p>	Since we dont have a <sub><b>Ramdisk</b></sub> yet, comment that line and replace <sup><b>${ramdisk_addr_r}:${initrdsize}</b></sup> with <sup><b>-</b></sup>.
 	Or copy the <sup><b>initrd.img</b></sup> to use it temporarily. 
 	You can now then verify at this point that our kernel boot as well and will stop at some point 
 	since we still do not have a filesystem.
-<br>
+<br></p>
 
 <br>
 
@@ -178,5 +177,5 @@ excerpt_separator: <!--more-->
 	https://www.raspberrypi.org/documentation/linux/kernel/building.md
 	https://kernelnomicon.org/?p=682
 </pre>
-</p></div>
+</div>
 <hr />
