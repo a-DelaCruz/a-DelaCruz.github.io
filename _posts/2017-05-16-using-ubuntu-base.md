@@ -10,7 +10,7 @@ excerpt_separator: <!--more-->
 <br>
 
 <br>
-	Create a folder were we will extract the Ubuntu base <a href="http://cdimage.ubuntu.com/ubuntu-base/releases/16.04.2/release/ubuntu-base-16.04.2-base.arm64.tar.gz"><b>rootfs</b></a>, and tar to extract.
+	Create a folder were we will extract the Ubuntu base <a href="http://cdimage.ubuntu.com/ubuntu-base/releases/16.04.2/release/ubuntu-base-16.04.2-base-arm64.tar.gz"><b>rootfs</b></a>, and tar to extract.
 <pre>	mkdir rootfs
 	cd rootfs/
 	sudo tar xzvf ubuntu-base-16.04.2-base-arm64.tar.gz

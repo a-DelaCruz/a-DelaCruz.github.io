@@ -15,6 +15,20 @@ body {
 	color: red;
 	}
 
+.post p {
+	width: 80%;
+        word-wrap: break-word;
+	}
+
+.post pre {
+	font-size:normal;
+	white-space: pre-wrap;
+        white-space: -moz-pre-wrap;
+        white-space: -pre-wrap;
+        white-space: -o-pre-wrap;
+        word-wrap: break-word;
+	}
+
 .top-nav {
 	overflow: hidden;
 	background-color: #E6E6E6;
@@ -58,7 +72,6 @@ main {
 	/*height: 1500px;  Used in this example to enable scrolling */
 	}
 
-
 .blog-post a , span{
 	font-family: 'Noto Sans', sans-serif;
 	text-decoration: none;
@@ -74,9 +87,33 @@ main {
         color: blue;
 	}
 
-
-
 .blo-post ul, li {
 	list-style: none;
 	}
 
+.blog-excerpt p {
+	font-size: 12px;
+	width: 50%;
+        word-wrap: break-word;
+	}
+.blog-excerpt pre {
+	font-size: 12px;
+	white-space: pre-wrap;
+        white-space: -moz-pre-wrap;
+        white-space: -pre-wrap;
+        white-space: -o-pre-wrap;
+        word-wrap: break-word;
+	}
+
+p {
+	width: 80%;
+	word-wrap: break-word;
+}
+
+pre {
+	white-space: pre-wrap;
+	white-space: -moz-pre-wrap;
+	white-space: -pre-wrap;
+	white-space: -o-pre-wrap;
+	word-wrap: break-word;
+ }
