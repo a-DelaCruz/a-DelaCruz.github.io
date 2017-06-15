@@ -33,6 +33,7 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - _config_dev.yml
+  - _config.yml
 
 defaults:
   - scope:
