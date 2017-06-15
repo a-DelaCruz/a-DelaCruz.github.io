@@ -22,6 +22,9 @@ url: "http://a-DelaCruz.github.io" # the base hostname & protocol for your site,
 #twitter_username: jekyllrb
 #github_username:  jekyll
 
+permalink: /blog/:year/:month/:day/:title
+excerpt_separator: "<!-- more -->"
+
 # Build settings
 markdown: kramdown
 theme: 
@@ -43,3 +46,6 @@ defaults:
 
 sass:
   sass_dir: _sass
+
+kramdown:
+  input: GFM
