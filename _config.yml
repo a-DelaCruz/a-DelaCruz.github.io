@@ -13,32 +13,26 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-name: My Personal Notes on Single Board Computer
-#email: your-email@domain.com
+title: My Notes on Single Board Computer
+email: 
 description: > # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+  Raspberry Pi 3 - 64-Bit kernel and arm64 rootfs
 baseurl: "/a-DelaCruz.github.io" # the subpath of your site, e.g. /blog
 url: "http://a-DelaCruz.github.io" # the base hostname & protocol for your site, e.g. http://example.com
-
-permalink: /blog/:year/:month/:day/:title
-excerpt_separator: "<!-- more -->"
+#twitter_username: jekyllrb
+#github_username:  jekyll
 
 # Build settings
-#markdown: kramdown
-#theme: minima
+markdown: kramdown
+theme: 
+google_analytics: #UA-99256627-1
+show_downloads: false
 #gems:
 #  - jekyll-feed
 exclude:
   - Gemfile
   - Gemfile.lock
   - _config_dev.yml
-sass:
-  sass_dir: _sass
-#include: ['_pages']
-kramdown:
-  input: GFM
 
 defaults:
   - scope:
