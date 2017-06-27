@@ -1,5 +1,95 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/" rel="alternate" type="text/html" /><updated>2017-06-27T09:39:27+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/</id><title type="html">My Notes on Single Board Computer</title><subtitle>Raspberry Pi 3 - 64-Bit kernel and arm64 rootfs
-</subtitle><entry><title type="html">Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 1]</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/26/rpi3-docker-gpio.html" rel="alternate" type="text/html" title="Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 1]" /><published>2017-06-26T00:00:00+08:00</published><updated>2017-06-26T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/26/rpi3-docker-gpio</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/26/rpi3-docker-gpio.html">&lt;p&gt;I wan’t to try .Net Core on linux-arm64… but unfortunately, there’s no available yet except Win-arm64 and linux-arm32. So instead of using qemu for VM inside RPi3… i encounter docker and try it out. For now i’ll use ubuntu-arm32 as the base image then later try alpine-linux.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/" rel="alternate" type="text/html" /><updated>2017-06-27T13:01:07+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/</id><title type="html">My Notes on Single Board Computer</title><subtitle>Raspberry Pi 3 - 64-Bit kernel and arm64 rootfs
+</subtitle><entry><title type="html">Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 2]</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/27/rpi3-docker-gpio-2.html" rel="alternate" type="text/html" title="Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 2]" /><published>2017-06-27T00:00:00+08:00</published><updated>2017-06-27T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/27/rpi3-docker-gpio-2</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/27/rpi3-docker-gpio-2.html">&lt;h3 id=&quot;-gpio&quot;&gt;&lt;a href=&quot;#header-3&quot;&gt;&lt;/a&gt; GPIO&lt;/h3&gt;
+&lt;p&gt;Now let’s try our RPi3 GPIO. In our testapp project we created &lt;a href=&quot;../26/rpi3-docker-gpio&quot;&gt;earlier&lt;/a&gt;…we’ll have a directory tree like mine:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/bin
+/obj
+testapp.csproj
+Program.cs
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then modify &lt;code class=&quot;highlighter-rouge&quot;&gt;Program.cs&lt;/code&gt; with these codes. What it does is we use &lt;code class=&quot;highlighter-rouge&quot;&gt;libbcm2835.so&lt;/code&gt; C internal commands into our C# app using PInvoke.
+Take note of the &lt;code class=&quot;highlighter-rouge&quot;&gt;PIN Numbering&lt;/code&gt;: bcm2835 library use physical numbering so &lt;code class=&quot;highlighter-rouge&quot;&gt;RPI_GPIO_P1_07&lt;/code&gt; is equal to GPIO4 of our RPi3.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/ubuntu/images/Raspberry-Pi-3-GPIO-Layout-Model-B.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;using System;
+using System.Runtime.InteropServices;
+
+namespace testapp
+{
+    class Program
+    {
+        private static uint HIGH = 0x1;
+        private static uint LOW  = 0x0;
+        private static byte RPI_GPIO_P1_07 = 4;
+        private static byte BCM2835_GPIO_FSEL_OUTP = 0x01;
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern int bcm2835_init();
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern void bcm2835_close();
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern void bcm2835_delay(uint millis);
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern void bcm2835_gpio_fsel(byte pin, byte mode);
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern void bcm2835_gpio_write(byte pin, uint on);
+
+        static void Main(string[] args)
+        {
+            Console.WriteLine(&quot;Hello World!&quot;);
+
+            if (bcm2835_init() == 1)
+            {
+                
+                    bcm2835_gpio_fsel(RPI_GPIO_P1_07, BCM2835_GPIO_FSEL_OUTP);
+                    
+                    // Blink
+                    while(bcm2835_init() == 1)
+                    {
+                        // Turn it on
+                        bcm2835_gpio_write(RPI_GPIO_P1_07, HIGH);
+                        // wait
+                        bcm2835_delay(500);
+                        // turn it off
+                        bcm2835_gpio_write(RPI_GPIO_P1_07, LOW);
+                        // wait 
+                        bcm2835_delay(500);
+                    }
+                
+            }
+            bcm2835_close();
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then publish and get our new &lt;code class=&quot;highlighter-rouge&quot;&gt;/publish&lt;/code&gt; folder contents. And copy it inside our RPi3.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;testapp&amp;gt; dotnet publish -r ubuntu.16.04-arm     //then copy /publish folder into our RPi3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Assuming you know how to and already hook up our test circuit: a led attach to our GPIO4 or rather PIN7 on the RPi3 physical Pin header.
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Please be careful and you should know how to properly hook up our test led to avoid breaking our RPi3&lt;/code&gt;.
+In RPi3, let us run our updated docker image then test our testapp on it.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo docker run -it --privileged --rm -p 5000:5000 -v /home/pi3:/home/share
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h6 id=&quot;note---rm--means-that-once-we-exit-docker-it-will-clean-our-previouly-runned-docker-image&quot;&gt;Note :&lt;code class=&quot;highlighter-rouge&quot;&gt;--rm&lt;/code&gt;  means that once we exit docker it will clean our previouly runned docker image.&lt;/h6&gt;
+
+&lt;p&gt;Make sure that you have &lt;code class=&quot;highlighter-rouge&quot;&gt;libbcm2835.so&lt;/code&gt; inside the &lt;code class=&quot;highlighter-rouge&quot;&gt;/lib/arm-~&lt;/code&gt; folder or it will complain about running it in SDK.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# cd /home/share/publish
+/home/share/publish# /opt/dotnet/dotnet ./testapp.dll
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Your led should be blinking right now….&lt;/p&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">GPIO Now let’s try our RPi3 GPIO. In our testapp project we created earlier…we’ll have a directory tree like mine: /bin /obj testapp.csproj Program.cs Then modify Program.cs with these codes. What it does is we use libbcm2835.so C internal commands into our C# app using PInvoke. Take note of the PIN Numbering: bcm2835 library use physical numbering so RPI_GPIO_P1_07 is equal to GPIO4 of our RPi3. using System; using System.Runtime.InteropServices; namespace testapp { class Program { private static uint HIGH = 0x1; private static uint LOW = 0x0; private static byte RPI_GPIO_P1_07 = 4; private static byte BCM2835_GPIO_FSEL_OUTP = 0x01; [DllImport(&quot;libbcm2835.so&quot;)] public static extern int bcm2835_init(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_close(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_delay(uint millis); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_fsel(byte pin, byte mode); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_write(byte pin, uint on); static void Main(string[] args) { Console.WriteLine(&quot;Hello World!&quot;); if (bcm2835_init() == 1) { bcm2835_gpio_fsel(RPI_GPIO_P1_07, BCM2835_GPIO_FSEL_OUTP); // Blink while(bcm2835_init() == 1) { // Turn it on bcm2835_gpio_write(RPI_GPIO_P1_07, HIGH); // wait bcm2835_delay(500); // turn it off bcm2835_gpio_write(RPI_GPIO_P1_07, LOW); // wait bcm2835_delay(500); } } bcm2835_close(); } } } Then publish and get our new /publish folder contents. And copy it inside our RPi3. testapp&amp;gt; dotnet publish -r ubuntu.16.04-arm //then copy /publish folder into our RPi3 Assuming you know how to and already hook up our test circuit: a led attach to our GPIO4 or rather PIN7 on the RPi3 physical Pin header. Please be careful and you should know how to properly hook up our test led to avoid breaking our RPi3. In RPi3, let us run our updated docker image then test our testapp on it. $ sudo docker run -it --privileged --rm -p 5000:5000 -v /home/pi3:/home/share Note :--rm means that once we exit docker it will clean our previouly runned docker image. Make sure that you have libbcm2835.so inside the /lib/arm-~ folder or it will complain about running it in SDK. # cd /home/share/publish /home/share/publish# /opt/dotnet/dotnet ./testapp.dll Your led should be blinking right now….</summary></entry><entry><title type="html">Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 1]</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/26/rpi3-docker-gpio.html" rel="alternate" type="text/html" title="Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 1]" /><published>2017-06-26T00:00:00+08:00</published><updated>2017-06-26T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/26/rpi3-docker-gpio</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/26/rpi3-docker-gpio.html">&lt;p&gt;I wan’t to try .Net Core on linux-arm64… but unfortunately, there’s no available yet except Win-arm64 and linux-arm32. So instead of using qemu for VM inside RPi3… i encounter docker and try it out. For now i’ll use ubuntu-arm32 as the base image then later try alpine-linux.&lt;/p&gt;
 
 &lt;h4 id=&quot;prerequisites&quot;&gt;&lt;a href=&quot;#header-4&quot;&gt;&lt;/a&gt;Prerequisites:&lt;/h4&gt;
 &lt;ul&gt;
@@ -72,7 +162,6 @@ $ sudo docker commit $(sudo docker ps -aq) armhf/ubuntu     // # sudo docker ps 
     &lt;span class=&quot;nt&quot;&gt;&amp;lt;TargetFramework&amp;gt;&lt;/span&gt;netcoreapp2.0&lt;span class=&quot;nt&quot;&gt;&amp;lt;/TargetFramework&amp;gt;&lt;/span&gt;
     &lt;span class=&quot;nt&quot;&gt;&amp;lt;RuntimeFrameworkVersion&amp;gt;&lt;/span&gt;2.0.0-preview1-002028-00&lt;span class=&quot;nt&quot;&gt;&amp;lt;/RuntimeFrameworkVersion&amp;gt;&lt;/span&gt;
     &lt;span class=&quot;nt&quot;&gt;&amp;lt;RuntimeIdentifiers&amp;gt;&lt;/span&gt;ubuntu.16.04-arm&lt;span class=&quot;nt&quot;&gt;&amp;lt;/RuntimeIdentifiers&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;AllowUnsafeBlocks&amp;gt;&lt;/span&gt;true&lt;span class=&quot;nt&quot;&gt;&amp;lt;/AllowUnsafeBlocks&amp;gt;&lt;/span&gt;
   &lt;span class=&quot;nt&quot;&gt;&amp;lt;/PropertyGroup&amp;gt;&lt;/span&gt;
 &lt;span class=&quot;nt&quot;&gt;&amp;lt;/Project&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
@@ -96,7 +185,7 @@ Now let’s go to: &lt;code class=&quot;highlighter-rouge&quot;&gt;/testapp/bin/
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Those last 2 commands are run inside the docker image. Yes! it’s alive…Now for the &lt;a href=&quot;&quot;&gt;part 2&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Those last 2 commands are run inside the docker image. Yes! it’s alive…Now for the &lt;a href=&quot;../27/rpi3-docker-gpio-2&quot;&gt;part 2&lt;/a&gt;&lt;/p&gt;
 
 &lt;h5 id=&quot;reference&quot;&gt;Reference:&lt;/h5&gt;
 &lt;ul&gt;
@@ -105,7 +194,7 @@ Now let’s go to: &lt;code class=&quot;highlighter-rouge&quot;&gt;/testapp/bin/
   &lt;li&gt;&lt;a href=&quot;https://jeremylindsayni.wordpress.com/2017/04/02/installing-ubuntu-16-04-on-a-raspberry-pi-3-installing-net-core-2-and-running-a-sample-net-core-2-app/&quot;&gt;https://jeremylindsayni.wordpress.com/2017/04/02/installing-ubuntu-16-04-on-a-raspberry-pi-3-installing-net-core-2-and-running-a-sample-net-core-2-app/&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">I wan’t to try .Net Core on linux-arm64… but unfortunately, there’s no available yet except Win-arm64 and linux-arm32. So instead of using qemu for VM inside RPi3… i encounter docker and try it out. For now i’ll use ubuntu-arm32 as the base image then later try alpine-linux. Prerequisites: dotnet-runtime-latest-linux-arm.tar.gz bcm2835-1.52.tar.gz .Net Core SDK // on your developtment host libbcm2835.so // We’ll create from bcm2835-library docker.io // To be installed on our RPi3 make // To be installed inside docker gcc // To be installed inside docker Docker Container Assuming you already install docker.io. Go ahead and pull an armhf/ubuntu image to be use. $ sudo docker pull armhf/ubuntu //This is what i use for now Then run it using these command: $ sudo docker run -it --privileged -p 5000:5000 -v /home/user:/home/share armhf/ubuntu Note: Docker options that we’ll use: -it -v /[folder to share]:/[folder destination] -p 5000:5000 //port to expose. [any port you like on host]:[any port you'll set on .net core] --privileged //to have acces on /dev/mem Then install these packages for .Net Core: # apt-get install libunwind8 libunwind8-dev gettext libicu-dev liblttng-ust-dev libcurl4-openssl-dev libssl-dev uuid-dev # apt-get install make gcc // can be remove after we created our libbcm2835.so We’re going to extract dotnet-runtime-latest-linux-arm.tar.gz in /opt/dotnet folder. # mkdir /opt/dotnet # tar -zxvf dotnet-runtime-latest-linux-arm.tar.gz -C /opt # /opt/dotnet/dotnet //Then run this to check that it works. or ./dotnet inside the dotnet folder Extract bcm2835-1.52.tar.gz anywhere you like, because where going to remove it once we have libbcm2835.so. # tar -zxvf bcm2835-1.52.tar.gz # cd bcm2835-1.52/src # gcc -fPIC -c bcm2835.c # gcc -shared bcm2835.o -o libbcm2835.so You can now remove the bcm2835-1.52 folder and be sure to put libbcm2835.so inside /lib/arm- folder. And now lets exit docker and save our updated docker image. # exit $ sudo docker commit $(sudo docker ps -aq) armhf/ubuntu // # sudo docker ps -aq get the id of the docker image we just exited. .Net Core Once .Net Core SDK is installed, create a simple console application that we can try to test first. I use windows for development. So from cmd promt i ran this command to create a test app. &amp;gt; dotnet new console -n testapp Then make sure the we have the same configuration like this for our test app in testapp.csproj: &amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&amp;gt; &amp;lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&amp;gt; &amp;lt;PropertyGroup&amp;gt; &amp;lt;OutputType&amp;gt;Exe&amp;lt;/OutputType&amp;gt; &amp;lt;TargetFramework&amp;gt;netcoreapp2.0&amp;lt;/TargetFramework&amp;gt; &amp;lt;RuntimeFrameworkVersion&amp;gt;2.0.0-preview1-002028-00&amp;lt;/RuntimeFrameworkVersion&amp;gt; &amp;lt;RuntimeIdentifiers&amp;gt;ubuntu.16.04-arm&amp;lt;/RuntimeIdentifiers&amp;gt; &amp;lt;AllowUnsafeBlocks&amp;gt;true&amp;lt;/AllowUnsafeBlocks&amp;gt; &amp;lt;/PropertyGroup&amp;gt; &amp;lt;/Project&amp;gt; For now aside from the above… we’ll leave everything as it is and then run these commands: &amp;gt; cd testapp testapp&amp;gt; dotnet restore . testapp&amp;gt; dotnet build . testapp&amp;gt; dotnet publish -r ubuntu.16.04-arm The command dotnet publish -r ubuntu.16.04-arm will create the necessary files that we need to run our console app in ubuntu. Now let’s go to: /testapp/bin/debug/netcoreapp2.0/ubuntu.16.04-arm folder and the /publish folder is what we need to copy into our RPi3. You can use any SFTP app you like to do it. Once your done transfering that folder… let’s navigate into it and test if it will run. let us run again our docker image above and then In my case i’ll use this as my shared folder: /home/pi3:/home/share [my RPi3 folder]:[docker folder that is created automatically] $ sudo docker run -it --privileged -p 5000:5000 -v /home/pi3:/home/share armhf/ubuntu # cd /home/pi3/share/publish # /opt/dotnet/dotnet ./testapp.dll Hellow World! Those last 2 commands are run inside the docker image. Yes! it’s alive…Now for the part 2 Reference: https://dotnetcorechris.github.io/dotnetcoreonraspberrypi.html http://www.yolinux.com/TUTORIALS/LibraryArchives-StaticAndDynamic.html https://jeremylindsayni.wordpress.com/2017/04/02/installing-ubuntu-16-04-on-a-raspberry-pi-3-installing-net-core-2-and-running-a-sample-net-core-2-app/</summary></entry><entry><title type="html">Raspberry Pi 3: Bluetooth Setup</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/16/rpi3-bluetooth-setup.html" rel="alternate" type="text/html" title="Raspberry Pi 3: Bluetooth Setup" /><published>2017-06-16T00:00:00+08:00</published><updated>2017-06-16T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/16/rpi3-bluetooth-setup</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/16/rpi3-bluetooth-setup.html">&lt;p&gt;In order for the Bluetooth to work.. we need to have this file.&lt;/p&gt;
+&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">I wan’t to try .Net Core on linux-arm64… but unfortunately, there’s no available yet except Win-arm64 and linux-arm32. So instead of using qemu for VM inside RPi3… i encounter docker and try it out. For now i’ll use ubuntu-arm32 as the base image then later try alpine-linux. Prerequisites: dotnet-runtime-latest-linux-arm.tar.gz bcm2835-1.52.tar.gz .Net Core SDK // on your developtment host libbcm2835.so // We’ll create from bcm2835-library docker.io // To be installed on our RPi3 make // To be installed inside docker gcc // To be installed inside docker Docker Container Assuming you already install docker.io. Go ahead and pull an armhf/ubuntu image to be use. $ sudo docker pull armhf/ubuntu //This is what i use for now Then run it using these command: $ sudo docker run -it --privileged -p 5000:5000 -v /home/user:/home/share armhf/ubuntu Note: Docker options that we’ll use: -it -v /[folder to share]:/[folder destination] -p 5000:5000 //port to expose. [any port you like on host]:[any port you'll set on .net core] --privileged //to have acces on /dev/mem Then install these packages for .Net Core: # apt-get install libunwind8 libunwind8-dev gettext libicu-dev liblttng-ust-dev libcurl4-openssl-dev libssl-dev uuid-dev # apt-get install make gcc // can be remove after we created our libbcm2835.so We’re going to extract dotnet-runtime-latest-linux-arm.tar.gz in /opt/dotnet folder. # mkdir /opt/dotnet # tar -zxvf dotnet-runtime-latest-linux-arm.tar.gz -C /opt # /opt/dotnet/dotnet //Then run this to check that it works. or ./dotnet inside the dotnet folder Extract bcm2835-1.52.tar.gz anywhere you like, because where going to remove it once we have libbcm2835.so. # tar -zxvf bcm2835-1.52.tar.gz # cd bcm2835-1.52/src # gcc -fPIC -c bcm2835.c # gcc -shared bcm2835.o -o libbcm2835.so You can now remove the bcm2835-1.52 folder and be sure to put libbcm2835.so inside /lib/arm- folder. And now lets exit docker and save our updated docker image. # exit $ sudo docker commit $(sudo docker ps -aq) armhf/ubuntu // # sudo docker ps -aq get the id of the docker image we just exited. .Net Core Once .Net Core SDK is installed, create a simple console application that we can try to test first. I use windows for development. So from cmd promt i ran this command to create a test app. &amp;gt; dotnet new console -n testapp Then make sure the we have the same configuration like this for our test app in testapp.csproj: &amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&amp;gt; &amp;lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&amp;gt; &amp;lt;PropertyGroup&amp;gt; &amp;lt;OutputType&amp;gt;Exe&amp;lt;/OutputType&amp;gt; &amp;lt;TargetFramework&amp;gt;netcoreapp2.0&amp;lt;/TargetFramework&amp;gt; &amp;lt;RuntimeFrameworkVersion&amp;gt;2.0.0-preview1-002028-00&amp;lt;/RuntimeFrameworkVersion&amp;gt; &amp;lt;RuntimeIdentifiers&amp;gt;ubuntu.16.04-arm&amp;lt;/RuntimeIdentifiers&amp;gt; &amp;lt;/PropertyGroup&amp;gt; &amp;lt;/Project&amp;gt; For now aside from the above… we’ll leave everything as it is and then run these commands: &amp;gt; cd testapp testapp&amp;gt; dotnet restore . testapp&amp;gt; dotnet build . testapp&amp;gt; dotnet publish -r ubuntu.16.04-arm The command dotnet publish -r ubuntu.16.04-arm will create the necessary files that we need to run our console app in ubuntu. Now let’s go to: /testapp/bin/debug/netcoreapp2.0/ubuntu.16.04-arm folder and the /publish folder is what we need to copy into our RPi3. You can use any SFTP app you like to do it. Once your done transfering that folder… let’s navigate into it and test if it will run. let us run again our docker image above and then In my case i’ll use this as my shared folder: /home/pi3:/home/share [my RPi3 folder]:[docker folder that is created automatically] $ sudo docker run -it --privileged -p 5000:5000 -v /home/pi3:/home/share armhf/ubuntu # cd /home/pi3/share/publish # /opt/dotnet/dotnet ./testapp.dll Hellow World! Those last 2 commands are run inside the docker image. Yes! it’s alive…Now for the part 2 Reference: https://dotnetcorechris.github.io/dotnetcoreonraspberrypi.html http://www.yolinux.com/TUTORIALS/LibraryArchives-StaticAndDynamic.html https://jeremylindsayni.wordpress.com/2017/04/02/installing-ubuntu-16-04-on-a-raspberry-pi-3-installing-net-core-2-and-running-a-sample-net-core-2-app/</summary></entry><entry><title type="html">Raspberry Pi 3: Bluetooth Setup</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/16/rpi3-bluetooth-setup.html" rel="alternate" type="text/html" title="Raspberry Pi 3: Bluetooth Setup" /><published>2017-06-16T00:00:00+08:00</published><updated>2017-06-16T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/16/rpi3-bluetooth-setup</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/16/rpi3-bluetooth-setup.html">&lt;p&gt;In order for the Bluetooth to work.. we need to have this file.&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/OpenELEC/misc-firmware/blob/master/firmware/brcm/BCM43430A1.hcd&quot;&gt;BCM43430A1.hcd&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
