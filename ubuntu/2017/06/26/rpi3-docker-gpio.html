@@ -116,7 +116,6 @@ $ sudo docker commit $(sudo docker ps -aq) armhf/ubuntu     // # sudo docker ps 
     <span class="nt">&lt;TargetFramework&gt;</span>netcoreapp2.0<span class="nt">&lt;/TargetFramework&gt;</span>
     <span class="nt">&lt;RuntimeFrameworkVersion&gt;</span>2.0.0-preview1-002028-00<span class="nt">&lt;/RuntimeFrameworkVersion&gt;</span>
     <span class="nt">&lt;RuntimeIdentifiers&gt;</span>ubuntu.16.04-arm<span class="nt">&lt;/RuntimeIdentifiers&gt;</span>
-    <span class="nt">&lt;AllowUnsafeBlocks&gt;</span>true<span class="nt">&lt;/AllowUnsafeBlocks&gt;</span>
   <span class="nt">&lt;/PropertyGroup&gt;</span>
 <span class="nt">&lt;/Project&gt;</span>
 </code></pre>
@@ -140,7 +139,7 @@ Now let’s go to: <code class="highlighter-rouge">/testapp/bin/debug/netcoreapp
 </code></pre>
 </div>
 
-<p>Those last 2 commands are run inside the docker image. Yes! it’s alive…Now for the <a href="">part 2</a></p>
+<p>Those last 2 commands are run inside the docker image. Yes! it’s alive…Now for the <a href="../27/rpi3-docker-gpio-2">part 2</a></p>
 
 <h5 id="reference">Reference:</h5>
 <ul>
