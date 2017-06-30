@@ -82,7 +82,7 @@
 
 <p>We’re going to extract <code class="highlighter-rouge">dotnet-runtime-latest-linux-arm.tar.gz</code> in <code class="highlighter-rouge">/opt/dotnet</code> folder.</p>
 <div class="highlighter-rouge"><pre class="highlight"><code># mkdir /opt/dotnet
-# tar -zxvf dotnet-runtime-latest-linux-arm.tar.gz -C /opt
+# tar -zxvf dotnet-runtime-latest-linux-arm.tar.gz -C /opt/dotnet
 # /opt/dotnet/dotnet    //Then run this to check that it works. or ./dotnet inside the dotnet folder
 </code></pre>
 </div>
@@ -103,7 +103,7 @@ $ sudo docker commit $(sudo docker ps -aq) armhf/ubuntu     // # sudo docker ps 
 </div>
 
 <h3 id="-net-core"><a href="#header-3"></a> .Net Core</h3>
-<p>Once <code class="highlighter-rouge">.Net Core SDK</code> is installed, create a simple console application that we can try to test first. I use windows for development. So from cmd promt i ran this command to create a test app.</p>
+<p>Once <code class="highlighter-rouge">.Net Core SDK</code> is installed, create a simple console application that we can try to test first. I use windows for development. So from cmd prompt i ran this command to create a test app.</p>
 <div class="highlighter-rouge"><pre class="highlight"><code>&gt; dotnet new console -n testapp
 </code></pre>
 </div>
@@ -132,7 +132,7 @@ testapp&gt; dotnet publish -r ubuntu.16.04-arm
 <p>The command <code class="highlighter-rouge">dotnet publish -r ubuntu.16.04-arm</code> will create the necessary files that we need to run our console app in ubuntu.
 Now let’s go to: <code class="highlighter-rouge">/testapp/bin/debug/netcoreapp2.0/ubuntu.16.04-arm</code> folder and the <code class="highlighter-rouge">/publish folder</code> is what we need to copy into our RPi3. You can use any SFTP app you like to do it. Once your done transfering that folder… let’s navigate into it and test if it will run. let us run again our docker image above and then In my case i’ll use this as my shared folder: <code class="highlighter-rouge">/home/pi3:/home/share</code> [my RPi3 folder]:[docker folder that is created automatically]</p>
 <div class="highlighter-rouge"><pre class="highlight"><code>$ sudo docker run -it --privileged -p 5000:5000 -v /home/pi3:/home/share armhf/ubuntu
-# cd /home/pi3/share/publish
+# cd /home/share/publish
 # /opt/dotnet/dotnet ./testapp.dll
 
     Hellow World!
