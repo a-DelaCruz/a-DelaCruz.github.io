@@ -1,5 +1,156 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/" rel="alternate" type="text/html" /><updated>2017-06-30T13:08:14+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/</id><title type="html">My Notes on Single Board Computer</title><subtitle>Raspberry Pi 3 - 64-Bit kernel and arm64 rootfs
-</subtitle><entry><title type="html">Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 3]</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/30/rpi3-docker-gpio-3.html" rel="alternate" type="text/html" title="Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 3]" /><published>2017-06-30T00:00:00+08:00</published><updated>2017-06-30T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/30/rpi3-docker-gpio-3</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/30/rpi3-docker-gpio-3.html">&lt;p&gt;In our previous &lt;a href=&quot;../27/rpi3-docker-gpio-2&quot;&gt;post&lt;/a&gt;… we tried a console app. This time we’ll try a web api. So we’ll create a new project and named it &lt;code class=&quot;highlighter-rouge&quot;&gt;testWebApi&lt;/code&gt;.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/" rel="alternate" type="text/html" /><updated>2017-07-01T15:53:45+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/</id><title type="html">My Notes on Single Board Computer</title><subtitle>Raspberry Pi 3 - 64-Bit kernel and arm64 rootfs
+</subtitle><entry><title type="html">Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 4]</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/07/01/rpi3-docker-gpio-4.html" rel="alternate" type="text/html" title="Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 4]" /><published>2017-07-01T00:00:00+08:00</published><updated>2017-07-01T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/07/01/rpi3-docker-gpio-4</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/07/01/rpi3-docker-gpio-4.html">&lt;p&gt;Since we now have tested our previous scenarios… Now let’s try to translate bcm2835 library C code to C# and only importing some C functions. That means we only need to have a glibc library present in our system. There are already C# library out there… like:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/raspberry-sharp/raspberry-sharp-io&quot;&gt;Raspberry# IO&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/cypherkey/RaspberryPi.Net/&quot;&gt;RaspberryPi.Net&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.raspberrypi.org/forums/viewtopic.php?f=34&amp;amp;t=152940&quot;&gt;BCM2835 port to C#&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Seems fine to use with mono installed… although i never tried to use them. And i have not read all their codes on which part are the Mono part. But there are some imports C function that are common to them. Among those three, the last one is a direct port of BCM2835 library to full C# code. But still use a few Mono system calls. So for now what i did is use his codes &lt;code class=&quot;highlighter-rouge&quot;&gt;BCM2835 port to C#&lt;/code&gt;, remove and modify some of it.
+So far this is what i’ve done and still not finished:&lt;/p&gt;
+&lt;h4 id=&quot;some-c-functions&quot;&gt;Some C functions.&lt;/h4&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;using System;
+using System.Runtime.InteropServices;
+
+namespace RPi3
+{
+    public static class Interop
+    {
+
+        #region Enum
+           
+            public enum OpenFlags : int // Open
+            {
+                O_RDWR = 2,
+                O_SYNC = 10000
+            }
+            
+            
+            public enum MmapProts : int //mmap
+            {
+                PROT_READ = 1,  // Page can be read.
+                PROT_WRITE = 2,  // Page can be written.
+                PROT_EXEC = 4,  // Page can be executed.
+                PROT_READWRITE = PROT_READ | PROT_WRITE
+            }
+
+            
+            public enum MmapFlags : int // mmap
+            {
+                MAP_SHARED = 1,     // Share changes.
+                MAP_PRIVATE = 2     // Changes are private.
+            }
+
+            public struct timespec  //Delay under test
+            {
+                public IntPtr tv_sec; /* seconds */
+                public IntPtr tv_nsec; /* nanoseconds */
+            }
+        #endregion
+        
+        #region Libc
+            [DllImport(&quot;libc.so.6&quot;)]
+            public static extern int geteuid();
+
+            [DllImport(&quot;libc.so.6&quot;)]
+            public static extern int open(string pathname, OpenFlags flags);
+
+            [DllImport(&quot;libc.so.6&quot;)]
+            public static extern int close(int fd);
+
+            [DllImport(&quot;libc.so.6&quot;)]
+            public static extern void sync();
+
+            [DllImport(&quot;libc.so.6&quot;)]
+            public static extern IntPtr mmap(IntPtr addr, uint length, MmapProts prot, MmapFlags flags, int fd, uint offset);
+
+            [DllImport(&quot;libc.so.6&quot;)]
+            public static extern int munmap(IntPtr addr, uint length);
+
+            [DllImport(&quot;libc.so.6&quot;)]
+            public static extern int nanosleep(ref timespec req, ref timespec rem);
+
+        #endregion
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You must include an &lt;code class=&quot;highlighter-rouge&quot;&gt;EntryPoint&lt;/code&gt; on your &lt;code class=&quot;highlighter-rouge&quot;&gt;DllImport&lt;/code&gt; in you ever want to change its name.. like so:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[DllImport(&quot;libc.so.6&quot;, EntryPoint = &quot;open&quot;)]
+private static extern IntPtr OpenSename(string pathname, OpenFlags flags);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And replace all code that use &lt;code class=&quot;highlighter-rouge&quot;&gt;Syscall&lt;/code&gt; to use this &lt;code class=&quot;highlighter-rouge&quot;&gt;Interop&lt;/code&gt; and remove Mono directive.
+I also remove this code below for now: and just use it’s type pointer instead like in the orginal but without having it volatile.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public unsafe struct VolatilePointer
+    {
+        public volatile uint* Address;
+
+        public VolatilePointer(uint Address)
+        {
+            this.Address = (uint*)Address;
+        }
+
+        public VolatilePointer(uint* Address)
+        {
+            this.Address = Address;
+        }
+
+        public static implicit operator VolatilePointer(uint* Address)
+        {
+            return new VolatilePointer(Address);
+        }
+
+        public static implicit operator VolatilePointer(uint Address)
+        {
+            return new VolatilePointer(Address);
+        }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;So from these:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[MethodImpl(MethodImplOptions.AggressiveInlining)] // &amp;lt;- I still need more time to grasp what this is for so i removed it for now
+public static uint bcm2835_peri_read(VolatilePointer paddr)
+{
+    uint ret;
+
+    Thread.MemoryBarrier();
+    ret = *paddr.Address;
+    Thread.MemoryBarrier();
+    return ret;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;into these:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public static uint bcm2835_peri_read(uint* paddr)
+{
+    uint ret;
+
+    Thread.MemoryBarrier();
+    ret = *paddr;
+    Thread.MemoryBarrier();
+    return ret;;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;For simple output test these are the basic function that is needed from &lt;a href=&quot;https://www.raspberrypi.org/forums/viewtopic.php?f=34&amp;amp;t=152940&quot;&gt;BCM2835 port to C#&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bcm2835_init()
+mapmem
+bcm2835_peri_read
+bcm2835_peri_write
+bcm2835_peri_set_bits
+bcm2835_gpio_fsel
+bcm2835_gpio_set
+bcm2835_gpio_clr
+bcm2835_gpio_write
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">Since we now have tested our previous scenarios… Now let’s try to translate bcm2835 library C code to C# and only importing some C functions. That means we only need to have a glibc library present in our system. There are already C# library out there… like: Raspberry# IO RaspberryPi.Net BCM2835 port to C# Seems fine to use with mono installed… although i never tried to use them. And i have not read all their codes on which part are the Mono part. But there are some imports C function that are common to them. Among those three, the last one is a direct port of BCM2835 library to full C# code. But still use a few Mono system calls. So for now what i did is use his codes BCM2835 port to C#, remove and modify some of it. So far this is what i’ve done and still not finished: Some C functions. using System; using System.Runtime.InteropServices; namespace RPi3 { public static class Interop { #region Enum public enum OpenFlags : int // Open { O_RDWR = 2, O_SYNC = 10000 } public enum MmapProts : int //mmap { PROT_READ = 1, // Page can be read. PROT_WRITE = 2, // Page can be written. PROT_EXEC = 4, // Page can be executed. PROT_READWRITE = PROT_READ | PROT_WRITE } public enum MmapFlags : int // mmap { MAP_SHARED = 1, // Share changes. MAP_PRIVATE = 2 // Changes are private. } public struct timespec //Delay under test { public IntPtr tv_sec; /* seconds */ public IntPtr tv_nsec; /* nanoseconds */ } #endregion #region Libc [DllImport(&quot;libc.so.6&quot;)] public static extern int geteuid(); [DllImport(&quot;libc.so.6&quot;)] public static extern int open(string pathname, OpenFlags flags); [DllImport(&quot;libc.so.6&quot;)] public static extern int close(int fd); [DllImport(&quot;libc.so.6&quot;)] public static extern void sync(); [DllImport(&quot;libc.so.6&quot;)] public static extern IntPtr mmap(IntPtr addr, uint length, MmapProts prot, MmapFlags flags, int fd, uint offset); [DllImport(&quot;libc.so.6&quot;)] public static extern int munmap(IntPtr addr, uint length); [DllImport(&quot;libc.so.6&quot;)] public static extern int nanosleep(ref timespec req, ref timespec rem); #endregion } } You must include an EntryPoint on your DllImport in you ever want to change its name.. like so: [DllImport(&quot;libc.so.6&quot;, EntryPoint = &quot;open&quot;)] private static extern IntPtr OpenSename(string pathname, OpenFlags flags); And replace all code that use Syscall to use this Interop and remove Mono directive. I also remove this code below for now: and just use it’s type pointer instead like in the orginal but without having it volatile. public unsafe struct VolatilePointer { public volatile uint* Address; public VolatilePointer(uint Address) { this.Address = (uint*)Address; } public VolatilePointer(uint* Address) { this.Address = Address; } public static implicit operator VolatilePointer(uint* Address) { return new VolatilePointer(Address); } public static implicit operator VolatilePointer(uint Address) { return new VolatilePointer(Address); } } So from these: [MethodImpl(MethodImplOptions.AggressiveInlining)] // &amp;lt;- I still need more time to grasp what this is for so i removed it for now public static uint bcm2835_peri_read(VolatilePointer paddr) { uint ret; Thread.MemoryBarrier(); ret = *paddr.Address; Thread.MemoryBarrier(); return ret; } into these: public static uint bcm2835_peri_read(uint* paddr) { uint ret; Thread.MemoryBarrier(); ret = *paddr; Thread.MemoryBarrier(); return ret;; } For simple output test these are the basic function that is needed from BCM2835 port to C#: bcm2835_init() mapmem bcm2835_peri_read bcm2835_peri_write bcm2835_peri_set_bits bcm2835_gpio_fsel bcm2835_gpio_set bcm2835_gpio_clr bcm2835_gpio_write</summary></entry><entry><title type="html">Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 3]</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/30/rpi3-docker-gpio-3.html" rel="alternate" type="text/html" title="Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 3]" /><published>2017-06-30T00:00:00+08:00</published><updated>2017-06-30T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/30/rpi3-docker-gpio-3</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/30/rpi3-docker-gpio-3.html">&lt;p&gt;In our previous &lt;a href=&quot;../27/rpi3-docker-gpio-2&quot;&gt;post&lt;/a&gt;… we tried a console app. This time we’ll try a web api. So we’ll create a new project and named it &lt;code class=&quot;highlighter-rouge&quot;&gt;testWebApi&lt;/code&gt;.&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;dotnet new piwebapi -n testWebApi
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
@@ -93,7 +244,11 @@ testWebApi&amp;gt;dotnet publish -r ubuntu.16.04-arm
 &lt;p&gt;In order to send a value to our Rpi3… Well use &lt;code class=&quot;highlighter-rouge&quot;&gt;POST&lt;/code&gt; then click &lt;code class=&quot;highlighter-rouge&quot;&gt;Params&lt;/code&gt; right before &lt;code class=&quot;highlighter-rouge&quot;&gt;SEND&lt;/code&gt;. On the &lt;code class=&quot;highlighter-rouge&quot;&gt;key&lt;/code&gt; column type &lt;code class=&quot;highlighter-rouge&quot;&gt;pinId&lt;/code&gt; and a &lt;code class=&quot;highlighter-rouge&quot;&gt;Value&lt;/code&gt; of &lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt; for HIGH[led on] and &lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt; for LOW[led off]. On our first &lt;code class=&quot;highlighter-rouge&quot;&gt;Send&lt;/code&gt;…our RPi3 will complain a &lt;code class=&quot;highlighter-rouge&quot;&gt;fail&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;Postman&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;Status:500 Internal Server Error&lt;/code&gt;. for now i don’t know how to fixe this.
 &lt;img src=&quot;/ubuntu/images/Postman-Post-1.jpg&quot; alt=&quot;&quot; /&gt;
 But if we press &lt;code class=&quot;highlighter-rouge&quot;&gt;Send&lt;/code&gt; again…. it works, our led is light up and and a &lt;code class=&quot;highlighter-rouge&quot;&gt;Status:200 OK&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;Postman&lt;/code&gt;.
-&lt;img src=&quot;/ubuntu/images/Postman-Post-2.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">In our previous post… we tried a console app. This time we’ll try a web api. So we’ll create a new project and named it testWebApi. &amp;gt;dotnet new piwebapi -n testWebApi Above code runned in windows cmd prompt because i use visual studio code as my editor. Run dotnet new --help to see a list of available templates. Now Open the created /ControllersValuesController and rename it in my case to TestpinController or just leave it as it is. we’ll modify our code like so: using System; using System.Collections.Generic; using System.Linq; using System.Threading.Tasks; using Microsoft.AspNetCore.Mvc; using System.Runtime.InteropServices; namespace testWebApi.Controllers { [Route(&quot;[controller]&quot;)] public class TestpinController : Controller { private static uint HIGH = 0x1; private static uint LOW = 0x0; private static byte BCM2835_GPIO_FSEL_OUTP = 0x01; private static byte RPI_GPIO_P1_07 = 4; [DllImport(&quot;libbcm2835.so&quot;)] public static extern int bcm2835_init(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_close(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_delay(uint millis); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_fsel(byte pin, byte mode); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_write(byte pin, uint on); [DllImport(&quot;libc.so.6&quot;)] public static extern int geteuid(); [HttpGet] public IEnumerable&amp;lt;string&amp;gt; Get() { return new string[] { &quot;value1&quot;, &quot;value2&quot; }; } [HttpPost] public void SwitchPin(int pinId) { if(bcm2835_init() == pinId) bcm2835_gpio_fsel(RPI_GPIO_P1_07, BCM2835_GPIO_FSEL_OUTP); switch (pinId) { case 1: bcm2835_gpio_write(RPI_GPIO_P1_07, HIGH); break; case 0: bcm2835_gpio_write(RPI_GPIO_P1_07, LOW); break; default: break; } bcm2835_close(); } } } Just like before let’s build and publish it for ubuntu.16.04-arm. Then copy it to our RPi3; testWebApi&amp;gt;dotnet build . testWebApi&amp;gt;dotnet publish -r ubuntu.16.04-arm So when we run it now inside our docker… and browse it at http://192.168.254.102:5000/Testpin we’ll have an output: But we have no way of sending value [HttpPost] to our RPi3. For that i use Postman which is a Chrome extension app for testing Web Apis. When we send Get command using Postman we’ll have an output like these: Displaying the values when we use a WebBrowser. In order to send a value to our Rpi3… Well use POST then click Params right before SEND. On the key column type pinId and a Value of 1 for HIGH[led on] and 0 for LOW[led off]. On our first Send…our RPi3 will complain a fail and Postman Status:500 Internal Server Error. for now i don’t know how to fixe this. But if we press Send again…. it works, our led is light up and and a Status:200 OK in Postman.</summary></entry><entry><title type="html">Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 2]</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/27/rpi3-docker-gpio-2.html" rel="alternate" type="text/html" title="Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 2]" /><published>2017-06-27T00:00:00+08:00</published><updated>2017-06-27T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/27/rpi3-docker-gpio-2</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/27/rpi3-docker-gpio-2.html">&lt;h3 id=&quot;-gpio&quot;&gt;&lt;a href=&quot;#header-3&quot;&gt;&lt;/a&gt; GPIO&lt;/h3&gt;
+&lt;img src=&quot;/ubuntu/images/Postman-Post-2.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On to &lt;a href=&quot;../../07/01/rpi3-docker-gpio-4&quot;&gt;part4&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">In our previous post… we tried a console app. This time we’ll try a web api. So we’ll create a new project and named it testWebApi. &amp;gt;dotnet new piwebapi -n testWebApi Above code runned in windows cmd prompt because i use visual studio code as my editor. Run dotnet new --help to see a list of available templates. Now Open the created /ControllersValuesController and rename it in my case to TestpinController or just leave it as it is. we’ll modify our code like so: using System; using System.Collections.Generic; using System.Linq; using System.Threading.Tasks; using Microsoft.AspNetCore.Mvc; using System.Runtime.InteropServices; namespace testWebApi.Controllers { [Route(&quot;[controller]&quot;)] public class TestpinController : Controller { private static uint HIGH = 0x1; private static uint LOW = 0x0; private static byte BCM2835_GPIO_FSEL_OUTP = 0x01; private static byte RPI_GPIO_P1_07 = 4; [DllImport(&quot;libbcm2835.so&quot;)] public static extern int bcm2835_init(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_close(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_delay(uint millis); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_fsel(byte pin, byte mode); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_write(byte pin, uint on); [DllImport(&quot;libc.so.6&quot;)] public static extern int geteuid(); [HttpGet] public IEnumerable&amp;lt;string&amp;gt; Get() { return new string[] { &quot;value1&quot;, &quot;value2&quot; }; } [HttpPost] public void SwitchPin(int pinId) { if(bcm2835_init() == pinId) bcm2835_gpio_fsel(RPI_GPIO_P1_07, BCM2835_GPIO_FSEL_OUTP); switch (pinId) { case 1: bcm2835_gpio_write(RPI_GPIO_P1_07, HIGH); break; case 0: bcm2835_gpio_write(RPI_GPIO_P1_07, LOW); break; default: break; } bcm2835_close(); } } } Just like before let’s build and publish it for ubuntu.16.04-arm. Then copy it to our RPi3; testWebApi&amp;gt;dotnet build . testWebApi&amp;gt;dotnet publish -r ubuntu.16.04-arm So when we run it now inside our docker… and browse it at http://192.168.254.102:5000/Testpin we’ll have an output: But we have no way of sending value [HttpPost] to our RPi3. For that i use Postman which is a Chrome extension app for testing Web Apis. When we send Get command using Postman we’ll have an output like these: Displaying the values when we use a WebBrowser. In order to send a value to our Rpi3… Well use POST then click Params right before SEND. On the key column type pinId and a Value of 1 for HIGH[led on] and 0 for LOW[led off]. On our first Send…our RPi3 will complain a fail and Postman Status:500 Internal Server Error. for now i don’t know how to fixe this. But if we press Send again…. it works, our led is light up and and a Status:200 OK in Postman. On to part4</summary></entry><entry><title type="html">Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 2]</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/27/rpi3-docker-gpio-2.html" rel="alternate" type="text/html" title="Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 2]" /><published>2017-06-27T00:00:00+08:00</published><updated>2017-06-27T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/27/rpi3-docker-gpio-2</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/27/rpi3-docker-gpio-2.html">&lt;h3 id=&quot;-gpio&quot;&gt;&lt;a href=&quot;#header-3&quot;&gt;&lt;/a&gt; GPIO&lt;/h3&gt;
 &lt;p&gt;Now let’s try our RPi3 GPIO. In our testapp project we created &lt;a href=&quot;../26/rpi3-docker-gpio&quot;&gt;earlier&lt;/a&gt;…we’ll have a directory tree like mine:&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/bin
 /obj
@@ -183,7 +338,9 @@ In RPi3, let us run our updated docker image then test our testapp on it.&lt;/p&
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Your led should be blinking right now…. &lt;a href=&quot;../30/rpi3-docker-gpio-3&quot;&gt;part3&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">GPIO Now let’s try our RPi3 GPIO. In our testapp project we created earlier…we’ll have a directory tree like mine: /bin /obj testapp.csproj Program.cs Then modify Program.cs with these codes. What it does is we use libbcm2835.so C internal commands into our C# app using PInvoke. Take note of the PIN Numbering: bcm2835 library use physical numbering so RPI_GPIO_P1_07 is equal to GPIO4 of our RPi3. using System; using System.Runtime.InteropServices; namespace testapp { class Program { private static uint HIGH = 0x1; private static uint LOW = 0x0; private static byte RPI_GPIO_P1_07 = 4; private static byte BCM2835_GPIO_FSEL_OUTP = 0x01; [DllImport(&quot;libbcm2835.so&quot;)] public static extern int bcm2835_init(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_close(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_delay(uint millis); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_fsel(byte pin, byte mode); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_write(byte pin, uint on); static void Main(string[] args) { Console.WriteLine(&quot;Hello World!&quot;); if (bcm2835_init() == 1) { bcm2835_gpio_fsel(RPI_GPIO_P1_07, BCM2835_GPIO_FSEL_OUTP); // Blink while(true) { // Turn it on bcm2835_gpio_write(RPI_GPIO_P1_07, HIGH); // wait bcm2835_delay(500); // turn it off bcm2835_gpio_write(RPI_GPIO_P1_07, LOW); // wait bcm2835_delay(500); } } bcm2835_close(); } } } Then publish and get our new /publish folder contents. And copy it inside our RPi3. testapp&amp;gt; dotnet publish -r ubuntu.16.04-arm //then copy /publish folder into our RPi3 Assuming you know how to and already hook up our test circuit: a led attach to our GPIO4 or rather PIN7 on the RPi3 physical Pin header. Please be careful and you should know how to properly hook up our test led to avoid breaking our RPi3. In RPi3, let us run our updated docker image then test our testapp on it. $ sudo docker run -it --privileged --rm -p 5000:5000 -v /home/pi3:/home/share Note :--rm means that once we exit docker it will clean our previouly runned docker image. Make sure that you have libbcm2835.so inside the /lib/arm-~ folder or it will complain about running it in SDK. # cd /home/share/publish /home/share/publish# /opt/dotnet/dotnet ./testapp.dll Your led should be blinking right now…. part3</summary></entry><entry><title type="html">Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 1]</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/26/rpi3-docker-gpio.html" rel="alternate" type="text/html" title="Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 1]" /><published>2017-06-26T00:00:00+08:00</published><updated>2017-06-26T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/26/rpi3-docker-gpio</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/26/rpi3-docker-gpio.html">&lt;p&gt;I wan’t to try .Net Core on linux-arm64… but unfortunately, there’s no available yet except Win-arm64 and linux-arm32. So instead of using qemu for VM inside RPi3… i encounter docker and try it out. For now i’ll use ubuntu-arm32 as the base image then later try alpine-linux.&lt;/p&gt;
+&lt;p&gt;Your led should be blinking right now…. &lt;a href=&quot;../30/rpi3-docker-gpio-3&quot;&gt;part3&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">GPIO Now let’s try our RPi3 GPIO. In our testapp project we created earlier…we’ll have a directory tree like mine: /bin /obj testapp.csproj Program.cs Then modify Program.cs with these codes. What it does is we use libbcm2835.so C internal commands into our C# app using PInvoke. Take note of the PIN Numbering: bcm2835 library use physical numbering so RPI_GPIO_P1_07 is equal to GPIO4 of our RPi3. using System; using System.Runtime.InteropServices; namespace testapp { class Program { private static uint HIGH = 0x1; private static uint LOW = 0x0; private static byte RPI_GPIO_P1_07 = 4; private static byte BCM2835_GPIO_FSEL_OUTP = 0x01; [DllImport(&quot;libbcm2835.so&quot;)] public static extern int bcm2835_init(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_close(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_delay(uint millis); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_fsel(byte pin, byte mode); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_write(byte pin, uint on); static void Main(string[] args) { Console.WriteLine(&quot;Hello World!&quot;); if (bcm2835_init() == 1) { bcm2835_gpio_fsel(RPI_GPIO_P1_07, BCM2835_GPIO_FSEL_OUTP); // Blink while(true) { // Turn it on bcm2835_gpio_write(RPI_GPIO_P1_07, HIGH); // wait bcm2835_delay(500); // turn it off bcm2835_gpio_write(RPI_GPIO_P1_07, LOW); // wait bcm2835_delay(500); } } bcm2835_close(); } } } Then publish and get our new /publish folder contents. And copy it inside our RPi3. testapp&amp;gt; dotnet publish -r ubuntu.16.04-arm //then copy /publish folder into our RPi3 Assuming you know how to and already hook up our test circuit: a led attach to our GPIO4 or rather PIN7 on the RPi3 physical Pin header. Please be careful and you should know how to properly hook up our test led to avoid breaking our RPi3. In RPi3, let us run our updated docker image then test our testapp on it. $ sudo docker run -it --privileged --rm -p 5000:5000 -v /home/pi3:/home/share Note :--rm means that once we exit docker it will clean our previouly runned docker image. Make sure that you have libbcm2835.so inside the /lib/arm-~ folder or it will complain about running it in SDK. # cd /home/share/publish /home/share/publish# /opt/dotnet/dotnet ./testapp.dll Your led should be blinking right now…. part3</summary></entry><entry><title type="html">Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 1]</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/26/rpi3-docker-gpio.html" rel="alternate" type="text/html" title="Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 1]" /><published>2017-06-26T00:00:00+08:00</published><updated>2017-06-26T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/26/rpi3-docker-gpio</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/26/rpi3-docker-gpio.html">&lt;p&gt;I wan’t to try .Net Core on linux-arm64… but unfortunately, there’s no available yet except Win-arm64 and linux-arm32. So instead of using qemu for VM inside RPi3… i encounter docker and try it out. For now i’ll use ubuntu-arm32 as the base image then later try alpine-linux.&lt;/p&gt;
 
 &lt;h4 id=&quot;prerequisites&quot;&gt;&lt;a href=&quot;#header-4&quot;&gt;&lt;/a&gt;Prerequisites:&lt;/h4&gt;
 &lt;ul&gt;
