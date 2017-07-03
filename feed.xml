@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/" rel="alternate" type="text/html" /><updated>2017-07-01T15:53:45+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/</id><title type="html">My Notes on Single Board Computer</title><subtitle>Raspberry Pi 3 - 64-Bit kernel and arm64 rootfs
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/" rel="alternate" type="text/html" /><updated>2017-07-03T20:20:25+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/</id><title type="html">My Notes on Single Board Computer</title><subtitle>Raspberry Pi 3 - 64-Bit kernel and arm64 rootfs
 </subtitle><entry><title type="html">Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 4]</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/07/01/rpi3-docker-gpio-4.html" rel="alternate" type="text/html" title="Raspberry Pi 3: simple GPIO on .Net Core inside Docker using bcm2835 library:[part 4]" /><published>2017-07-01T00:00:00+08:00</published><updated>2017-07-01T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/07/01/rpi3-docker-gpio-4</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/07/01/rpi3-docker-gpio-4.html">&lt;p&gt;Since we now have tested our previous scenarios… Now let’s try to translate bcm2835 library C code to C# and only importing some C functions. That means we only need to have a glibc library present in our system. There are already C# library out there… like:&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/raspberry-sharp/raspberry-sharp-io&quot;&gt;Raspberry# IO&lt;/a&gt;&lt;/li&gt;
@@ -484,7 +484,176 @@ Then try it out now if our device is present.&lt;/p&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/xbianonpi/xbian/issues/813&quot;&gt;https://github.com/xbianonpi/xbian/issues/813&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">In order for the Bluetooth to work.. we need to have this file. BCM43430A1.hcd Make sure this are installed: bluetooth bluez Put this file: BCM43430A1.hcd in /lib/firmware/brcm folder… then create a symlink of it in /etc/firmware folder. $ sudo mkdir /etc/firmware $ sudo ln -s /lib/firmware/brcm/BCM43430A1.hcd /etc/firmware/BCM43430A1.hcd Then to test it.. run this twice: $ sudo /usr/bin/hciattach /dev/ttyAMA0 bc43xx 921600 noflow First run we’ll encouter Initialization timed out. But on the second time we’ll get this Device setup complete. Then try it out now if our device is present. $ hcitool dev Devices: hci0 [your device id shows here] Then run your friendly bluetoothctl. To automate this at boot, just follow the scripts from the reference below. Reference: http://www.adelpha.be/blog/index.php/2016/09/24/raspberry-pi-3-native-wifi-and-bluetooth/ https://github.com/xbianonpi/xbian/issues/813</summary></entry><entry><title type="html">Raspberry Pi 3: Wifi Setup</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/05/17/rpi3-wifi-setup.html" rel="alternate" type="text/html" title="Raspberry Pi 3: Wifi Setup" /><published>2017-05-17T00:00:00+08:00</published><updated>2017-05-17T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/05/17/rpi3-wifi-setup</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/05/17/rpi3-wifi-setup.html">&lt;p&gt;To make the Raspberry pi 3 Wifi to work…we need to get or have atleast 2 files. But first we must create a
+&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">In order for the Bluetooth to work.. we need to have this file. BCM43430A1.hcd Make sure this are installed: bluetooth bluez Put this file: BCM43430A1.hcd in /lib/firmware/brcm folder… then create a symlink of it in /etc/firmware folder. $ sudo mkdir /etc/firmware $ sudo ln -s /lib/firmware/brcm/BCM43430A1.hcd /etc/firmware/BCM43430A1.hcd Then to test it.. run this twice: $ sudo /usr/bin/hciattach /dev/ttyAMA0 bc43xx 921600 noflow First run we’ll encouter Initialization timed out. But on the second time we’ll get this Device setup complete. Then try it out now if our device is present. $ hcitool dev Devices: hci0 [your device id shows here] Then run your friendly bluetoothctl. To automate this at boot, just follow the scripts from the reference below. Reference: http://www.adelpha.be/blog/index.php/2016/09/24/raspberry-pi-3-native-wifi-and-bluetooth/ https://github.com/xbianonpi/xbian/issues/813</summary></entry><entry><title type="html">Raspberry Pi 3 Alpine Linux arm64</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/alpine/2017/06/15/alpine-linux.html" rel="alternate" type="text/html" title="Raspberry Pi 3 Alpine Linux arm64" /><published>2017-06-15T00:00:00+08:00</published><updated>2017-06-15T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/alpine/2017/06/15/alpine-linux</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/alpine/2017/06/15/alpine-linux.html">&lt;p&gt;As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3.&lt;/p&gt;
+
+&lt;h4 id=&quot;prerequisites&quot;&gt;Prerequisites:&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;Alpine linux Generic Arm - &lt;a href=&quot;https://nl.alpinelinux.org/alpine/v3.6/releases/aarch64/alpine-uboot-3.6.1-aarch64.tar.gz&quot;&gt;aarch64&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;For the kernel and U-boot…just follow my previous &lt;a href=&quot;rpi3-64bit-kernel-and-Uboot-booting-up&quot;&gt;post&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;note-enable-squashfs-support--file-systems---miscellaneous-filesystems----squashfs-40&quot;&gt;Note: Enable Squashfs support @ File systems -&amp;gt; Miscellaneous filesystems -&amp;gt; &amp;lt;*&amp;gt; SquashFS 4.0&lt;/h4&gt;
+
+&lt;p&gt;The files that we need from alpine to modify is &lt;code class=&quot;highlighter-rouge&quot;&gt;initramfs-vanilla&lt;/code&gt;, and a copy of &lt;code class=&quot;highlighter-rouge&quot;&gt;apk&lt;/code&gt; folder (&lt;code class=&quot;highlighter-rouge&quot;&gt;alpine.apkovl.tar.gz&lt;/code&gt; is optional). so go ahead and extract them.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;initramfs-vanilla&lt;/code&gt; is a compressed cpio archive. To extract it we do this:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkdir temp
+$ cd temp
+$ sudo gunzip -c /boot/initramfs-vanilla | cpio -i
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then we need to install our latest modules into it…assuming you already compiled kernel 4.11. following this &lt;a href=&quot;rpi3-64bit-kernel-and-Uboot-booting-up&quot;&gt;post&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make modules_install INSTALL_MOD_PATH=../temp/
+        when it is done go back to /temp/ folder where we extract the initramfs and into the modules folder.
+$ cd temp/lib/modules/
+        and remove the kernel previous version and optional: the build, source folder symlink in temp/lib/modules/4.11~/ folder
+$ sudo rm -rf 4.9~
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now we have our custom initramfs and then recreate the compressed cpio archive again.
+Inside the folder run:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo find . | cpio -H newc -o | gzip -9 &amp;gt; [file destination]/initramfs-rpi3-cpio
+$ cd ..
+$ sudo mkimage -A arm64 -O linux -T ramdisk -d initramfs-rpi3-cpio initramfs-rpi3 // For U-boot
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;modloop-vanilla&lt;/code&gt; is a squashfs file. We can make from scratch or unsquash it using this command:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo unsquashfs -f -d [file destination] [file location]/file.squashfs
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;To create our own &lt;code class=&quot;highlighter-rouge&quot;&gt;modloop&lt;/code&gt; file let start by making a folder&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo mkdir modules // Then inside this module, let's install again our rpi-4.11y modules from above
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;After you’ve installed &lt;code class=&quot;highlighter-rouge&quot;&gt;our modules from above&lt;/code&gt; on the modules folder that we’ve just created.. you’ll have a folder structure like so:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/modules
+        |- /lib
+                |- /firmware    // firmware_install INSTALL_FW_PATH=[in this location or just use from the moodlop-vanilla] 
+                |- /modules     // again remove build and source symlink folder here
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Rearrange above modules folder to:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/modules/modules/firmware
+/modules/modules/4.11~
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Squash it using this command:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo mksquashfs [folder to be squash] [filename] -comp [compression method: I use 'xz' -Xdict-size 100%
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And now we have our own &lt;code class=&quot;highlighter-rouge&quot;&gt;initramfs-rpi3&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;modloop-rpi3&lt;/code&gt;. Our µsd card should now look like this:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/apk
+/boot/Image
+/boot/kernel8.img
+/boot/boot.scr
+/boot/initramfs-rpi3
+/boot/modloop-rpi3
+bcm2710-rpi-3-b.dtb
+bootcode.bin
+start.elf 
+fixup.dat 
+config.txt
+cmdline.txt
+alpine.apkovl.tar.gz // optional will be created once we setup our alpine linux
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We’ll modify the &lt;code class=&quot;highlighter-rouge&quot;&gt;cmdline.txt&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;boot.scr&lt;/code&gt; for alpine linux.&lt;/p&gt;
+&lt;h5 id=&quot;cmdlinetxt&quot;&gt;cmdline.txt&lt;/h5&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;modules=loop,squashfs,sd-mod,usb-storage quiet net.ifnames=0 dwc_otg.lpm_enable=0 console=ttyS0,115200 fsck.repair=yes rootwait
+// the quiet command can be remove: it just hide the message buffer of kernel. `ttyS0` can be replace by `ttyAMA0`
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h5 id=&quot;bootscr&quot;&gt;boot.scr&lt;/h5&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fdt addr 0x100
+fdt get value bootargs /chosen bootargs
+setenv kernel_addr_r 0x01000000
+setenv ramdisk_addr_r 0x02100000
+fatload mmc 0:1 ${kernel_addr_r} boot/Image
+fatload mmc 0:1 ${ramdisk_addr_r} boot/initramfs-rpi3
+setenv initrdsize $filesize
+fatload mmc 0:1 ${fdt_addr_r} bcm2710-rpi-3-b.dtb
+booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Go ahead noew and try to boot it up. You should have an output like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/alpine/images/alpine-linux-arm64-rpi3.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see… there’s a hwclock error since our raspberry pi 3 don’t have any. So after you run &lt;code class=&quot;highlighter-rouge&quot;&gt;setup-alpine&lt;/code&gt; and use &lt;code class=&quot;highlighter-rouge&quot;&gt;lbu commit &lt;/code&gt; to save changes…run this:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rc-update add swclock boot    # enable the software clock
+rc-update del hwclock boot    # disable the hardware clock
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;In my case i use &lt;code class=&quot;highlighter-rouge&quot;&gt;Busybox NTP&lt;/code&gt; as it might be the most lightweight solution. Save the changes and reboot.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;lbu commit
+reboot
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;wifi&quot;&gt;Wifi:&lt;/h4&gt;
+&lt;p&gt;I didn’t include the &lt;code class=&quot;highlighter-rouge&quot;&gt;brcm&lt;/code&gt; above because i encouter a &lt;code class=&quot;highlighter-rouge&quot;&gt;brcmf_sdio_htclk&lt;/code&gt; error but can be resolve by reloading the module: &lt;code class=&quot;highlighter-rouge&quot;&gt;brcmfmac&lt;/code&gt;
+The good thing about alpine linux is if you make a &lt;code class=&quot;highlighter-rouge&quot;&gt;firmware folder&lt;/code&gt; on the root directory of our µsd card, it’ll be recognized by alpine and load it once alpine boot up. Don’t worry if the rest of the folder inside the OS fimrware folder is gone(it’s  just hidden in plain site). So i place my brcm folder there for now.&lt;/p&gt;
+
+&lt;p&gt;According to alpine linux… &lt;a href=&quot;https://wiki.alpinelinux.org/wiki/Connecting_to_a_wireless_access_point&quot;&gt;Connecting to a wireless access point&lt;/a&gt; Broadcom Wi-Fi Chipset Users: we need &lt;code class=&quot;highlighter-rouge&quot;&gt;b43-firmware&lt;/code&gt; so go ahead and follow that or we can compile it somewhere else like what i did.&lt;/p&gt;
+
+&lt;p&gt;On ubuntu 16.04 i install &lt;code class=&quot;highlighter-rouge&quot;&gt;b43-fwcutter&lt;/code&gt; then get &lt;a href=&quot;http://mirror2.openwrt.org/sources/broadcom-wl-4.150.10.5.tar.bz2&quot;&gt;b43-firmware&lt;/a&gt; and follow the instruction &lt;a href=&quot;http://linuxwireless.org/en/users/Drivers/b43/&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ tar -xjf broadcom-wl-4.150.10.5.tar.bz2       // make sure bzip is installed
+$ b43-fwcutter -w [$FIRMWARE_INSTALL_DIR/b43] broadcom-wl-4.150.10.5/driver/wl_apsta_mimo.o
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then copy that &lt;code class=&quot;highlighter-rouge&quot;&gt;b43&lt;/code&gt; folder to firmware folder on the root of our µsd card.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/apk
+/boot/Image
+/boot/kernel8.img
+/boot/boot.scr
+/boot/initramfs-rpi3
+/boot/modloop-rpi3
+/firmware/b43
+/firmware/brcm
+bcm2710-rpi-3-b.dtb
+bootcode.bin
+start.elf 
+fixup.dat 
+config.txt
+cmdline.txt
+alpine.apkovl.tar.gz // optional will be created once we setup our alpine linux
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Load the &lt;code class=&quot;highlighter-rouge&quot;&gt;b43&lt;/code&gt; kernel and enable it at boot up:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ modprobe b43
+$ echo b43 &amp;gt;&amp;gt; /etc/modules
+$ lbu commit    //To save changes
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;If you run &lt;code class=&quot;highlighter-rouge&quot;&gt;dmesg&lt;/code&gt; command and display a brcmfmac error just reload &lt;code class=&quot;highlighter-rouge&quot;&gt;brcmfmac module&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ modprobe -r brcmfmac  // For now
+$ modprobe brcmfmac
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Feedback is at most welcome…&lt;/p&gt;
+
+&lt;h5 id=&quot;reference&quot;&gt;Reference:&lt;/h5&gt;
+&lt;ul&gt;
+  &lt;li&gt;http://backreference.org/2010/07/04/modifying-initrdinitramfs-files/&lt;/li&gt;
+  &lt;li&gt;https://askubuntu.com/questions/437880/extract-a-squashfs-to-an-existing-directory&lt;/li&gt;
+  &lt;li&gt;https://wiki.alpinelinux.org/wiki/DIY_Fully_working_Alpine_Linux_for_Allwinner_and_Other_ARM_SOCs&lt;/li&gt;
+  &lt;li&gt;https://wiki.alpinelinux.org/wiki/Raspberry_Pi&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="alpine" /><summary type="html">As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3. Prerequisites: Alpine linux Generic Arm - aarch64 For the kernel and U-boot…just follow my previous post. Note: Enable Squashfs support @ File systems -&amp;gt; Miscellaneous filesystems -&amp;gt; &amp;lt;*&amp;gt; SquashFS 4.0 The files that we need from alpine to modify is initramfs-vanilla, and a copy of apk folder (alpine.apkovl.tar.gz is optional). so go ahead and extract them. initramfs-vanilla is a compressed cpio archive. To extract it we do this: $ mkdir temp $ cd temp $ sudo gunzip -c /boot/initramfs-vanilla | cpio -i Then we need to install our latest modules into it…assuming you already compiled kernel 4.11. following this post. $ sudo ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make modules_install INSTALL_MOD_PATH=../temp/ when it is done go back to /temp/ folder where we extract the initramfs and into the modules folder. $ cd temp/lib/modules/ and remove the kernel previous version and optional: the build, source folder symlink in temp/lib/modules/4.11~/ folder $ sudo rm -rf 4.9~ Now we have our custom initramfs and then recreate the compressed cpio archive again. Inside the folder run: $ sudo find . | cpio -H newc -o | gzip -9 &amp;gt; [file destination]/initramfs-rpi3-cpio $ cd .. $ sudo mkimage -A arm64 -O linux -T ramdisk -d initramfs-rpi3-cpio initramfs-rpi3 // For U-boot modloop-vanilla is a squashfs file. We can make from scratch or unsquash it using this command: $ sudo unsquashfs -f -d [file destination] [file location]/file.squashfs To create our own modloop file let start by making a folder $ sudo mkdir modules // Then inside this module, let's install again our rpi-4.11y modules from above After you’ve installed our modules from above on the modules folder that we’ve just created.. you’ll have a folder structure like so: /modules |- /lib |- /firmware // firmware_install INSTALL_FW_PATH=[in this location or just use from the moodlop-vanilla] |- /modules // again remove build and source symlink folder here Rearrange above modules folder to: /modules/modules/firmware /modules/modules/4.11~ Squash it using this command: $ sudo mksquashfs [folder to be squash] [filename] -comp [compression method: I use 'xz' -Xdict-size 100% And now we have our own initramfs-rpi3 and modloop-rpi3. Our µsd card should now look like this: /apk /boot/Image /boot/kernel8.img /boot/boot.scr /boot/initramfs-rpi3 /boot/modloop-rpi3 bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt alpine.apkovl.tar.gz // optional will be created once we setup our alpine linux We’ll modify the cmdline.txt and boot.scr for alpine linux. cmdline.txt modules=loop,squashfs,sd-mod,usb-storage quiet net.ifnames=0 dwc_otg.lpm_enable=0 console=ttyS0,115200 fsck.repair=yes rootwait // the quiet command can be remove: it just hide the message buffer of kernel. `ttyS0` can be replace by `ttyAMA0` boot.scr fdt addr 0x100 fdt get value bootargs /chosen bootargs setenv kernel_addr_r 0x01000000 setenv ramdisk_addr_r 0x02100000 fatload mmc 0:1 ${kernel_addr_r} boot/Image fatload mmc 0:1 ${ramdisk_addr_r} boot/initramfs-rpi3 setenv initrdsize $filesize fatload mmc 0:1 ${fdt_addr_r} bcm2710-rpi-3-b.dtb booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r} Go ahead noew and try to boot it up. You should have an output like this: As you can see… there’s a hwclock error since our raspberry pi 3 don’t have any. So after you run setup-alpine and use lbu commit to save changes…run this: rc-update add swclock boot # enable the software clock rc-update del hwclock boot # disable the hardware clock In my case i use Busybox NTP as it might be the most lightweight solution. Save the changes and reboot. lbu commit reboot Wifi: I didn’t include the brcm above because i encouter a brcmf_sdio_htclk error but can be resolve by reloading the module: brcmfmac The good thing about alpine linux is if you make a firmware folder on the root directory of our µsd card, it’ll be recognized by alpine and load it once alpine boot up. Don’t worry if the rest of the folder inside the OS fimrware folder is gone(it’s just hidden in plain site). So i place my brcm folder there for now. According to alpine linux… Connecting to a wireless access point Broadcom Wi-Fi Chipset Users: we need b43-firmware so go ahead and follow that or we can compile it somewhere else like what i did. On ubuntu 16.04 i install b43-fwcutter then get b43-firmware and follow the instruction here $ tar -xjf broadcom-wl-4.150.10.5.tar.bz2 // make sure bzip is installed $ b43-fwcutter -w [$FIRMWARE_INSTALL_DIR/b43] broadcom-wl-4.150.10.5/driver/wl_apsta_mimo.o Then copy that b43 folder to firmware folder on the root of our µsd card. /apk /boot/Image /boot/kernel8.img /boot/boot.scr /boot/initramfs-rpi3 /boot/modloop-rpi3 /firmware/b43 /firmware/brcm bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt alpine.apkovl.tar.gz // optional will be created once we setup our alpine linux Load the b43 kernel and enable it at boot up: $ modprobe b43 $ echo b43 &amp;gt;&amp;gt; /etc/modules $ lbu commit //To save changes If you run dmesg command and display a brcmfmac error just reload brcmfmac module: $ modprobe -r brcmfmac // For now $ modprobe brcmfmac Feedback is at most welcome… Reference: http://backreference.org/2010/07/04/modifying-initrdinitramfs-files/ https://askubuntu.com/questions/437880/extract-a-squashfs-to-an-existing-directory https://wiki.alpinelinux.org/wiki/DIY_Fully_working_Alpine_Linux_for_Allwinner_and_Other_ARM_SOCs https://wiki.alpinelinux.org/wiki/Raspberry_Pi</summary></entry><entry><title type="html">Raspberry Pi 3: Wifi Setup</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/05/17/rpi3-wifi-setup.html" rel="alternate" type="text/html" title="Raspberry Pi 3: Wifi Setup" /><published>2017-05-17T00:00:00+08:00</published><updated>2017-05-17T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/05/17/rpi3-wifi-setup</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/05/17/rpi3-wifi-setup.html">&lt;p&gt;To make the Raspberry pi 3 Wifi to work…we need to get or have atleast 2 files. But first we must create a
 folder inside the &lt;code class=&quot;highlighter-rouge&quot;&gt;/lib/firmware/&lt;/code&gt; and name it &lt;code class=&quot;highlighter-rouge&quot;&gt;brcm&lt;/code&gt;. And in that folder we’ll put
 &lt;code class=&quot;highlighter-rouge&quot;&gt;brcmfmac43430-sdio.bin&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;brcmfmac43430-sdio.txt&lt;/code&gt;.&lt;/p&gt;
 
