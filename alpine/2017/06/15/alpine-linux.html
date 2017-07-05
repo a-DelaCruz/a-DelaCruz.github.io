@@ -43,7 +43,10 @@
 	<p class="meta">15 Jun 2017</p>
 
 	<div class="post">
-	  <p>As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3.</p>
+	  <h4 id="-17-07-06-to-fix-brcmfmac-loading-error-directly-place-brcm-folder-inside-our-custom-initramfs-rpi3-file">*** 17-07-06: To fix brcmfmac loading error: directly place <code class="highlighter-rouge">brcm</code> folder inside our custom <code class="highlighter-rouge">initramfs-rpi3</code> file.</h4>
+<h4 id="-17-07-06-b43-in-optional-meaning-youll-be-connected-to-net-using-ipv6-ipv4-if-b43-is-loaded">*** 17-07-06: <code class="highlighter-rouge">b43</code> in optional… meaning you’ll be connected to net using <code class="highlighter-rouge">ipv6</code>. <code class="highlighter-rouge">ipv4</code> if <code class="highlighter-rouge">b43</code> is loaded.</h4>
+
+<p>As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3.</p>
 
 <h4 id="prerequisites">Prerequisites:</h4>
 <ul>
@@ -160,7 +163,7 @@ reboot
 </code></pre>
 </div>
 
-<h4 id="wifi">Wifi:</h4>
+<h4 id="wifi-optional">Wifi: (optional…)</h4>
 <p>I didn’t include the <code class="highlighter-rouge">brcm</code> above because i encouter a <code class="highlighter-rouge">brcmf_sdio_htclk</code> error but can be resolve by reloading the module: <code class="highlighter-rouge">brcmfmac</code>
 The good thing about alpine linux is if you make a <code class="highlighter-rouge">firmware folder</code> on the root directory of our µsd card, it’ll be recognized by alpine and load it once alpine boot up. Don’t worry if the rest of the folder inside the OS fimrware folder is gone(it’s  just hidden in plain site). So i place my brcm folder there for now.</p>
 
