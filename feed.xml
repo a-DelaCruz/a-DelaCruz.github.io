@@ -1,5 +1,210 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/a-DelaCruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/a-DelaCruz.github.io/" rel="alternate" type="text/html" /><updated>2017-07-11T21:06:01+08:00</updated><id>http://localhost:4000/a-DelaCruz.github.io/</id><title type="html">My Notes on Single Board Computer</title><subtitle>Raspberry Pi 3 - 64-Bit kernel and arm64 rootfs
-</subtitle><entry><title type="html">Raspberry Pi 3: Wifi config</title><link href="http://localhost:4000/a-DelaCruz.github.io/alpine/2017/07/11/alpine-wifi.html" rel="alternate" type="text/html" title="Raspberry Pi 3: Wifi config" /><published>2017-07-11T00:00:00+08:00</published><updated>2017-07-11T00:00:00+08:00</updated><id>http://localhost:4000/a-DelaCruz.github.io/alpine/2017/07/11/alpine-wifi</id><content type="html" xml:base="http://localhost:4000/a-DelaCruz.github.io/alpine/2017/07/11/alpine-wifi.html">&lt;p&gt;Alpine linux network interface configuration are very different from what i used on ubuntu. 
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/a-DelaCruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/a-DelaCruz.github.io/" rel="alternate" type="text/html" /><updated>2017-07-23T15:34:52+08:00</updated><id>http://localhost:4000/a-DelaCruz.github.io/</id><title type="html">My Notes on Single Board Computer</title><subtitle>Raspberry Pi 3 - 64-Bit kernel and arm64 rootfs
+</subtitle><entry><title type="html">Simple GPIO OUTP WebUI on .Net Core and Bootstrap [part1]</title><link href="http://localhost:4000/a-DelaCruz.github.io/ubuntu/2017/07/23/rpi3-webui-gpio.html" rel="alternate" type="text/html" title="Simple GPIO OUTP WebUI on .Net Core and Bootstrap [part1]" /><published>2017-07-23T00:00:00+08:00</published><updated>2017-07-23T00:00:00+08:00</updated><id>http://localhost:4000/a-DelaCruz.github.io/ubuntu/2017/07/23/rpi3-webui-gpio</id><content type="html" xml:base="http://localhost:4000/a-DelaCruz.github.io/ubuntu/2017/07/23/rpi3-webui-gpio.html">&lt;p&gt;From my previous posts… we can now  use .Net Core properly for our Web App. This time we’ll be creating a &lt;code class=&quot;highlighter-rouge&quot;&gt;simple WebUI&lt;/code&gt; that set our &lt;code class=&quot;highlighter-rouge&quot;&gt;GPIO OUTP&lt;/code&gt; to either &lt;code class=&quot;highlighter-rouge&quot;&gt;HIGH or LOW&lt;/code&gt;. 
+For &lt;code class=&quot;highlighter-rouge&quot;&gt;real-time function of GPIO INPT&lt;/code&gt;, i’m eyeing to an additional framework for that later. 
+Unlike on a .Net Core consoleapp that we dedicate a set of time to detect an INPT state, for Web App, i have no idea if that is the same case.&lt;/p&gt;
+
+&lt;p&gt;Earlier i modified codes from my previous &lt;a href=&quot;../../07/01/rpi3-docker-gpio-4&quot;&gt;post&lt;/a&gt; again… to remove Mono directives to just using .Net Core. Up until now, what i have accomplished so far are:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GPIO mode: INPT/OUTP
+OUTP state: HIGH/LOW
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now to start… let’s create a &lt;code class=&quot;highlighter-rouge&quot;&gt;new empty dotnet Web App&lt;/code&gt;. And modify some created files with a few codes. I prefer to start from scratch and slowly add files that i need. If you want, you can use the &lt;code class=&quot;highlighter-rouge&quot;&gt;mvc template&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dotnet new web -n RPi3.WebUI
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;rpi3webuicsproj&quot;&gt;RPi3.WebUI.csproj:&lt;/h4&gt;
+&lt;p&gt;Once you modified &lt;code class=&quot;highlighter-rouge&quot;&gt;RPi3.WebUI.csproj&lt;/code&gt; file to like below, run &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet restore&lt;/code&gt; afterwards.
+I’ve set &lt;code class=&quot;highlighter-rouge&quot;&gt;RuntimeIdentifiers&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;linux-arm&lt;/code&gt; so it can be run to any linux arm32 OS that use glibc.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;Project Sdk=&quot;Microsoft.NET.Sdk.Web&quot;&amp;gt;
+
+  &amp;lt;PropertyGroup&amp;gt;
+    &amp;lt;TargetFramework&amp;gt;netcoreapp2.0&amp;lt;/TargetFramework&amp;gt;
+    &amp;lt;RuntimeIdentifiers&amp;gt;linux-arm&amp;lt;/RuntimeIdentifiers&amp;gt;
+  &amp;lt;/PropertyGroup&amp;gt;
+  &amp;lt;ItemGroup&amp;gt;
+    &amp;lt;Folder Include=&quot;wwwroot\&quot; /&amp;gt;
+  &amp;lt;/ItemGroup&amp;gt;
+
+  &amp;lt;ItemGroup&amp;gt;
+    &amp;lt;PackageReference Include=&quot;Microsoft.AspNetCore.All&quot; Version=&quot;2.0.0-preview2-final&quot; /&amp;gt;
+  &amp;lt;/ItemGroup&amp;gt;
+
+&amp;lt;/Project&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;startupcs&quot;&gt;Startup.cs:&lt;/h4&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public void ConfigureServices(IServiceCollection services)
+{
+    services.AddMvc();
+}
+
+// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+{
+    if (env.IsDevelopment())
+    {
+        app.UseDeveloperExceptionPage();
+        app.UseStatusCodePages();
+    }
+    app.UseStaticFiles();
+
+    app.UseMvc(routes =&amp;gt;
+    {
+        routes.MapRoute(
+        name: &quot;default&quot;,
+        template: &quot;{controller=Home}/{action=Index}/{id?}&quot;);
+    });
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;programcs&quot;&gt;Program.cs:&lt;/h4&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public static void Main(string[] args)
+        {
+            BuildWebHost(args).Run();
+        }
+
+        public static IWebHost BuildWebHost(string[] args) =&amp;gt;
+            WebHost.CreateDefaultBuilder(args)
+                .UseEnvironment(&quot;Development&quot;)  //Change to Production once needed
+                .UseUrls(&quot;http://*:5000&quot;)       //Set to your desired port
+                .UseStartup&amp;lt;Startup&amp;gt;()
+                .Build();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;add-views&quot;&gt;Add Views:&lt;/h4&gt;
+&lt;p&gt;Create several folders:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;/Views&lt;/li&gt;
+  &lt;li&gt;/Views/Shared&lt;/li&gt;
+  &lt;li&gt;/Views/Home&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Create these files:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;/Views/_ViewImports.cshtml&lt;/li&gt;
+  &lt;li&gt;/Views/_ViewStart.cshtml&lt;/li&gt;
+  &lt;li&gt;/Views/Shared/_Layout.cshtml&lt;/li&gt;
+  &lt;li&gt;/Views/Home/Index.cshtml&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;And modify above files with these:&lt;/p&gt;
+&lt;h5 id=&quot;_viewimportscshtml&quot;&gt;_ViewImports.cshtml:&lt;/h5&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h5 id=&quot;_viewstartcshtml&quot;&gt;_ViewStart.cshtml:&lt;/h5&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@{
+    Layout = &quot;_Layout&quot;;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h5 id=&quot;_layoutcshtml&quot;&gt;_Layout.cshtml:&lt;/h5&gt;
+&lt;p&gt;Codes below used on &lt;code class=&quot;highlighter-rouge&quot;&gt;Bottstrap 4&lt;/code&gt;. If you don’t have a local &lt;code class=&quot;highlighter-rouge&quot;&gt;bootstrap&lt;/code&gt; files at &lt;code class=&quot;highlighter-rouge&quot;&gt;/wwwroot&lt;/code&gt;, use the &lt;code class=&quot;highlighter-rouge&quot;&gt;Bootstrap CDN&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css&quot; integrity=&quot;sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ&quot; crossorigin=&quot;anonymous&quot;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;charset=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;utf-8&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;viewport&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;content=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;width=device-width, initial-scale=1.0&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;title&amp;gt;&lt;/span&gt;@ViewData[&quot;Title&quot;] - testMVC&lt;span class=&quot;nt&quot;&gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;environment&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;include=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Development&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~/css/bootstrap.css&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~/css/site.css&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;integrity=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;crossorigin=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;anonymous&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/environment&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;environment&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;names=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Staging,Production&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;integrity=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;crossorigin=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;anonymous&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/environment&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;nav&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;navbar navbar-toggleable-md navbar-inverse bg-success&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;navbar-toggler navbar-toggler-right&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;button&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;data-toggle=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;collapse&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;data-target=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;#navbarNav&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;aria-controls=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;navbarNav&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;aria-expanded=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;false&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;aria-label=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Toggle navigation&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;span&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;navbar-toggler-icon&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/span&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;h4&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;navbar-brand mb-0&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;NavBar&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h4&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;collapse navbar-collapse&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;navbarNav&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;navbar-nav&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;nav-item nav-link active&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Home&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&amp;lt;span&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;sr-only&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;(current)&lt;span class=&quot;nt&quot;&gt;&amp;lt;/span&amp;gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;nav-item nav-link&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/Home/About&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;About&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;nav-item nav-link&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/Home/Settings&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Settings&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/nav&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;container body-content&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        @RenderBody()
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;hr&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;footer&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;span class=&quot;ni&quot;&gt;&amp;amp;copy;&lt;/span&gt; 2017 - testMVC&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/footer&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;environment&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;include=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Development&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~/jquery/jquery-3.1.1.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~/js/bootstrap.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~/js/site.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/environment&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;environment&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;names=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Staging,Production&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- jQuery library --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://code.jquery.com/jquery-3.1.1.slim.min.js&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;integrity=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;crossorigin=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;anonymous&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+            
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Tether --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;integrity=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;crossorigin=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;anonymous&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+            
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Latest compiled JavaScript --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;integrity=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;crossorigin=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;anonymous&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/environment&amp;gt;&lt;/span&gt;
+
+    @RenderSection(&quot;Scripts&quot;, required: false)
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h5 id=&quot;indexcshtml&quot;&gt;Index.cshtml:&lt;/h5&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@{
+    ViewData[&quot;Title&quot;] = &quot;Home&quot;;
+}
+
+&amp;lt;h2&amp;gt;Index&amp;lt;/h2&amp;gt;
+
+&amp;lt;p&amp;gt;Hello from our View Template!&amp;lt;/p&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;add-controllers&quot;&gt;Add Controllers:&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;/Controllers&lt;/li&gt;
+  &lt;li&gt;/Controllers/HomeController.cs&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5 id=&quot;homecontrollercs&quot;&gt;HomeController.cs:&lt;/h5&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;using Microsoft.AspNetCore.Mvc;
+
+namespace RPi3.WebUI.Controllers
+{
+    public class HomeController : Controller
+    {
+        public IActionResult Index()
+        {
+            return View();
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Go ahead and run &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet run&lt;/code&gt; and navigate to &lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost:5000&lt;/code&gt;, so we can verify that our modification works.&lt;/p&gt;
+
+&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">From my previous posts… we can now use .Net Core properly for our Web App. This time we’ll be creating a simple WebUI that set our GPIO OUTP to either HIGH or LOW. For real-time function of GPIO INPT, i’m eyeing to an additional framework for that later. Unlike on a .Net Core consoleapp that we dedicate a set of time to detect an INPT state, for Web App, i have no idea if that is the same case. Earlier i modified codes from my previous post again… to remove Mono directives to just using .Net Core. Up until now, what i have accomplished so far are: GPIO mode: INPT/OUTP OUTP state: HIGH/LOW Now to start… let’s create a new empty dotnet Web App. And modify some created files with a few codes. I prefer to start from scratch and slowly add files that i need. If you want, you can use the mvc template. dotnet new web -n RPi3.WebUI RPi3.WebUI.csproj: Once you modified RPi3.WebUI.csproj file to like below, run dotnet restore afterwards. I’ve set RuntimeIdentifiers to linux-arm so it can be run to any linux arm32 OS that use glibc. &amp;lt;Project Sdk=&quot;Microsoft.NET.Sdk.Web&quot;&amp;gt; &amp;lt;PropertyGroup&amp;gt; &amp;lt;TargetFramework&amp;gt;netcoreapp2.0&amp;lt;/TargetFramework&amp;gt; &amp;lt;RuntimeIdentifiers&amp;gt;linux-arm&amp;lt;/RuntimeIdentifiers&amp;gt; &amp;lt;/PropertyGroup&amp;gt; &amp;lt;ItemGroup&amp;gt; &amp;lt;Folder Include=&quot;wwwroot\&quot; /&amp;gt; &amp;lt;/ItemGroup&amp;gt; &amp;lt;ItemGroup&amp;gt; &amp;lt;PackageReference Include=&quot;Microsoft.AspNetCore.All&quot; Version=&quot;2.0.0-preview2-final&quot; /&amp;gt; &amp;lt;/ItemGroup&amp;gt; &amp;lt;/Project&amp;gt; Startup.cs: public void ConfigureServices(IServiceCollection services) { services.AddMvc(); } // This method gets called by the runtime. Use this method to configure the HTTP request pipeline. public void Configure(IApplicationBuilder app, IHostingEnvironment env) { if (env.IsDevelopment()) { app.UseDeveloperExceptionPage(); app.UseStatusCodePages(); } app.UseStaticFiles(); app.UseMvc(routes =&amp;gt; { routes.MapRoute( name: &quot;default&quot;, template: &quot;{controller=Home}/{action=Index}/{id?}&quot;); }); } Program.cs: public static void Main(string[] args) { BuildWebHost(args).Run(); } public static IWebHost BuildWebHost(string[] args) =&amp;gt; WebHost.CreateDefaultBuilder(args) .UseEnvironment(&quot;Development&quot;) //Change to Production once needed .UseUrls(&quot;http://*:5000&quot;) //Set to your desired port .UseStartup&amp;lt;Startup&amp;gt;() .Build(); Add Views: Create several folders: /Views /Views/Shared /Views/Home Create these files: /Views/_ViewImports.cshtml /Views/_ViewStart.cshtml /Views/Shared/_Layout.cshtml /Views/Home/Index.cshtml And modify above files with these: _ViewImports.cshtml: @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers _ViewStart.cshtml: @{ Layout = &quot;_Layout&quot;; } _Layout.cshtml: Codes below used on Bottstrap 4. If you don’t have a local bootstrap files at /wwwroot, use the Bootstrap CDN: &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css&quot; integrity=&quot;sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ&quot; crossorigin=&quot;anonymous&quot;&amp;gt; &amp;lt;!DOCTYPE html&amp;gt; &amp;lt;html&amp;gt; &amp;lt;head&amp;gt; &amp;lt;meta charset=&quot;utf-8&quot; /&amp;gt; &amp;lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&amp;gt; &amp;lt;title&amp;gt;@ViewData[&quot;Title&quot;] - testMVC&amp;lt;/title&amp;gt; &amp;lt;environment include=&quot;Development&quot;&amp;gt; &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;~/css/bootstrap.css&quot; /&amp;gt; &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;~/css/site.css&quot; /&amp;gt; &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css&quot; integrity=&quot;sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ&quot; crossorigin=&quot;anonymous&quot;&amp;gt; &amp;lt;/environment&amp;gt; &amp;lt;environment names=&quot;Staging,Production&quot;&amp;gt; &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css&quot; integrity=&quot;sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ&quot; crossorigin=&quot;anonymous&quot;&amp;gt; &amp;lt;/environment&amp;gt; &amp;lt;/head&amp;gt; &amp;lt;body&amp;gt; &amp;lt;nav class=&quot;navbar navbar-toggleable-md navbar-inverse bg-success&quot;&amp;gt; &amp;lt;button class=&quot;navbar-toggler navbar-toggler-right&quot; type=&quot;button&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#navbarNav&quot; aria-controls=&quot;navbarNav&quot; aria-expanded=&quot;false&quot; aria-label=&quot;Toggle navigation&quot;&amp;gt;&amp;lt;span class=&quot;navbar-toggler-icon&quot;&amp;gt;&amp;lt;/span&amp;gt; &amp;lt;/button&amp;gt; &amp;lt;h4 class=&quot;navbar-brand mb-0&quot;&amp;gt;NavBar&amp;lt;/h4&amp;gt; &amp;lt;div class=&quot;collapse navbar-collapse&quot; id=&quot;navbarNav&quot;&amp;gt; &amp;lt;div class=&quot;navbar-nav&quot;&amp;gt; &amp;lt;a class=&quot;nav-item nav-link active&quot; href=&quot;/&quot;&amp;gt;Home&amp;lt;/a&amp;gt;&amp;lt;span class=&quot;sr-only&quot;&amp;gt;(current)&amp;lt;/span&amp;gt;&amp;lt;/a&amp;gt; &amp;lt;a class=&quot;nav-item nav-link&quot; href=&quot;/Home/About&quot;&amp;gt;About&amp;lt;/a&amp;gt; &amp;lt;a class=&quot;nav-item nav-link&quot; href=&quot;/Home/Settings&quot;&amp;gt;Settings&amp;lt;/a&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/nav&amp;gt; &amp;lt;div class=&quot;container body-content&quot;&amp;gt; @RenderBody() &amp;lt;hr /&amp;gt; &amp;lt;footer&amp;gt; &amp;lt;p&amp;gt;&amp;amp;copy; 2017 - testMVC&amp;lt;/p&amp;gt; &amp;lt;/footer&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;environment include=&quot;Development&quot;&amp;gt; &amp;lt;script src=&quot;~/jquery/jquery-3.1.1.js&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;script src=&quot;~/js/bootstrap.js&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;script src=&quot;~/js/site.js&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;/environment&amp;gt; &amp;lt;environment names=&quot;Staging,Production&quot;&amp;gt; &amp;lt;!-- jQuery library --&amp;gt; &amp;lt;script src=&quot;https://code.jquery.com/jquery-3.1.1.slim.min.js&quot; integrity=&quot;sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n&quot; crossorigin=&quot;anonymous&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;!-- Tether --&amp;gt; &amp;lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js&quot; integrity=&quot;sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb&quot; crossorigin=&quot;anonymous&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;!-- Latest compiled JavaScript --&amp;gt; &amp;lt;script src=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js&quot; integrity=&quot;sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn&quot; crossorigin=&quot;anonymous&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;/environment&amp;gt; @RenderSection(&quot;Scripts&quot;, required: false) &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; Index.cshtml: @{ ViewData[&quot;Title&quot;] = &quot;Home&quot;; } &amp;lt;h2&amp;gt;Index&amp;lt;/h2&amp;gt; &amp;lt;p&amp;gt;Hello from our View Template!&amp;lt;/p&amp;gt; Add Controllers: /Controllers /Controllers/HomeController.cs HomeController.cs: using Microsoft.AspNetCore.Mvc; namespace RPi3.WebUI.Controllers { public class HomeController : Controller { public IActionResult Index() { return View(); } } } Go ahead and run dotnet run and navigate to http://localhost:5000, so we can verify that our modification works.</summary></entry><entry><title type="html">Raspberry Pi 3: Wifi config</title><link href="http://localhost:4000/a-DelaCruz.github.io/alpine/2017/07/11/alpine-wifi.html" rel="alternate" type="text/html" title="Raspberry Pi 3: Wifi config" /><published>2017-07-11T00:00:00+08:00</published><updated>2017-07-11T00:00:00+08:00</updated><id>http://localhost:4000/a-DelaCruz.github.io/alpine/2017/07/11/alpine-wifi</id><content type="html" xml:base="http://localhost:4000/a-DelaCruz.github.io/alpine/2017/07/11/alpine-wifi.html">&lt;p&gt;Alpine linux network interface configuration are very different from what i used on ubuntu. 
 But &lt;code class=&quot;highlighter-rouge&quot;&gt;wpa_supplicant.conf&lt;/code&gt; are still the same.
 For the &lt;code class=&quot;highlighter-rouge&quot;&gt;interface&lt;/code&gt; file:&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;auto lo
@@ -927,165 +1132,4 @@ Now boot it up and you should now be able to login.&lt;/p&gt;
   &lt;li&gt;&lt;a href=&quot;http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html&quot;&gt;http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">Following my previous post, we now can now boot our kernel thru U-boot. Now were going to create a filesystem base from arm64 ubuntu base rootfs. Create a folder were we will extract the Ubuntu base rootfs, and tar to extract. $ mkdir rootfs $ cd rootfs/ $ sudo tar xzvf ubuntu-base-16.04.2-base-arm64.tar.gz</summary></entry><entry><title type="html">Raspberry Pi 3 64bit kernel and U-boot booting up</title><link href="http://localhost:4000/a-DelaCruz.github.io/ubuntu/2017/05/16/rpi3-64bit-kernel-and-Uboot-booting-up.html" rel="alternate" type="text/html" title="Raspberry Pi 3 64bit kernel and U-boot booting up" /><published>2017-05-16T00:00:00+08:00</published><updated>2017-05-16T00:00:00+08:00</updated><id>http://localhost:4000/a-DelaCruz.github.io/ubuntu/2017/05/16/rpi3-64bit-kernel-and-Uboot-booting-up</id><content type="html" xml:base="http://localhost:4000/a-DelaCruz.github.io/ubuntu/2017/05/16/rpi3-64bit-kernel-and-Uboot-booting-up.html">&lt;p&gt;Updated, Organized and corrected some typos:&lt;/p&gt;
-
-&lt;h4 id=&quot;cross-build-prerequisite&quot;&gt;&lt;a href=&quot;#header-4&quot;&gt;&lt;/a&gt;Cross-build prerequisite:&lt;/h4&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gcc-arch64-linux-gnu    g++-5                  ncurses-dev
-make                    git                    bc          
-u-boot-tools            device-tree-compiler   pkg-config-aarch64-linux-gnu
-libncurses5-dev
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;!--more--&gt;
-&lt;p&gt;Assuming there is already a Cross-build environment: Built on Ubuntu Server 16.04.02&lt;/p&gt;
-
-&lt;h4 id=&quot;prerequisites&quot;&gt;&lt;a href=&quot;#header-4&quot;&gt;&lt;/a&gt;Prerequisites:&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;Ubuntu Base &lt;a href=&quot;http://cdimage.ubuntu.com/ubuntu-base/releases/16.04.2/release/ubuntu-base-16.04.2-base-arm64.tar.gz&quot;&gt;Rootfs&lt;/a&gt; (install additional package using apt-get)&lt;/li&gt;
-  &lt;li&gt;Raspberry pi &lt;a href=&quot;https://github.com/raspberrypi/linux.git&quot;&gt;kernel&lt;/a&gt; (Have not tried using Upstream kernel)&lt;/li&gt;
-  &lt;li&gt;Raspberry pi &lt;a href=&quot;https://github.com/raspberrypi/firmware/tree/master/boot&quot;&gt;firmware&lt;/a&gt;(bootcode.bin, start.elf, fixup.dat as this are the min. files to boot)&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://www.denx.de/wiki/U-Boot/WebHome&quot;&gt;U-boot&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;µsd-card-assuming-you-already-know-how-to-partition-it&quot;&gt;&lt;a href=&quot;#header-4&quot;&gt;&lt;/a&gt;µSD card: &lt;code class=&quot;highlighter-rouge&quot;&gt;(assuming you already know how to partition it)&lt;/code&gt;&lt;/h4&gt;
-
-&lt;p&gt;Your µSD card(fat partition 1) should contain the following:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/boot
-bootcode.bin
-start.elf 
-fixup.dat 
-config.txt
-cmdline.txt
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;h6 id=&quot;note-boot-sub-folder-will-contain-our-u-boot-file-kernel-and-initrd-image-file&quot;&gt;&lt;a href=&quot;#header-6&quot;&gt;&lt;/a&gt;Note: &lt;code class=&quot;highlighter-rouge&quot;&gt;/boot&lt;/code&gt; sub-folder will contain our U-Boot file, Kernel and Initrd image file.&lt;/h6&gt;
-
-&lt;p&gt;For the &lt;code class=&quot;highlighter-rouge&quot;&gt;config.txt&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;cmdline.txt&lt;/code&gt;, we have to create them and include this lines.&lt;/p&gt;
-
-&lt;h5 id=&quot;configtxt&quot;&gt;&lt;a href=&quot;#header-5&quot;&gt;&lt;/a&gt;config.txt:&lt;/h5&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arm_control=0x200
-force_turboo=1
-enable_uart=1
-device_tree_address=0x100
-device_tree_end=0x8000
-kernel=boot/kernel8.img
-dtparam=i2c_arm=on
-dtparam=spi=on
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h5 id=&quot;cmdlinetxt&quot;&gt;&lt;a href=&quot;#header-5&quot;&gt;&lt;/a&gt;cmdline.txt:&lt;/h5&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;net.ifnames=0 dwc_otg.lpm_enable=0 console=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h4 id=&quot;u-boot&quot;&gt;&lt;a href=&quot;#header-4&quot;&gt;&lt;/a&gt;U-Boot:&lt;/h4&gt;
-&lt;p&gt;Get the source code by cloning the U-Boot git repository or download the tar file.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ git clone depth 1 branch v2017.03 single-branch git://git.denx.de/u-boot.git
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;or download:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ftp://ftp.denx.de/pub/u-boot/u-boot-2017.03.tar.bz2
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Then configure and build u-boot. For 64-bit use &lt;code class=&quot;highlighter-rouge&quot;&gt;rpi_3_defconfig&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd u-boot/
-$ sudo make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Then compile it.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;To change output directory use &lt;code class=&quot;highlighter-rouge&quot;&gt;O=Output path/&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=Output path/
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;After it has been built. Locate &lt;code class=&quot;highlighter-rouge&quot;&gt;u-boot.bin&lt;/code&gt; in your output_path as this is the file we need. 
-Copy it to your µSD card inside &lt;code class=&quot;highlighter-rouge&quot;&gt;/boot folder&lt;/code&gt; and rename it to &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel8.img&lt;/code&gt; or keep its name as is in config.txt. 
-Boot it up to confirm that its working.&lt;/p&gt;
-
-&lt;h4 id=&quot;kernel&quot;&gt;&lt;a href=&quot;#header-4&quot;&gt;&lt;/a&gt;Kernel:&lt;/h4&gt;
-&lt;p&gt;Get the kernel source code at the official Raspberry pi git repository.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ git clone depth 1 branch v2017.03 single-branch https://github.com/raspberrypi/linux.git
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Use &lt;code class=&quot;highlighter-rouge&quot;&gt;bcmrpi3_defconfig&lt;/code&gt; for kernel config. 
-You can further configure it according to your needs. But for now, its fine to leave it be.
-You can also change the output directory using: &lt;code class=&quot;highlighter-rouge&quot;&gt;O=Output_path/&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd linux
-$ sudo make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- bcmrpi3_defconfig
-$ sudo make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j3
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Locate &lt;code class=&quot;highlighter-rouge&quot;&gt;Image&lt;/code&gt; (no need to convert for U-Boot use it as it is for 64bit) file at your output_path/ &lt;code class=&quot;highlighter-rouge&quot;&gt;arch/arm64/boot/&lt;/code&gt; 
-and the &lt;code class=&quot;highlighter-rouge&quot;&gt;bcm2710-rpi-3-b.dtb&lt;/code&gt; at &lt;code class=&quot;highlighter-rouge&quot;&gt;arch/arm/boot/dts/&lt;/code&gt;. I encounter problem using 
-&lt;code class=&quot;highlighter-rouge&quot;&gt;bcm2837-rpi-3-b.dtb&lt;/code&gt;. So for now use &lt;code class=&quot;highlighter-rouge&quot;&gt;bcm2710-rpi-3-b.dtb&lt;/code&gt; instead. 
-Copy the &lt;code class=&quot;highlighter-rouge&quot;&gt;Image&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;/boot folder&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;bcm2710-rpi-3-b.dtb&lt;/code&gt; in the upper most directory of your µSD card.
-It should look like this:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/boot/Image
-/boot/kernel8.img
-bcm2710-rpi-3-b.dtb
-bootcode.bin
-start.elf 
-fixup.dat 
-config.txt
-cmdline.txt
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;At this point, you can test it if it will boot the kernel but we need to have a boot script that U-Boot needs. 
-Were using the boot.script from this file: &lt;a href=&quot;https://www.finnie.org/software/raspberrypi/ubuntu-rpi3/20160517-raspi3-arm64-firmware-kernel.tar.xz&quot;&gt;&lt;b&gt;20160517-raspi3-arm64-firmware-kernel.tar.xz&lt;/b&gt;&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Modify and create the &lt;code class=&quot;highlighter-rouge&quot;&gt;boot.scr&lt;/code&gt; from it.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkimage -A arm64 -O linux -T script -d /path/to/boot.script /path/where/you/want/to/save
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;boot.script&lt;/code&gt; should look like this: and place it inside hte &lt;code class=&quot;highlighter-rouge&quot;&gt;/boot&lt;/code&gt; folder.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fdt addr 0x100
-fdt get value bootargs /chosen bootargs
-setenv kernel_addr_r 0x01000000
-setenv ramdisk_addr_r 0x02100000
-fatload mmc 0:1 ${kernel_addr_r} boot/Image
-fatload mmc 0:1 ${ramdisk_addr_r} boot/initrd.img
-setenv initrdsize $filesize
-fatload mmc 0:1 ${fdt_addr_r} bcm2710-rpi-3-b.dtb
-booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Since we dont have a Ramdisk yet, comment that line and replace &lt;code class=&quot;highlighter-rouge&quot;&gt;${ramdisk_addr_r}:${initrdsize}&lt;/code&gt; with &lt;code class=&quot;highlighter-rouge&quot;&gt;-&lt;/code&gt;.
-Or copy the &lt;code class=&quot;highlighter-rouge&quot;&gt;initrd.img&lt;/code&gt; to use it temporarily.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/boot/Image
-/boot/boot.scr
-/boot/kernel8.img
-/boot/initrd.img
-bcm2710-rpi-3-b.dtb
-bootcode.bin
-start.elf 
-fixup.dat 
-config.txt
-cmdline.txt
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;You can now then verify at this point that our kernel boot as well and will stop at some point 
-since we still do not have a filesystem.&lt;/p&gt;
-
-&lt;p&gt;Next post will be about on how to make a filesystem base on Ubuntu Base.&lt;/p&gt;
-
-&lt;h5 id=&quot;reference&quot;&gt;&lt;a href=&quot;#header-5&quot;&gt;&lt;/a&gt;Reference:&lt;/h5&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3&quot;&gt;https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://wiki.ubuntu.com/Base&quot;&gt;https://wiki.ubuntu.com/Base&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.raspberrypi.org/documentation/linux/kernel/building.md&quot;&gt;https://www.raspberrypi.org/documentation/linux/kernel/building.md&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://kernelnomicon.org/?p=682&quot;&gt;https://kernelnomicon.org/?p=682&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">Updated, Organized and corrected some typos: Cross-build prerequisite: gcc-arch64-linux-gnu g++-5 ncurses-dev make git bc u-boot-tools device-tree-compiler pkg-config-aarch64-linux-gnu libncurses5-dev</summary></entry></feed>
+&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">Following my previous post, we now can now boot our kernel thru U-boot. Now were going to create a filesystem base from arm64 ubuntu base rootfs. Create a folder were we will extract the Ubuntu base rootfs, and tar to extract. $ mkdir rootfs $ cd rootfs/ $ sudo tar xzvf ubuntu-base-16.04.2-base-arm64.tar.gz</summary></entry></feed>
