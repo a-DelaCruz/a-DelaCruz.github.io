@@ -1,5 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/a-DelaCruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/a-DelaCruz.github.io/" rel="alternate" type="text/html" /><updated>2017-07-23T15:34:52+08:00</updated><id>http://localhost:4000/a-DelaCruz.github.io/</id><title type="html">My Notes on Single Board Computer</title><subtitle>Raspberry Pi 3 - 64-Bit kernel and arm64 rootfs
-</subtitle><entry><title type="html">Simple GPIO OUTP WebUI on .Net Core and Bootstrap [part1]</title><link href="http://localhost:4000/a-DelaCruz.github.io/ubuntu/2017/07/23/rpi3-webui-gpio.html" rel="alternate" type="text/html" title="Simple GPIO OUTP WebUI on .Net Core and Bootstrap [part1]" /><published>2017-07-23T00:00:00+08:00</published><updated>2017-07-23T00:00:00+08:00</updated><id>http://localhost:4000/a-DelaCruz.github.io/ubuntu/2017/07/23/rpi3-webui-gpio</id><content type="html" xml:base="http://localhost:4000/a-DelaCruz.github.io/ubuntu/2017/07/23/rpi3-webui-gpio.html">&lt;p&gt;From my previous posts… we can now  use .Net Core properly for our Web App. This time we’ll be creating a &lt;code class=&quot;highlighter-rouge&quot;&gt;simple WebUI&lt;/code&gt; that set our &lt;code class=&quot;highlighter-rouge&quot;&gt;GPIO OUTP&lt;/code&gt; to either &lt;code class=&quot;highlighter-rouge&quot;&gt;HIGH or LOW&lt;/code&gt;. 
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/a-DelaCruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/a-DelaCruz.github.io/" rel="alternate" type="text/html" /><updated>2017-08-03T10:38:30+08:00</updated><id>http://localhost:4000/a-DelaCruz.github.io/</id><title type="html">My Notes on Single Board Computer</title><subtitle>Raspberry Pi 3 - 64-Bit kernel and arm64 rootfs
+</subtitle><entry><title type="html">Enabling I2C for Raspberry Pi 3</title><link href="http://localhost:4000/a-DelaCruz.github.io/ubuntu/2017/08/03/rpi3-i2c.html" rel="alternate" type="text/html" title="Enabling I2C for Raspberry Pi 3" /><published>2017-08-03T00:00:00+08:00</published><updated>2017-08-03T00:00:00+08:00</updated><id>http://localhost:4000/a-DelaCruz.github.io/ubuntu/2017/08/03/rpi3-i2c</id><content type="html" xml:base="http://localhost:4000/a-DelaCruz.github.io/ubuntu/2017/08/03/rpi3-i2c.html">&lt;p&gt;Following my previous &lt;a href=&quot;../../05/16/rpi3-64bit-kernel-and-Uboot-booting-up&quot;&gt;post&lt;/a&gt;, a little modification in the &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel CONFIG&lt;/code&gt; to enable &lt;code class=&quot;highlighter-rouge&quot;&gt;I2C&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Everything has to made from scratch just to be sure it works for you.
+If your following my procedures, please let me know if you encounter problems so i may try to find ways to resolve it. I just recently found out this problem so it just got resolve now as of this typing.&lt;/p&gt;
+
+&lt;p&gt;For &lt;code class=&quot;highlighter-rouge&quot;&gt;I2C&lt;/code&gt; to work, Enable &lt;code class=&quot;highlighter-rouge&quot;&gt;I2C device interface&lt;/code&gt; instead of setting it up as a &lt;code class=&quot;highlighter-rouge&quot;&gt;modules&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Device Drivers
+    |- I2C support
+        |- [*] I2C device interface
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Afterwards, you can see &lt;code class=&quot;highlighter-rouge&quot;&gt;i2c-1&lt;/code&gt; present under &lt;code class=&quot;highlighter-rouge&quot;&gt;/dev&lt;/code&gt; folder. &lt;code class=&quot;highlighter-rouge&quot;&gt;i2c-bcm2835&lt;/code&gt; are loaded as module instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;i2c-bcm2708&lt;/code&gt; while both being set as &lt;code class=&quot;highlighter-rouge&quot;&gt;modules&lt;/code&gt; on &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel CONFIG&lt;/code&gt;.
+No need to add &lt;code class=&quot;highlighter-rouge&quot;&gt;i2c-dev&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/modules&lt;/code&gt; as it is loaded by kernel itself.
+Then just install &lt;code class=&quot;highlighter-rouge&quot;&gt;i2c-tools&lt;/code&gt; to verify that it works and we can now detect the device address connected to &lt;code class=&quot;highlighter-rouge&quot;&gt;I2c-1&lt;/code&gt;.&lt;/p&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">Following my previous post, a little modification in the kernel CONFIG to enable I2C. Everything has to made from scratch just to be sure it works for you. If your following my procedures, please let me know if you encounter problems so i may try to find ways to resolve it. I just recently found out this problem so it just got resolve now as of this typing. For I2C to work, Enable I2C device interface instead of setting it up as a modules. Device Drivers |- I2C support |- [*] I2C device interface Afterwards, you can see i2c-1 present under /dev folder. i2c-bcm2835 are loaded as module instead of i2c-bcm2708 while both being set as modules on kernel CONFIG. No need to add i2c-dev in /etc/modules as it is loaded by kernel itself. Then just install i2c-tools to verify that it works and we can now detect the device address connected to I2c-1.</summary></entry><entry><title type="html">WebUI on .Net Core and Bootstrap4 [part1]</title><link href="http://localhost:4000/a-DelaCruz.github.io/ubuntu/2017/07/23/rpi3-webui-gpio.html" rel="alternate" type="text/html" title="WebUI on .Net Core and Bootstrap4 [part1]" /><published>2017-07-23T00:00:00+08:00</published><updated>2017-07-23T00:00:00+08:00</updated><id>http://localhost:4000/a-DelaCruz.github.io/ubuntu/2017/07/23/rpi3-webui-gpio</id><content type="html" xml:base="http://localhost:4000/a-DelaCruz.github.io/ubuntu/2017/07/23/rpi3-webui-gpio.html">&lt;p&gt;From my previous posts… we can now  use .Net Core properly for our Web App. This time we’ll be creating a &lt;code class=&quot;highlighter-rouge&quot;&gt;simple WebUI&lt;/code&gt; that set our &lt;code class=&quot;highlighter-rouge&quot;&gt;GPIO OUTP&lt;/code&gt; to either &lt;code class=&quot;highlighter-rouge&quot;&gt;HIGH or LOW&lt;/code&gt;. 
 For &lt;code class=&quot;highlighter-rouge&quot;&gt;real-time function of GPIO INPT&lt;/code&gt;, i’m eyeing to an additional framework for that later. 
 Unlike on a .Net Core consoleapp that we dedicate a set of time to detect an INPT state, for Web App, i have no idea if that is the same case.&lt;/p&gt;
 
@@ -118,7 +131,7 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     &lt;span class=&quot;nt&quot;&gt;&amp;lt;title&amp;gt;&lt;/span&gt;@ViewData[&quot;Title&quot;] - testMVC&lt;span class=&quot;nt&quot;&gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
 
     &lt;span class=&quot;nt&quot;&gt;&amp;lt;environment&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;include=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Development&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~/css/bootstrap.css&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~/css/bootstrap.min.css&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
         &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~/css/site.css&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
         &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;integrity=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;crossorigin=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;anonymous&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
     &lt;span class=&quot;nt&quot;&gt;&amp;lt;/environment&amp;gt;&lt;/span&gt;
@@ -148,8 +161,9 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
 
     &lt;span class=&quot;nt&quot;&gt;&amp;lt;environment&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;include=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Development&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~/jquery/jquery-3.1.1.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~/js/bootstrap.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~/lib/jquery/jquery-3.2.1.min.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~/lib/tether/tether-1.4.0.min.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~/lib/bootstrap/js/bootstrap.min.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
         &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~/js/site.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
     &lt;span class=&quot;nt&quot;&gt;&amp;lt;/environment&amp;gt;&lt;/span&gt;
     &lt;span class=&quot;nt&quot;&gt;&amp;lt;environment&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;names=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Staging,Production&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
@@ -204,7 +218,7 @@ namespace RPi3.WebUI.Controllers
 
 &lt;p&gt;Go ahead and run &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet run&lt;/code&gt; and navigate to &lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost:5000&lt;/code&gt;, so we can verify that our modification works.&lt;/p&gt;
 
-&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">From my previous posts… we can now use .Net Core properly for our Web App. This time we’ll be creating a simple WebUI that set our GPIO OUTP to either HIGH or LOW. For real-time function of GPIO INPT, i’m eyeing to an additional framework for that later. Unlike on a .Net Core consoleapp that we dedicate a set of time to detect an INPT state, for Web App, i have no idea if that is the same case. Earlier i modified codes from my previous post again… to remove Mono directives to just using .Net Core. Up until now, what i have accomplished so far are: GPIO mode: INPT/OUTP OUTP state: HIGH/LOW Now to start… let’s create a new empty dotnet Web App. And modify some created files with a few codes. I prefer to start from scratch and slowly add files that i need. If you want, you can use the mvc template. dotnet new web -n RPi3.WebUI RPi3.WebUI.csproj: Once you modified RPi3.WebUI.csproj file to like below, run dotnet restore afterwards. I’ve set RuntimeIdentifiers to linux-arm so it can be run to any linux arm32 OS that use glibc. &amp;lt;Project Sdk=&quot;Microsoft.NET.Sdk.Web&quot;&amp;gt; &amp;lt;PropertyGroup&amp;gt; &amp;lt;TargetFramework&amp;gt;netcoreapp2.0&amp;lt;/TargetFramework&amp;gt; &amp;lt;RuntimeIdentifiers&amp;gt;linux-arm&amp;lt;/RuntimeIdentifiers&amp;gt; &amp;lt;/PropertyGroup&amp;gt; &amp;lt;ItemGroup&amp;gt; &amp;lt;Folder Include=&quot;wwwroot\&quot; /&amp;gt; &amp;lt;/ItemGroup&amp;gt; &amp;lt;ItemGroup&amp;gt; &amp;lt;PackageReference Include=&quot;Microsoft.AspNetCore.All&quot; Version=&quot;2.0.0-preview2-final&quot; /&amp;gt; &amp;lt;/ItemGroup&amp;gt; &amp;lt;/Project&amp;gt; Startup.cs: public void ConfigureServices(IServiceCollection services) { services.AddMvc(); } // This method gets called by the runtime. Use this method to configure the HTTP request pipeline. public void Configure(IApplicationBuilder app, IHostingEnvironment env) { if (env.IsDevelopment()) { app.UseDeveloperExceptionPage(); app.UseStatusCodePages(); } app.UseStaticFiles(); app.UseMvc(routes =&amp;gt; { routes.MapRoute( name: &quot;default&quot;, template: &quot;{controller=Home}/{action=Index}/{id?}&quot;); }); } Program.cs: public static void Main(string[] args) { BuildWebHost(args).Run(); } public static IWebHost BuildWebHost(string[] args) =&amp;gt; WebHost.CreateDefaultBuilder(args) .UseEnvironment(&quot;Development&quot;) //Change to Production once needed .UseUrls(&quot;http://*:5000&quot;) //Set to your desired port .UseStartup&amp;lt;Startup&amp;gt;() .Build(); Add Views: Create several folders: /Views /Views/Shared /Views/Home Create these files: /Views/_ViewImports.cshtml /Views/_ViewStart.cshtml /Views/Shared/_Layout.cshtml /Views/Home/Index.cshtml And modify above files with these: _ViewImports.cshtml: @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers _ViewStart.cshtml: @{ Layout = &quot;_Layout&quot;; } _Layout.cshtml: Codes below used on Bottstrap 4. If you don’t have a local bootstrap files at /wwwroot, use the Bootstrap CDN: &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css&quot; integrity=&quot;sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ&quot; crossorigin=&quot;anonymous&quot;&amp;gt; &amp;lt;!DOCTYPE html&amp;gt; &amp;lt;html&amp;gt; &amp;lt;head&amp;gt; &amp;lt;meta charset=&quot;utf-8&quot; /&amp;gt; &amp;lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&amp;gt; &amp;lt;title&amp;gt;@ViewData[&quot;Title&quot;] - testMVC&amp;lt;/title&amp;gt; &amp;lt;environment include=&quot;Development&quot;&amp;gt; &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;~/css/bootstrap.css&quot; /&amp;gt; &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;~/css/site.css&quot; /&amp;gt; &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css&quot; integrity=&quot;sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ&quot; crossorigin=&quot;anonymous&quot;&amp;gt; &amp;lt;/environment&amp;gt; &amp;lt;environment names=&quot;Staging,Production&quot;&amp;gt; &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css&quot; integrity=&quot;sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ&quot; crossorigin=&quot;anonymous&quot;&amp;gt; &amp;lt;/environment&amp;gt; &amp;lt;/head&amp;gt; &amp;lt;body&amp;gt; &amp;lt;nav class=&quot;navbar navbar-toggleable-md navbar-inverse bg-success&quot;&amp;gt; &amp;lt;button class=&quot;navbar-toggler navbar-toggler-right&quot; type=&quot;button&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#navbarNav&quot; aria-controls=&quot;navbarNav&quot; aria-expanded=&quot;false&quot; aria-label=&quot;Toggle navigation&quot;&amp;gt;&amp;lt;span class=&quot;navbar-toggler-icon&quot;&amp;gt;&amp;lt;/span&amp;gt; &amp;lt;/button&amp;gt; &amp;lt;h4 class=&quot;navbar-brand mb-0&quot;&amp;gt;NavBar&amp;lt;/h4&amp;gt; &amp;lt;div class=&quot;collapse navbar-collapse&quot; id=&quot;navbarNav&quot;&amp;gt; &amp;lt;div class=&quot;navbar-nav&quot;&amp;gt; &amp;lt;a class=&quot;nav-item nav-link active&quot; href=&quot;/&quot;&amp;gt;Home&amp;lt;/a&amp;gt;&amp;lt;span class=&quot;sr-only&quot;&amp;gt;(current)&amp;lt;/span&amp;gt;&amp;lt;/a&amp;gt; &amp;lt;a class=&quot;nav-item nav-link&quot; href=&quot;/Home/About&quot;&amp;gt;About&amp;lt;/a&amp;gt; &amp;lt;a class=&quot;nav-item nav-link&quot; href=&quot;/Home/Settings&quot;&amp;gt;Settings&amp;lt;/a&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/nav&amp;gt; &amp;lt;div class=&quot;container body-content&quot;&amp;gt; @RenderBody() &amp;lt;hr /&amp;gt; &amp;lt;footer&amp;gt; &amp;lt;p&amp;gt;&amp;amp;copy; 2017 - testMVC&amp;lt;/p&amp;gt; &amp;lt;/footer&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;environment include=&quot;Development&quot;&amp;gt; &amp;lt;script src=&quot;~/jquery/jquery-3.1.1.js&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;script src=&quot;~/js/bootstrap.js&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;script src=&quot;~/js/site.js&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;/environment&amp;gt; &amp;lt;environment names=&quot;Staging,Production&quot;&amp;gt; &amp;lt;!-- jQuery library --&amp;gt; &amp;lt;script src=&quot;https://code.jquery.com/jquery-3.1.1.slim.min.js&quot; integrity=&quot;sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n&quot; crossorigin=&quot;anonymous&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;!-- Tether --&amp;gt; &amp;lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js&quot; integrity=&quot;sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb&quot; crossorigin=&quot;anonymous&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;!-- Latest compiled JavaScript --&amp;gt; &amp;lt;script src=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js&quot; integrity=&quot;sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn&quot; crossorigin=&quot;anonymous&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;/environment&amp;gt; @RenderSection(&quot;Scripts&quot;, required: false) &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; Index.cshtml: @{ ViewData[&quot;Title&quot;] = &quot;Home&quot;; } &amp;lt;h2&amp;gt;Index&amp;lt;/h2&amp;gt; &amp;lt;p&amp;gt;Hello from our View Template!&amp;lt;/p&amp;gt; Add Controllers: /Controllers /Controllers/HomeController.cs HomeController.cs: using Microsoft.AspNetCore.Mvc; namespace RPi3.WebUI.Controllers { public class HomeController : Controller { public IActionResult Index() { return View(); } } } Go ahead and run dotnet run and navigate to http://localhost:5000, so we can verify that our modification works.</summary></entry><entry><title type="html">Raspberry Pi 3: Wifi config</title><link href="http://localhost:4000/a-DelaCruz.github.io/alpine/2017/07/11/alpine-wifi.html" rel="alternate" type="text/html" title="Raspberry Pi 3: Wifi config" /><published>2017-07-11T00:00:00+08:00</published><updated>2017-07-11T00:00:00+08:00</updated><id>http://localhost:4000/a-DelaCruz.github.io/alpine/2017/07/11/alpine-wifi</id><content type="html" xml:base="http://localhost:4000/a-DelaCruz.github.io/alpine/2017/07/11/alpine-wifi.html">&lt;p&gt;Alpine linux network interface configuration are very different from what i used on ubuntu. 
+&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">From my previous posts… we can now use .Net Core properly for our Web App. This time we’ll be creating a simple WebUI that set our GPIO OUTP to either HIGH or LOW. For real-time function of GPIO INPT, i’m eyeing to an additional framework for that later. Unlike on a .Net Core consoleapp that we dedicate a set of time to detect an INPT state, for Web App, i have no idea if that is the same case. Earlier i modified codes from my previous post again… to remove Mono directives to just using .Net Core. Up until now, what i have accomplished so far are: GPIO mode: INPT/OUTP OUTP state: HIGH/LOW Now to start… let’s create a new empty dotnet Web App. And modify some created files with a few codes. I prefer to start from scratch and slowly add files that i need. If you want, you can use the mvc template. dotnet new web -n RPi3.WebUI RPi3.WebUI.csproj: Once you modified RPi3.WebUI.csproj file to like below, run dotnet restore afterwards. I’ve set RuntimeIdentifiers to linux-arm so it can be run to any linux arm32 OS that use glibc. &amp;lt;Project Sdk=&quot;Microsoft.NET.Sdk.Web&quot;&amp;gt; &amp;lt;PropertyGroup&amp;gt; &amp;lt;TargetFramework&amp;gt;netcoreapp2.0&amp;lt;/TargetFramework&amp;gt; &amp;lt;RuntimeIdentifiers&amp;gt;linux-arm&amp;lt;/RuntimeIdentifiers&amp;gt; &amp;lt;/PropertyGroup&amp;gt; &amp;lt;ItemGroup&amp;gt; &amp;lt;Folder Include=&quot;wwwroot\&quot; /&amp;gt; &amp;lt;/ItemGroup&amp;gt; &amp;lt;ItemGroup&amp;gt; &amp;lt;PackageReference Include=&quot;Microsoft.AspNetCore.All&quot; Version=&quot;2.0.0-preview2-final&quot; /&amp;gt; &amp;lt;/ItemGroup&amp;gt; &amp;lt;/Project&amp;gt; Startup.cs: public void ConfigureServices(IServiceCollection services) { services.AddMvc(); } // This method gets called by the runtime. Use this method to configure the HTTP request pipeline. public void Configure(IApplicationBuilder app, IHostingEnvironment env) { if (env.IsDevelopment()) { app.UseDeveloperExceptionPage(); app.UseStatusCodePages(); } app.UseStaticFiles(); app.UseMvc(routes =&amp;gt; { routes.MapRoute( name: &quot;default&quot;, template: &quot;{controller=Home}/{action=Index}/{id?}&quot;); }); } Program.cs: public static void Main(string[] args) { BuildWebHost(args).Run(); } public static IWebHost BuildWebHost(string[] args) =&amp;gt; WebHost.CreateDefaultBuilder(args) .UseEnvironment(&quot;Development&quot;) //Change to Production once needed .UseUrls(&quot;http://*:5000&quot;) //Set to your desired port .UseStartup&amp;lt;Startup&amp;gt;() .Build(); Add Views: Create several folders: /Views /Views/Shared /Views/Home Create these files: /Views/_ViewImports.cshtml /Views/_ViewStart.cshtml /Views/Shared/_Layout.cshtml /Views/Home/Index.cshtml And modify above files with these: _ViewImports.cshtml: @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers _ViewStart.cshtml: @{ Layout = &quot;_Layout&quot;; } _Layout.cshtml: Codes below used on Bottstrap 4. If you don’t have a local bootstrap files at /wwwroot, use the Bootstrap CDN: &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css&quot; integrity=&quot;sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ&quot; crossorigin=&quot;anonymous&quot;&amp;gt; &amp;lt;!DOCTYPE html&amp;gt; &amp;lt;html&amp;gt; &amp;lt;head&amp;gt; &amp;lt;meta charset=&quot;utf-8&quot; /&amp;gt; &amp;lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&amp;gt; &amp;lt;title&amp;gt;@ViewData[&quot;Title&quot;] - testMVC&amp;lt;/title&amp;gt; &amp;lt;environment include=&quot;Development&quot;&amp;gt; &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;~/css/bootstrap.min.css&quot; /&amp;gt; &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;~/css/site.css&quot; /&amp;gt; &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css&quot; integrity=&quot;sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ&quot; crossorigin=&quot;anonymous&quot;&amp;gt; &amp;lt;/environment&amp;gt; &amp;lt;environment names=&quot;Staging,Production&quot;&amp;gt; &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css&quot; integrity=&quot;sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ&quot; crossorigin=&quot;anonymous&quot;&amp;gt; &amp;lt;/environment&amp;gt; &amp;lt;/head&amp;gt; &amp;lt;body&amp;gt; &amp;lt;nav class=&quot;navbar navbar-toggleable-md navbar-inverse bg-success&quot;&amp;gt; &amp;lt;button class=&quot;navbar-toggler navbar-toggler-right&quot; type=&quot;button&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#navbarNav&quot; aria-controls=&quot;navbarNav&quot; aria-expanded=&quot;false&quot; aria-label=&quot;Toggle navigation&quot;&amp;gt;&amp;lt;span class=&quot;navbar-toggler-icon&quot;&amp;gt;&amp;lt;/span&amp;gt; &amp;lt;/button&amp;gt; &amp;lt;h4 class=&quot;navbar-brand mb-0&quot;&amp;gt;NavBar&amp;lt;/h4&amp;gt; &amp;lt;div class=&quot;collapse navbar-collapse&quot; id=&quot;navbarNav&quot;&amp;gt; &amp;lt;div class=&quot;navbar-nav&quot;&amp;gt; &amp;lt;a class=&quot;nav-item nav-link active&quot; href=&quot;/&quot;&amp;gt;Home&amp;lt;/a&amp;gt;&amp;lt;span class=&quot;sr-only&quot;&amp;gt;(current)&amp;lt;/span&amp;gt;&amp;lt;/a&amp;gt; &amp;lt;a class=&quot;nav-item nav-link&quot; href=&quot;/Home/About&quot;&amp;gt;About&amp;lt;/a&amp;gt; &amp;lt;a class=&quot;nav-item nav-link&quot; href=&quot;/Home/Settings&quot;&amp;gt;Settings&amp;lt;/a&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/nav&amp;gt; &amp;lt;div class=&quot;container body-content&quot;&amp;gt; @RenderBody() &amp;lt;hr /&amp;gt; &amp;lt;footer&amp;gt; &amp;lt;p&amp;gt;&amp;amp;copy; 2017 - testMVC&amp;lt;/p&amp;gt; &amp;lt;/footer&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;environment include=&quot;Development&quot;&amp;gt; &amp;lt;script src=&quot;~/lib/jquery/jquery-3.2.1.min.js&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;script src=&quot;~/lib/tether/tether-1.4.0.min.js&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;script src=&quot;~/lib/bootstrap/js/bootstrap.min.js&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;script src=&quot;~/js/site.js&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;/environment&amp;gt; &amp;lt;environment names=&quot;Staging,Production&quot;&amp;gt; &amp;lt;!-- jQuery library --&amp;gt; &amp;lt;script src=&quot;https://code.jquery.com/jquery-3.1.1.slim.min.js&quot; integrity=&quot;sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n&quot; crossorigin=&quot;anonymous&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;!-- Tether --&amp;gt; &amp;lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js&quot; integrity=&quot;sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb&quot; crossorigin=&quot;anonymous&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;!-- Latest compiled JavaScript --&amp;gt; &amp;lt;script src=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js&quot; integrity=&quot;sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn&quot; crossorigin=&quot;anonymous&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;/environment&amp;gt; @RenderSection(&quot;Scripts&quot;, required: false) &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; Index.cshtml: @{ ViewData[&quot;Title&quot;] = &quot;Home&quot;; } &amp;lt;h2&amp;gt;Index&amp;lt;/h2&amp;gt; &amp;lt;p&amp;gt;Hello from our View Template!&amp;lt;/p&amp;gt; Add Controllers: /Controllers /Controllers/HomeController.cs HomeController.cs: using Microsoft.AspNetCore.Mvc; namespace RPi3.WebUI.Controllers { public class HomeController : Controller { public IActionResult Index() { return View(); } } } Go ahead and run dotnet run and navigate to http://localhost:5000, so we can verify that our modification works.</summary></entry><entry><title type="html">Raspberry Pi 3: Wifi config</title><link href="http://localhost:4000/a-DelaCruz.github.io/alpine/2017/07/11/alpine-wifi.html" rel="alternate" type="text/html" title="Raspberry Pi 3: Wifi config" /><published>2017-07-11T00:00:00+08:00</published><updated>2017-07-11T00:00:00+08:00</updated><id>http://localhost:4000/a-DelaCruz.github.io/alpine/2017/07/11/alpine-wifi</id><content type="html" xml:base="http://localhost:4000/a-DelaCruz.github.io/alpine/2017/07/11/alpine-wifi.html">&lt;p&gt;Alpine linux network interface configuration are very different from what i used on ubuntu. 
 But &lt;code class=&quot;highlighter-rouge&quot;&gt;wpa_supplicant.conf&lt;/code&gt; are still the same.
 For the &lt;code class=&quot;highlighter-rouge&quot;&gt;interface&lt;/code&gt; file:&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;auto lo
@@ -956,180 +970,4 @@ $ sudo ifconfig wlan0 up
   &lt;li&gt;&lt;a href=&quot;https://w1.fi/cgit/hostap/plain/wpa_supplicant/wpa_supplicant.conf&quot;&gt;https://w1.fi/cgit/hostap/plain/wpa_supplicant/wpa_supplicant.conf&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">To make the Raspberry pi 3 Wifi to work…we need to get or have atleast 2 files. But first we must create a folder inside the /lib/firmware/ and name it brcm. And in that folder we’ll put brcmfmac43430-sdio.bin and brcmfmac43430-sdio.txt. Prerequisite: brcmfmac43430-sdio.bin brcmfmac43430-sdio.txt wpa-supplicant wireless-tools</summary></entry><entry><title type="html">Using Ubuntu-base arm64 rootfs for Raspberry Pi 3</title><link href="http://localhost:4000/a-DelaCruz.github.io/ubuntu/2017/05/16/using-ubuntu-base.html" rel="alternate" type="text/html" title="Using Ubuntu-base arm64 rootfs for Raspberry Pi 3" /><published>2017-05-16T00:00:00+08:00</published><updated>2017-05-16T00:00:00+08:00</updated><id>http://localhost:4000/a-DelaCruz.github.io/ubuntu/2017/05/16/using-ubuntu-base</id><content type="html" xml:base="http://localhost:4000/a-DelaCruz.github.io/ubuntu/2017/05/16/using-ubuntu-base.html">&lt;p&gt;Following my previous &lt;a href=&quot;rpi3-64bit-kernel-and-Uboot-booting-up&quot;&gt;post&lt;/a&gt;, we now can now boot our kernel thru U-boot. 
-Now were going to create a filesystem base from arm64 ubuntu base rootfs.&lt;/p&gt;
-
-&lt;p&gt;Create a folder were we will extract the Ubuntu base &lt;a href=&quot;http://cdimage.ubuntu.com/ubuntu-base/releases/16.04.2/release/ubuntu-base-16.04.2-base-arm64.tar.gz&quot;&gt;&lt;b&gt;rootfs&lt;/b&gt;&lt;/a&gt;, and tar to extract.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkdir rootfs
-$ cd rootfs/
-$ sudo tar xzvf ubuntu-base-16.04.2-base-arm64.tar.gz
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;!--more--&gt;
-&lt;p&gt;Install the kernel module and firmware into the rootfs folder.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- modules_install INSTALL_MOD_PATH={directory}/rootfs/
-$ sudo ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- firmware_install INSTALL_FW_PATH={directory}rootfs/lib/firmware/
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Check that it was installed correctly.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ls rootfs/lib/modules/4.11~
-
-	build               modules.builtin        modules.devname      modules.symbols.bin
-	kernel              modules.builtin.bin    modules.order        source
-	modules.alias       modules.dep            modules.softdep
-	modules.alias.bin   modules.dep.bin        modules.symbols
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Well use &lt;code class=&quot;highlighter-rouge&quot;&gt;chroot&lt;/code&gt; to further setup our filesystem.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo cp -av /usr/bin/qemu-aarch64-static {directory}/rootfs/usr/bin
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;h6 id=&quot;or-use-rsync-rsync--azvh-source-destination&quot;&gt;&lt;a href=&quot;#header-6&quot;&gt;&lt;/a&gt;Or use rsync: rsync -azvh source destination&lt;/h6&gt;
-
-&lt;h6 id=&quot;note&quot;&gt;&lt;a href=&quot;#header-6&quot;&gt;&lt;/a&gt;Note:&lt;/h6&gt;
-&lt;h6 id=&quot;-usrbinqemu-arm-static-is-for-32-bit-armhf-architecture&quot;&gt;&lt;a href=&quot;#header-6&quot;&gt;&lt;/a&gt;*	/usr/bin/&lt;b&gt;qemu-arm-static&lt;/b&gt; is for 32-bit armhf architecture&lt;/h6&gt;
-&lt;h6 id=&quot;-usrbinqemu-aarch64-static-is-for-64-bit-arm64-architecture&quot;&gt;&lt;a href=&quot;#header-6&quot;&gt;&lt;/a&gt;*	/usr/bin/&lt;b&gt;qemu-aarch64-static&lt;/b&gt; is for 64-bit arm64 architecture&lt;/h6&gt;
-
-&lt;p&gt;Then we need to copy &lt;code class=&quot;highlighter-rouge&quot;&gt;resolv.conf&lt;/code&gt; from our host machine for internet connection to &lt;code class=&quot;highlighter-rouge&quot;&gt;rootfs/etc/&lt;/code&gt;:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo cp -av /run/resolvconf/resolv.conf rootfs/etc/
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Enter chroot environment:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo chroot {directory}rootfs/
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Now that you’re in the chroot environment, we can now add an admin user with sudo permission.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ useradd -G sudo -m -s /bin/bash pi3
-$ echo pi3:pi3 | chpasswd
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;h6 id=&quot;note-the-format-input-line-of-chpasswd-is-user_namepassword&quot;&gt;&lt;a href=&quot;#header-6&quot;&gt;&lt;/a&gt;Note: The format input line of chpasswd is: user_name:password.&lt;/h6&gt;
-
-&lt;p&gt;You can setup your &lt;code class=&quot;highlighter-rouge&quot;&gt;hostname&lt;/code&gt; here for your target device or in the kernel configuration making sure that the hostname is empty.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ echo U-Base_min &amp;gt; /etc/hostname
-$ echo 127.0.0.1 localhost &amp;gt; /etc/hosts
-$ echo 127.0.1.1 U-Base_min &amp;gt;&amp;gt; /etc/hosts
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Fetch the latest package lists from server then upgrade.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ apt-get update
-$ apt-get upgrade
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Then install these first:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ apt-get install dialog perl
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;We need those installed first to correct some error messages abot locale:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ locale-gen &quot;en_US.UTF-8&quot;
-	Generating locales...
-  		en_US.UTF-8... done
-	Generation complete.
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;Install minimal packages:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ apt-get install sudo ifupdown net-tools ethtool udev wireless-tools iputils-ping resolvconf wget apt-utils wpasupplicant initramfs-tools
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Create a Ramdisk(optional).&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkinitramfs -o /boot/initrd.img /lib/modules/4.11~
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;When everything you want to setup has been done, exit chroot:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ exit
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;To reduce the rootfs/ size we can remove some unwanted files.
-Create a file &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/dpkg/dpkg.cfg.d/01_nodoc&lt;/code&gt; which specifies the desired filters. Example:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;path-exclude /usr/share/doc/*
-# we need to keep copyright files for legal reasons
-path-include /usr/share/doc/*/copyright
-path-exclude /usr/share/man/*
-path-exclude /usr/share/groff/*
-path-exclude /usr/share/info/*
-# lintian stuff is small, but really unnecessary
-path-exclude /usr/share/lintian/*
-path-exclude /usr/share/linda/*
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Then you can manually remove any documentation already installed:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo find rootfs/usr/share/doc -depth -type f ! -name copyright|xargs rm || true
-$ sudo find rootfs/usr/share/doc -empty|xargs rmdir || true
-$ sudo rm -rf rootfs/usr/share/man/* rootfs/usr/share/groff/* rootfs/usr/share/info/*
-$ sudo rm -rf rootfs/usr/share/lintian/* rootfs/usr/share/linda/* rootfs/var/cache/man/*
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Then copy the &lt;code class=&quot;highlighter-rouge&quot;&gt;rootfs/&lt;/code&gt; content to the 2nd partition of your µSD car. Or you could make an image file with several partition on it. This will create a 2gb empty img file:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo dd if=/dev/zero of=myimage.img bs=1024 count=2M
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Then partition it using &lt;code class=&quot;highlighter-rouge&quot;&gt;fdisk&lt;/code&gt; in my case:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo fdisk myimage.img
-	Result:
-	| Device     | Boot | Start 	| End	  | Sectors |
-	|:-----------|:-----|:----------|:--------|:--------|
-	| myimage1   |      | 2048  	| 1026047 | 1024000 | Fat
-	| myimage2   |      | 1026048 	| 4194303 | 3168256 | Linux
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Display the name of the assigned loop device:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo losetup --find --show myimage.img
-	
-	/dev/loop0
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;Then we can use &lt;code class=&quot;highlighter-rouge&quot;&gt;fdisk&lt;/code&gt; to identify our image file partitions assinged loop&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo fdisk /dev/loop0
-
-	Device:
-		/dev/loop1
-		/dev/loop2
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Then, to assign a loopback device: and format it.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo losetup /dev/loop1 myimage.img 
-$ sudo losetup /dev/loop2 myimage.img
-$ sudo mkfs.vfat /dev/loop1
-$ sudo mkfs.ext4 /dev/loop2
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;h6 id=&quot;mkfsvfat--n-partition-name-devloop1&quot;&gt;&lt;a href=&quot;#header-6&quot;&gt;&lt;/a&gt;mkfs.vfat -n &lt;code class=&quot;highlighter-rouge&quot;&gt;partition name&lt;/code&gt; /dev/loop1&lt;/h6&gt;
-
-&lt;p&gt;Mount and Copy those necessary files that we need to their respected partition.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo mount /dev/loop1 /mnt/boot
-$ sudo mount /dev/loop2 /mnt/rootfs
-
-	then umount and detach:
-$ sudo umount /dev/loop1
-$ sudo umount /dev/loop2
-$ sudo losetup --detach /dev/loop1
-$ sudo losetup --detach /dev/loop2
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;You can now burn that myimage.img to yor µsd card.
-Now boot it up and you should now be able to login.&lt;/p&gt;
-
-&lt;p&gt;Net post will be about setting up the wifi.&lt;/p&gt;
-
-&lt;h5 id=&quot;reference&quot;&gt;&lt;a href=&quot;#header-5&quot;&gt;&lt;/a&gt;Reference:&lt;/h5&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;http://docs.khadas.com/social/BuildUbuntuRootfsViaUbuntuBase/&quot;&gt;http://docs.khadas.com/social/BuildUbuntuRootfsViaUbuntuBase/&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://gnu-linux.org/building-ubuntu-rootfs-for-arm.html&quot;&gt;https://gnu-linux.org/building-ubuntu-rootfs-for-arm.html&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html&quot;&gt;http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">Following my previous post, we now can now boot our kernel thru U-boot. Now were going to create a filesystem base from arm64 ubuntu base rootfs. Create a folder were we will extract the Ubuntu base rootfs, and tar to extract. $ mkdir rootfs $ cd rootfs/ $ sudo tar xzvf ubuntu-base-16.04.2-base-arm64.tar.gz</summary></entry></feed>
+&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">To make the Raspberry pi 3 Wifi to work…we need to get or have atleast 2 files. But first we must create a folder inside the /lib/firmware/ and name it brcm. And in that folder we’ll put brcmfmac43430-sdio.bin and brcmfmac43430-sdio.txt. Prerequisite: brcmfmac43430-sdio.bin brcmfmac43430-sdio.txt wpa-supplicant wireless-tools</summary></entry></feed>

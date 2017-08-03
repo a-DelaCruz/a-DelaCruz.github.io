@@ -39,7 +39,7 @@
 
 <div class="post-org">
 
-	<h2>Simple GPIO OUTP WebUI on .Net Core and Bootstrap [part1]</h2>	
+	<h2>WebUI on .Net Core and Bootstrap4 [part1]</h2>	
 	<p class="meta">23 Jul 2017</p>
 
 	<div class="post">
@@ -162,7 +162,7 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     <span class="nt">&lt;title&gt;</span>@ViewData["Title"] - testMVC<span class="nt">&lt;/title&gt;</span>
 
     <span class="nt">&lt;environment</span> <span class="na">include=</span><span class="s">"Development"</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"~/css/bootstrap.css"</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"~/css/bootstrap.min.css"</span> <span class="nt">/&gt;</span>
         <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"~/css/site.css"</span> <span class="nt">/&gt;</span>
         <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"</span> <span class="na">integrity=</span><span class="s">"sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"</span> <span class="na">crossorigin=</span><span class="s">"anonymous"</span><span class="nt">&gt;</span>
     <span class="nt">&lt;/environment&gt;</span>
@@ -192,8 +192,9 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     <span class="nt">&lt;/div&gt;</span>
 
     <span class="nt">&lt;environment</span> <span class="na">include=</span><span class="s">"Development"</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"~/jquery/jquery-3.1.1.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
-        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"~/js/bootstrap.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"~/lib/jquery/jquery-3.2.1.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"~/lib/tether/tether-1.4.0.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"~/lib/bootstrap/js/bootstrap.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
         <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"~/js/site.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
     <span class="nt">&lt;/environment&gt;</span>
     <span class="nt">&lt;environment</span> <span class="na">names=</span><span class="s">"Staging,Production"</span><span class="nt">&gt;</span>
