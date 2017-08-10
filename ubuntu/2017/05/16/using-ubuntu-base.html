@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>My Notes on Single Board Computer by </title>
-    <link rel="stylesheet" href="/a-DelaCruz.github.io/assets/css/style.css?v=">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
     <meta name="viewport" content="width=device-width">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -49,7 +49,7 @@ Now were going to create a filesystem base from arm64 ubuntu base rootfs.</p>
 <p>Create a folder were we will extract the Ubuntu base <a href="http://cdimage.ubuntu.com/ubuntu-base/releases/16.04/release/ubuntu-base-16.04.3-base-arm64.tar.gz"><b>rootfs</b></a>, and tar to extract.</p>
 <div class="highlighter-rouge"><pre class="highlight"><code>$ mkdir rootfs
 $ cd rootfs/
-$ sudo tar xzvf ubuntu-base-16.04.2-base-arm64.tar.gz
+$ sudo tar -xzvf ubuntu-base-16.04.3-base-arm64.tar.gz
 </code></pre>
 </div>
 <!--more-->
@@ -62,7 +62,7 @@ $ sudo ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- firmware_install INSTALL_FW_P
 <p>Check that it was installed correctly.</p>
 <div class="highlighter-rouge"><pre class="highlight"><code>$ ls rootfs/lib/modules/4.11~
 
-	modules.builtin        modules.devname      modules.symbols.bin
+	modules.builtin     modules.devname        modules.symbols.bin
 	kernel              modules.builtin.bin    modules.order        
 	modules.alias       modules.dep            modules.softdep
 	modules.alias.bin   modules.dep.bin        modules.symbols
@@ -94,6 +94,12 @@ $ sudo ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- firmware_install INSTALL_FW_P
 $ echo pi3:pi3 | chpasswd
 </code></pre>
 </div>
+
+<p>Change root password with these command.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>$ passwd root
+</code></pre>
+</div>
+
 <h6 id="note-the-format-input-line-of-chpasswd-is-user_namepassword"><a href="#header-6"></a>Note: The format input line of chpasswd is: user_name:password.</h6>
 
 <p>You can setup your <code class="highlighter-rouge">hostname</code> here for your target device or in the kernel configuration making sure that the hostname is empty.</p>
@@ -113,6 +119,7 @@ $ apt-get upgrade
 <div class="highlighter-rouge"><pre class="highlight"><code>$ apt-get install dialog perl
 </code></pre>
 </div>
+
 <p>We need those installed first to correct some error messages about locale: If <code class="highlighter-rouge">locale-gen</code> command is missing, <code class="highlighter-rouge">apt-get install locales</code> first.</p>
 <div class="highlighter-rouge"><pre class="highlight"><code>$ locale-gen "en_US.UTF-8"
 	Generating locales...
@@ -120,17 +127,18 @@ $ apt-get upgrade
 	Generation complete.
 </code></pre>
 </div>
+
 <p>Install minimal packages:</p>
 <div class="highlighter-rouge"><pre class="highlight"><code>$ apt-get install sudo ifupdown net-tools ethtool udev wireless-tools iputils-ping resolvconf wget apt-utils wpasupplicant initramfs-tools
 </code></pre>
 </div>
 
-<p>Create a Ramdisk(optional).</p>
+<p>Create our Ramdisk.</p>
 <div class="highlighter-rouge"><pre class="highlight"><code>$ mkinitramfs -o /boot/initrd.img /lib/modules/4.11~
 </code></pre>
 </div>
 
-<p>When everything you want to setup has been done, exit chroot:</p>
+<p>When everything you want are done, exit chroot:</p>
 <div class="highlighter-rouge"><pre class="highlight"><code>$ exit
 </code></pre>
 </div>
@@ -256,7 +264,7 @@ Now boot it up and you should now be able to login.</p>
         <small>Wordpress &mdash; <a href="https://cranzblog.wordpress.com">Blog</a></small></p>
       </footer>
     </div>
-    <script src="/a-DelaCruz.github.io/assets/js/scale.fix.js"></script>
+    <script src="/assets/js/scale.fix.js"></script>
 
 
   

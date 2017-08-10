@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>My Notes on Single Board Computer by </title>
-    <link rel="stylesheet" href="/a-DelaCruz.github.io/assets/css/style.css?v=">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
     <meta name="viewport" content="width=device-width">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -44,6 +44,7 @@
 
 	<div class="post">
 	  <p>Updated, Organized and corrected some typos:</p>
+<h6 id="170810-boot-script-modified">17/08/10: Boot script modified</h6>
 
 <h4 id="cross-build-prerequisite"><a href="#header-4"></a>Cross-build prerequisite:</h4>
 <div class="highlighter-rouge"><pre class="highlight"><code>gcc-arch64-linux-gnu    g++-5                  ncurses-dev
@@ -53,7 +54,7 @@ libncurses5-dev
 </code></pre>
 </div>
 <!--more-->
-<p>Assuming there is already a Cross-build environment: Built on Ubuntu Server 16.04.02</p>
+<p>Assuming there is already a Cross-build environment: Built on Ubuntu Server 16.04.03 LTS</p>
 
 <h4 id="prerequisites"><a href="#header-4"></a>Prerequisites:</h4>
 <ul>
@@ -97,11 +98,11 @@ dtparam=spi=on
 
 <h4 id="u-boot"><a href="#header-4"></a>U-Boot:</h4>
 <p>Get the source code by cloning the U-Boot git repository or download the tar file.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>$ git clone depth 1 branch v2017.03 single-branch git://git.denx.de/u-boot.git
+<div class="highlighter-rouge"><pre class="highlight"><code>$ git clone depth 1 branch v2017.05 single-branch git://git.denx.de/u-boot.git
 </code></pre>
 </div>
 <p>or download:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>ftp://ftp.denx.de/pub/u-boot/u-boot-2017.03.tar.bz2
+<div class="highlighter-rouge"><pre class="highlight"><code>ftp://ftp.denx.de/pub/u-boot/u-boot-2017.05.tar.bz2
 </code></pre>
 </div>
 
@@ -177,6 +178,16 @@ booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r}
 </code></pre>
 </div>
 
+<h5 id="note-boot-script-modified-no-need-for-dtb-file-entry-still-uses-bcm2710-rpi-3-bdtb-and-will-automatically-be-picked-up-so-it-must-be-present-at-root-directory-of-µsd-card">Note: Boot script modified. No need for dtb file entry. Still uses <code class="highlighter-rouge">bcm2710-rpi-3-b.dtb</code> and will automatically be picked up, so it must be present at root directory of µSD card:</h5>
+<div class="highlighter-rouge"><pre class="highlight"><code>setenv kernel_addr_r 0x01000000
+setenv ramdisk_addr_r 0x02100000
+fatload mmc 0:1 ${kernel_addr_r} boot/Image
+fatload mmc 0:1 ${ramdisk_addr_r} boot/initrd.img
+setenv initrdsize $filesize
+booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r}
+</code></pre>
+</div>
+
 <p>Since we dont have a Ramdisk yet, comment that line and replace <code class="highlighter-rouge">${ramdisk_addr_r}:${initrdsize}</code> with <code class="highlighter-rouge">-</code>.
 Or copy the <code class="highlighter-rouge">initrd.img</code> to use it temporarily.</p>
 <div class="highlighter-rouge"><pre class="highlight"><code>/boot/Image
@@ -241,7 +252,7 @@ since we still do not have a filesystem.</p>
         <small>Wordpress &mdash; <a href="https://cranzblog.wordpress.com">Blog</a></small></p>
       </footer>
     </div>
-    <script src="/a-DelaCruz.github.io/assets/js/scale.fix.js"></script>
+    <script src="/assets/js/scale.fix.js"></script>
 
 
   
