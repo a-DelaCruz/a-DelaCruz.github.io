@@ -83,7 +83,8 @@
 <p>We’re going to extract <code class="highlighter-rouge">dotnet-runtime-latest-linux-arm.tar.gz</code> in <code class="highlighter-rouge">/opt/dotnet</code> folder.</p>
 <div class="highlighter-rouge"><pre class="highlight"><code># mkdir /opt/dotnet
 # tar -zxvf dotnet-runtime-latest-linux-arm.tar.gz -C /opt/dotnet
-# /opt/dotnet/dotnet    //Then run this to check that it works. or ./dotnet inside the dotnet folder
+# ln -s /opt/dotnet/dotnet /usr/bin/dotnet 
+# dotnet --info           // to verify that it works
 </code></pre>
 </div>
 
@@ -195,7 +196,7 @@ Now let’s go to: <code class="highlighter-rouge">/testapp/bin/debug/netcoreapp
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
         })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-        ga('create', 'UA-99256627-1', 'auto');
+        //ga('create', 'UA-99256627-1', 'auto');
         ga('send', 'pageview');
     </script>
   

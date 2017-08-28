@@ -39,27 +39,35 @@
 
 <div class="post-org">
 
-	<h2>Enabling I2C for Raspberry Pi 3</h2>	
-	<p class="meta">03 Aug 2017</p>
+	<h2>WebUI using .Net Core and Bootstrap4 [part2]</h2>	
+	<p class="meta">28 Aug 2017</p>
 
 	<div class="post">
-	  <p>Following my previous <a href="../../05/16/rpi3-64bit-kernel-and-Uboot-booting-up">post</a>, a little modification in the <code class="highlighter-rouge">kernel CONFIG</code> to enable <code class="highlighter-rouge">I2C</code>.</p>
+	  <p>What i used:</p>
+<ul>
+  <li>.Net Core 2     //  Latest Release</li>
+  <li><a href="/ubuntu/files/RPi3.Core.zip">RPi3.Core</a>       //  customize bcm2835 library</li>
+</ul>
 
-<p>Everything has to made from scratch just to be sure it works for you.
-If your following my procedures, I just recently found out this problem so it just got resolve now as of this typing.</p>
+<p>RPi3.Core:</p>
+<ul>
+  <li>What works are as follows:</li>
+  <li>Set GPIO Output and Input</li>
+  <li>Get GPIO pin level[High/Low]</li>
+  <li>I2C</li>
+  <li>Pull-up/Pull-down</li>
+  <li>You may continue to modiy:</li>
+  <li>SPI</li>
+  <li>PWM</li>
+  <li>Edge Detection</li>
+</ul>
 
-<p>For <code class="highlighter-rouge">I2C</code> to work, Enable <code class="highlighter-rouge">I2C device interface</code> instead of setting it up as a <code class="highlighter-rouge">modules</code>.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>Device Drivers
-    |- I2C support
-        |- [*] I2C device interface
+<p>To reference a .net core project use:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt; dotnet add reference RPi3.Core/RPi3.Core.csproj
 </code></pre>
 </div>
-<p>Afterwards, you can see <code class="highlighter-rouge">i2c-1</code> present under <code class="highlighter-rouge">/dev</code> folder. <code class="highlighter-rouge">i2c-bcm2835</code> are loaded as module instead of <code class="highlighter-rouge">i2c-bcm2708</code> while both being set as <code class="highlighter-rouge">modules</code> on <code class="highlighter-rouge">kernel CONFIG</code>.
-No need to add <code class="highlighter-rouge">i2c-dev</code> in <code class="highlighter-rouge">/etc/modules</code> as it is loaded by kernel itself.
-Then just install <code class="highlighter-rouge">i2c-tools</code> to verify that it works and we can now detect the device address connected to <code class="highlighter-rouge">I2c-1</code>.</p>
 
-<hr />
-
+<p>https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-add-reference</p>
 
 	</div>
 
