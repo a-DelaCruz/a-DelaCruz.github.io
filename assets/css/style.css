@@ -1,0 +1,174 @@
+body {
+  margin: 0; }
+
+.wrapper-header {
+  display: grid;
+  grid-gap: 10px 5px;
+  grid-template-columns: 40px 40px 1fr;
+  background-color: #fff;
+  color: #444; }
+
+.wrapper-home {
+  margin-top: 10px;
+  display: grid;
+  grid-gap: 10px 5px;
+  grid-template-columns: 40px 40px 1fr;
+  grid-template-rows: 1fr 50px;
+  background-color: #fff;
+  color: #444; }
+
+.wrapper-blog {
+  margin-top: 10px;
+  display: grid;
+  grid-gap: 10px 5px;
+  grid-template-columns: 40px 40px 1fr;
+  grid-template-rows: 1fr 50px;
+  background-color: #fff;
+  color: #444; }
+
+.logo img {
+  grid-column: 1 / span 2;
+  height: auto;
+  width: 80px; }
+
+.ads {
+  grid-column: 3;
+  height: 70px; }
+
+.ads:empty {
+  display: none; }
+
+.home-navi-left {
+  grid-column: 1 / span 2; }
+
+.home-topic {
+  grid-column: 3; }
+
+.blog-navi-left {
+  grid-column: 1 / span 2; }
+
+.blog {
+  grid-column: 3; }
+
+img.navi-left {
+  width: auto;
+  height: 30px; }
+
+.navi-left ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: auto; }
+
+.navi-left ul li a {
+  display: block;
+  text-align: center;
+  margin-bottom: 4px; }
+
+.topic-grid1,
+.topic-grid2 {
+  float: left;
+  width: 360px;
+  margin-right: 2%;
+  border: none;
+  border-radius: 0.7em; }
+
+.topic-item1,
+.topic-item2 {
+  text-align: center;
+  border-top-left-radius: 0.7em;
+  border-top-right-radius: 0.7em;
+  position: relative;
+  padding: 4px;
+  height: 64px; }
+
+.topic-item1 {
+  background: #E95420;
+  color: #fff; }
+
+.topic-item2 {
+  background: #00ace6;
+  color: #fff; }
+
+.topic-desc p {
+  margin-left: -8px;
+  font-size: 14px;
+  font-family: "Montserrat", sans-serif;
+  margin-top: 2px; }
+
+.issue-box {
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+  height: 130px;
+  width: 143px;
+  text-align: center;
+  z-index: 0;
+  right: 0;
+  border-top-right-radius: 0.7em; }
+
+.issue-box span.issue-title {
+  font-family: "Montserrat", sans-serif;
+  font-size: 8px;
+  color: #444;
+  background: #ffd400;
+  text-transform: uppercase;
+  padding: 4px;
+  width: 180px;
+  text-align: center;
+  display: block;
+  position: absolute;
+  left: 28px;
+  top: 16px;
+  transform: rotate(45deg);
+  box-shadow: 3px -4px 13px 3px rgba(0, 0, 0, 0.75); }
+
+.issue-box span:empty {
+  display: none; }
+
+.topic-listbox {
+  padding: 2px;
+  text-align: left; }
+
+.post-list a:visited,
+.post-list a:link,
+.spost-list a:active {
+  color: black; }
+
+.post-list a:hover {
+  color: #0099cc; }
+
+.post-list li {
+  display: inline-block;
+  margin: 4px 4px;
+  list-style: none; }
+
+.post-list span {
+  font-size: 12px;
+  font-family: "Montserrat", sans-serif;
+  color: #525252; }
+
+.post-list a {
+  text-decoration: none;
+  font-size: 14px;
+  font-family: "Montserrat", sans-serif; }
+
+img {
+  width: 100%; }
+
+.wrapper-blog {
+  width: 98%;
+  font-family: "Montserrat", sans-serif; }
+
+.blog-title {
+  text-align: center; }
+
+.blog-date {
+  font-size: 12px;
+  font-weight: bold; }
+
+.blog-content li {
+  list-style: none; }
+
+.blog-content a {
+  text-decoration: none; }
