@@ -8,7 +8,8 @@ img {
   display: grid;
   grid-template-columns: 40px 40px auto 1fr;
   grid-template-rows: 70px auto;
-  grid-gap: 10px; }
+  grid-gap: 10px 5px;
+  background-color: transparent; }
 
 .header {
   grid-row: 1; }
@@ -20,42 +21,36 @@ img {
   grid-column: 3; }
 
 .header.ads2 {
-  grid-column: 4; }
+  grid-column: 4;
+  left: -10px; }
 
 .wrapper-body {
   grid-row: 2;
   grid-column: 1 / span 4;
-  height: 200px;
-  background-color: gray;
+  background-color: transparent;
   border: 2px solid red;
   display: grid;
-  grid-gap: 10px;
+  grid-gap: 5px;
   grid-template-columns: 40px 40px 1fr;
   grid-template-rows: auto 50px; }
 
 .home {
   grid-row: 1; }
 
-.home.navi-left {
-  grid-column: 1 / span 2;
-  background-color: #b0da19;
-  border: 2px solid red; }
+.home-navi-left {
+  grid-column: 1 / span 2; }
 
-.home.article {
+.home-article {
   grid-column: 3;
-  background-color: #15d36a;
-  border: 2px solid red; }
+  background-color: #15d36a; }
 
 .test {
   grid-column: 2;
   background-color: #1b18a7;
-  border: 2px solid red;
   width: 100%;
   grid-row: 2; }
 
 .header {
-  background-color: gray;
-  border: 2px solid red;
   height: 70px; }
 
 .header.brand img {
@@ -74,13 +69,13 @@ img.navi-left {
   width: auto;
   height: 30px; }
 
-.navi-left ul {
+.container-navi-left ul {
   margin: 0;
   padding: 0;
   list-style: none;
   width: auto; }
 
-.navi-left ul li a {
+.container-navi-left ul li a {
   display: block;
   text-align: center;
   margin-bottom: 6px; }
