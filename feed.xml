@@ -1,0 +1,898 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/" rel="alternate" type="text/html" /><updated>2017-11-02T22:34:03+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 - 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">WebUI using .Net Core and Bootstrap4: #2</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/08/28/rpi3-webui-gpio-2.html" rel="alternate" type="text/html" title="WebUI using .Net Core and Bootstrap4: #2" /><published>2017-08-28T00:00:00+08:00</published><updated>2017-08-28T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/08/28/rpi3-webui-gpio-2</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/08/28/rpi3-webui-gpio-2.html">&lt;p&gt;What i used:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;.Net Core 2     //  Latest Release&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/ubuntu/files/RPi3.Core.zip&quot;&gt;RPi3.Core&lt;/a&gt;       //  customize bcm2835 library. No need for mono to be installed&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;
+RPi3.Core:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;What works are as follows:&lt;/li&gt;
+  &lt;li&gt;Set GPIO Output and Input&lt;/li&gt;
+  &lt;li&gt;Get GPIO pin level[High/Low]&lt;/li&gt;
+  &lt;li&gt;I2C&lt;/li&gt;
+  &lt;li&gt;Pull-up/Pull-down&lt;/li&gt;
+  &lt;li&gt;You may continue to modiy: based on this &lt;a href=&quot;../../07/01/rpi3-docker-gpio-4&quot;&gt;post&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;SPI&lt;/li&gt;
+  &lt;li&gt;PWM&lt;/li&gt;
+  &lt;li&gt;Edge Detection&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;
+To reference a .net core project use:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; dotnet add reference RPi3.Core/RPi3.Core.csproj
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-add-reference&quot;&gt;https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-add-reference&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">What i used: .Net Core 2 // Latest Release RPi3.Core // customize bcm2835 library. No need for mono to be installed RPi3.Core: What works are as follows: Set GPIO Output and Input Get GPIO pin level[High/Low] I2C Pull-up/Pull-down You may continue to modiy: based on this post SPI PWM Edge Detection To reference a .net core project use: &amp;gt; dotnet add reference RPi3.Core/RPi3.Core.csproj https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-add-reference</summary></entry><entry><title type="html">Enabling I2C for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/08/03/rpi3-i2c.html" rel="alternate" type="text/html" title="Enabling I2C for Raspberry Pi 3" /><published>2017-08-03T00:00:00+08:00</published><updated>2017-08-03T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/08/03/rpi3-i2c</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/08/03/rpi3-i2c.html">&lt;p&gt;Following my previous &lt;a href=&quot;../../05/16/rpi3-64bit-kernel-and-Uboot-booting-up&quot;&gt;post&lt;/a&gt;, a little modification in the &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel CONFIG&lt;/code&gt; to enable &lt;code class=&quot;highlighter-rouge&quot;&gt;I2C&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+Everything has to made from scratch just to be sure it works for you.
+If your following my procedures, I just recently found out this problem so it just got resolve now as of this typing.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+For &lt;code class=&quot;highlighter-rouge&quot;&gt;I2C&lt;/code&gt; to work, Enable &lt;code class=&quot;highlighter-rouge&quot;&gt;I2C device interface&lt;/code&gt; instead of setting it up as a &lt;code class=&quot;highlighter-rouge&quot;&gt;module&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Device Drivers
+    |- I2C support
+        |- [*] I2C device interface
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Afterwards, you can see &lt;code class=&quot;highlighter-rouge&quot;&gt;i2c-1&lt;/code&gt; present under &lt;code class=&quot;highlighter-rouge&quot;&gt;/dev&lt;/code&gt; folder. &lt;code class=&quot;highlighter-rouge&quot;&gt;i2c-bcm2835&lt;/code&gt; are loaded as module instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;i2c-bcm2708&lt;/code&gt; while both being set as &lt;code class=&quot;highlighter-rouge&quot;&gt;modules&lt;/code&gt; on &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel CONFIG&lt;/code&gt;.
+No need to add &lt;code class=&quot;highlighter-rouge&quot;&gt;i2c-dev&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/modules&lt;/code&gt; as it is loaded by kernel itself.
+Then just install &lt;code class=&quot;highlighter-rouge&quot;&gt;i2c-tools&lt;/code&gt; to verify that it works and we can now detect the device address connected to &lt;code class=&quot;highlighter-rouge&quot;&gt;I2c-1&lt;/code&gt;.&lt;/p&gt;
+
+&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">Following my previous post, a little modification in the kernel CONFIG to enable I2C. Everything has to made from scratch just to be sure it works for you. If your following my procedures, I just recently found out this problem so it just got resolve now as of this typing. For I2C to work, Enable I2C device interface instead of setting it up as a module. Device Drivers |- I2C support |- [*] I2C device interface Afterwards, you can see i2c-1 present under /dev folder. i2c-bcm2835 are loaded as module instead of i2c-bcm2708 while both being set as modules on kernel CONFIG. No need to add i2c-dev in /etc/modules as it is loaded by kernel itself. Then just install i2c-tools to verify that it works and we can now detect the device address connected to I2c-1.</summary></entry><entry><title type="html">WebUI using .Net Core and Bootstrap4: #1</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/07/23/rpi3-webui-gpio.html" rel="alternate" type="text/html" title="WebUI using .Net Core and Bootstrap4: #1" /><published>2017-07-23T00:00:00+08:00</published><updated>2017-07-23T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/07/23/rpi3-webui-gpio</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/07/23/rpi3-webui-gpio.html">&lt;p&gt;From my previous posts… we can now  use .Net Core&lt;code class=&quot;highlighter-rouge&quot;&gt;(2.1.0-preview2-25506-02)&lt;/code&gt; properly for our Web App. This time we’ll be creating a &lt;code class=&quot;highlighter-rouge&quot;&gt;simple WebUI&lt;/code&gt; that set our &lt;code class=&quot;highlighter-rouge&quot;&gt;GPIO OUTP&lt;/code&gt; to either &lt;code class=&quot;highlighter-rouge&quot;&gt;HIGH or LOW&lt;/code&gt;. 
+For &lt;code class=&quot;highlighter-rouge&quot;&gt;real-time function of GPIO INPT&lt;/code&gt;, i’m eyeing to an additional framework for that later. 
+Unlike on a .Net Core consoleapp that we dedicate a set of time to detect an INPT state, for Web App, i have no idea if that is the same case.&lt;/p&gt;
+
+&lt;p&gt;Earlier i modified codes from my previous &lt;a href=&quot;../../07/01/rpi3-docker-gpio-4&quot;&gt;post&lt;/a&gt; again… to remove Mono directives to just using .Net Core. Up until now, what i have accomplished so far are:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GPIO mode: INPT/OUTP
+OUTP state: HIGH/LOW
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now to start… let’s create a &lt;code class=&quot;highlighter-rouge&quot;&gt;new empty dotnet Web App&lt;/code&gt;. And modify some created files with a few codes. I prefer to start from scratch and slowly add files that i need. If you want, you can use the &lt;code class=&quot;highlighter-rouge&quot;&gt;mvc template&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dotnet new web -n RPi3.WebUI
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;rpi3webuicsproj&quot;&gt;RPi3.WebUI.csproj:&lt;/h4&gt;
+&lt;p&gt;Once you modified &lt;code class=&quot;highlighter-rouge&quot;&gt;RPi3.WebUI.csproj&lt;/code&gt; file to like below, run &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet restore&lt;/code&gt; afterwards.
+I’ve set &lt;code class=&quot;highlighter-rouge&quot;&gt;RuntimeIdentifiers&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;linux-arm&lt;/code&gt; so it can be run to any linux arm32 OS that use glibc.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;Project Sdk=&quot;Microsoft.NET.Sdk.Web&quot;&amp;gt;
+
+  &amp;lt;PropertyGroup&amp;gt;
+    &amp;lt;TargetFramework&amp;gt;netcoreapp2.0&amp;lt;/TargetFramework&amp;gt;
+    &amp;lt;RuntimeIdentifiers&amp;gt;linux-arm&amp;lt;/RuntimeIdentifiers&amp;gt;
+  &amp;lt;/PropertyGroup&amp;gt;
+  &amp;lt;ItemGroup&amp;gt;
+    &amp;lt;Folder Include=&quot;wwwroot\&quot; /&amp;gt;
+  &amp;lt;/ItemGroup&amp;gt;
+
+  &amp;lt;ItemGroup&amp;gt;
+    &amp;lt;PackageReference Include=&quot;Microsoft.AspNetCore.All&quot; Version=&quot;2.0.0-preview2-final&quot; /&amp;gt;
+  &amp;lt;/ItemGroup&amp;gt;
+
+&amp;lt;/Project&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;startupcs&quot;&gt;Startup.cs:&lt;/h4&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public void ConfigureServices(IServiceCollection services)
+{
+    services.AddMvc();
+}
+
+// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+{
+    if (env.IsDevelopment())
+    {
+        app.UseDeveloperExceptionPage();
+        app.UseStatusCodePages();
+    }
+    app.UseStaticFiles();
+
+    app.UseMvc(routes =&amp;gt;
+    {
+        routes.MapRoute(
+        name: &quot;default&quot;,
+        template: &quot;{controller=Home}/{action=Index}/{id?}&quot;);
+    });
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;programcs&quot;&gt;Program.cs:&lt;/h4&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public static void Main(string[] args)
+        {
+            BuildWebHost(args).Run();
+        }
+
+        public static IWebHost BuildWebHost(string[] args) =&amp;gt;
+            WebHost.CreateDefaultBuilder(args)
+                .UseEnvironment(&quot;Development&quot;)  //Change to Production once needed
+                .UseUrls(&quot;http://*:5000&quot;)       //Set to your desired port
+                .UseStartup&amp;lt;Startup&amp;gt;()
+                .Build();
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;add-views&quot;&gt;Add Views:&lt;/h4&gt;
+&lt;p&gt;Create several folders:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;/Views&lt;/li&gt;
+  &lt;li&gt;/Views/Shared&lt;/li&gt;
+  &lt;li&gt;/Views/Home&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Create these files:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;/Views/_ViewImports.cshtml&lt;/li&gt;
+  &lt;li&gt;/Views/_ViewStart.cshtml&lt;/li&gt;
+  &lt;li&gt;/Views/Shared/_Layout.cshtml&lt;/li&gt;
+  &lt;li&gt;/Views/Home/Index.cshtml&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;
+And modify above files with these:&lt;/p&gt;
+&lt;h5 id=&quot;_viewimportscshtml&quot;&gt;_ViewImports.cshtml:&lt;/h5&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h5 id=&quot;_viewstartcshtml&quot;&gt;_ViewStart.cshtml:&lt;/h5&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@{
+    Layout = &quot;_Layout&quot;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h5 id=&quot;_layoutcshtml&quot;&gt;_Layout.cshtml:&lt;/h5&gt;
+&lt;p&gt;Codes below used on &lt;code class=&quot;highlighter-rouge&quot;&gt;Bottstrap 4&lt;/code&gt;. If you don’t have a local &lt;code class=&quot;highlighter-rouge&quot;&gt;bootstrap&lt;/code&gt; files at &lt;code class=&quot;highlighter-rouge&quot;&gt;/wwwroot&lt;/code&gt;, use the &lt;code class=&quot;highlighter-rouge&quot;&gt;Bootstrap CDN&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css&quot; integrity=&quot;sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ&quot; crossorigin=&quot;anonymous&quot;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;charset=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;utf-8&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;viewport&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;content=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;width=device-width, initial-scale=1.0&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;title&amp;gt;&lt;/span&gt;@ViewData[&quot;Title&quot;] - testMVC&lt;span class=&quot;nt&quot;&gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;environment&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;include=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Development&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~/css/bootstrap.min.css&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~/css/site.css&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;integrity=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;crossorigin=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;anonymous&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/environment&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;environment&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;names=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Staging,Production&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;integrity=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;crossorigin=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;anonymous&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/environment&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;nav&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;navbar navbar-toggleable-md navbar-inverse bg-success&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;navbar-toggler navbar-toggler-right&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;button&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;data-toggle=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;collapse&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;data-target=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;#navbarNav&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;aria-controls=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;navbarNav&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;aria-expanded=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;false&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;aria-label=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Toggle navigation&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;span&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;navbar-toggler-icon&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/span&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;h4&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;navbar-brand mb-0&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;NavBar&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h4&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;collapse navbar-collapse&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;navbarNav&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;navbar-nav&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;nav-item nav-link active&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Home&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&amp;lt;span&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;sr-only&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;(current)&lt;span class=&quot;nt&quot;&gt;&amp;lt;/span&amp;gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;nav-item nav-link&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/Home/About&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;About&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;nav-item nav-link&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/Home/Settings&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Settings&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/nav&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;container body-content&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        @RenderBody()
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;hr&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;footer&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;span class=&quot;ni&quot;&gt;&amp;amp;copy;&lt;/span&gt; 2017 - testMVC&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/footer&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;environment&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;include=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Development&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~/lib/jquery/jquery-3.2.1.min.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~/lib/tether/tether-1.4.0.min.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~/lib/bootstrap/js/bootstrap.min.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;~/js/site.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/environment&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;environment&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;names=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Staging,Production&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- jQuery library --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://code.jquery.com/jquery-3.1.1.slim.min.js&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;integrity=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;crossorigin=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;anonymous&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+            
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Tether --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;integrity=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;crossorigin=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;anonymous&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+            
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Latest compiled JavaScript --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;integrity=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;crossorigin=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;anonymous&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/environment&amp;gt;&lt;/span&gt;
+
+    @RenderSection(&quot;Scripts&quot;, required: false)
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h5 id=&quot;indexcshtml&quot;&gt;Index.cshtml:&lt;/h5&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@{
+    ViewData[&quot;Title&quot;] = &quot;Home&quot;;
+}
+
+&amp;lt;h2&amp;gt;Index&amp;lt;/h2&amp;gt;
+
+&amp;lt;p&amp;gt;Hello from our View Template!&amp;lt;/p&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;add-controllers&quot;&gt;Add Controllers:&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;/Controllers&lt;/li&gt;
+  &lt;li&gt;/Controllers/HomeController.cs&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5 id=&quot;homecontrollercs&quot;&gt;HomeController.cs:&lt;/h5&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;using Microsoft.AspNetCore.Mvc;
+
+namespace RPi3.WebUI.Controllers
+{
+    public class HomeController : Controller
+    {
+        public IActionResult Index()
+        {
+            return View();
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Go ahead and run &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet run&lt;/code&gt; and navigate to &lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost:5000&lt;/code&gt;, so we can verify that our modification works.&lt;/p&gt;
+
+&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">From my previous posts… we can now use .Net Core(2.1.0-preview2-25506-02) properly for our Web App. This time we’ll be creating a simple WebUI that set our GPIO OUTP to either HIGH or LOW. For real-time function of GPIO INPT, i’m eyeing to an additional framework for that later. Unlike on a .Net Core consoleapp that we dedicate a set of time to detect an INPT state, for Web App, i have no idea if that is the same case. Earlier i modified codes from my previous post again… to remove Mono directives to just using .Net Core. Up until now, what i have accomplished so far are: GPIO mode: INPT/OUTP OUTP state: HIGH/LOW Now to start… let’s create a new empty dotnet Web App. And modify some created files with a few codes. I prefer to start from scratch and slowly add files that i need. If you want, you can use the mvc template. dotnet new web -n RPi3.WebUI RPi3.WebUI.csproj: Once you modified RPi3.WebUI.csproj file to like below, run dotnet restore afterwards. I’ve set RuntimeIdentifiers to linux-arm so it can be run to any linux arm32 OS that use glibc. &amp;lt;Project Sdk=&quot;Microsoft.NET.Sdk.Web&quot;&amp;gt; &amp;lt;PropertyGroup&amp;gt; &amp;lt;TargetFramework&amp;gt;netcoreapp2.0&amp;lt;/TargetFramework&amp;gt; &amp;lt;RuntimeIdentifiers&amp;gt;linux-arm&amp;lt;/RuntimeIdentifiers&amp;gt; &amp;lt;/PropertyGroup&amp;gt; &amp;lt;ItemGroup&amp;gt; &amp;lt;Folder Include=&quot;wwwroot\&quot; /&amp;gt; &amp;lt;/ItemGroup&amp;gt; &amp;lt;ItemGroup&amp;gt; &amp;lt;PackageReference Include=&quot;Microsoft.AspNetCore.All&quot; Version=&quot;2.0.0-preview2-final&quot; /&amp;gt; &amp;lt;/ItemGroup&amp;gt; &amp;lt;/Project&amp;gt; Startup.cs: public void ConfigureServices(IServiceCollection services) { services.AddMvc(); } // This method gets called by the runtime. Use this method to configure the HTTP request pipeline. public void Configure(IApplicationBuilder app, IHostingEnvironment env) { if (env.IsDevelopment()) { app.UseDeveloperExceptionPage(); app.UseStatusCodePages(); } app.UseStaticFiles(); app.UseMvc(routes =&amp;gt; { routes.MapRoute( name: &quot;default&quot;, template: &quot;{controller=Home}/{action=Index}/{id?}&quot;); }); } Program.cs: public static void Main(string[] args) { BuildWebHost(args).Run(); } public static IWebHost BuildWebHost(string[] args) =&amp;gt; WebHost.CreateDefaultBuilder(args) .UseEnvironment(&quot;Development&quot;) //Change to Production once needed .UseUrls(&quot;http://*:5000&quot;) //Set to your desired port .UseStartup&amp;lt;Startup&amp;gt;() .Build(); Add Views: Create several folders: /Views /Views/Shared /Views/Home Create these files: /Views/_ViewImports.cshtml /Views/_ViewStart.cshtml /Views/Shared/_Layout.cshtml /Views/Home/Index.cshtml And modify above files with these: _ViewImports.cshtml: @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers _ViewStart.cshtml: @{ Layout = &quot;_Layout&quot;; } _Layout.cshtml: Codes below used on Bottstrap 4. If you don’t have a local bootstrap files at /wwwroot, use the Bootstrap CDN: &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css&quot; integrity=&quot;sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ&quot; crossorigin=&quot;anonymous&quot;&amp;gt; &amp;lt;!DOCTYPE html&amp;gt; &amp;lt;html&amp;gt; &amp;lt;head&amp;gt; &amp;lt;meta charset=&quot;utf-8&quot; /&amp;gt; &amp;lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&amp;gt; &amp;lt;title&amp;gt;@ViewData[&quot;Title&quot;] - testMVC&amp;lt;/title&amp;gt; &amp;lt;environment include=&quot;Development&quot;&amp;gt; &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;~/css/bootstrap.min.css&quot; /&amp;gt; &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;~/css/site.css&quot; /&amp;gt; &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css&quot; integrity=&quot;sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ&quot; crossorigin=&quot;anonymous&quot;&amp;gt; &amp;lt;/environment&amp;gt; &amp;lt;environment names=&quot;Staging,Production&quot;&amp;gt; &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css&quot; integrity=&quot;sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ&quot; crossorigin=&quot;anonymous&quot;&amp;gt; &amp;lt;/environment&amp;gt; &amp;lt;/head&amp;gt; &amp;lt;body&amp;gt; &amp;lt;nav class=&quot;navbar navbar-toggleable-md navbar-inverse bg-success&quot;&amp;gt; &amp;lt;button class=&quot;navbar-toggler navbar-toggler-right&quot; type=&quot;button&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#navbarNav&quot; aria-controls=&quot;navbarNav&quot; aria-expanded=&quot;false&quot; aria-label=&quot;Toggle navigation&quot;&amp;gt;&amp;lt;span class=&quot;navbar-toggler-icon&quot;&amp;gt;&amp;lt;/span&amp;gt; &amp;lt;/button&amp;gt; &amp;lt;h4 class=&quot;navbar-brand mb-0&quot;&amp;gt;NavBar&amp;lt;/h4&amp;gt; &amp;lt;div class=&quot;collapse navbar-collapse&quot; id=&quot;navbarNav&quot;&amp;gt; &amp;lt;div class=&quot;navbar-nav&quot;&amp;gt; &amp;lt;a class=&quot;nav-item nav-link active&quot; href=&quot;/&quot;&amp;gt;Home&amp;lt;/a&amp;gt;&amp;lt;span class=&quot;sr-only&quot;&amp;gt;(current)&amp;lt;/span&amp;gt;&amp;lt;/a&amp;gt; &amp;lt;a class=&quot;nav-item nav-link&quot; href=&quot;/Home/About&quot;&amp;gt;About&amp;lt;/a&amp;gt; &amp;lt;a class=&quot;nav-item nav-link&quot; href=&quot;/Home/Settings&quot;&amp;gt;Settings&amp;lt;/a&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/nav&amp;gt; &amp;lt;div class=&quot;container body-content&quot;&amp;gt; @RenderBody() &amp;lt;hr /&amp;gt; &amp;lt;footer&amp;gt; &amp;lt;p&amp;gt;&amp;amp;copy; 2017 - testMVC&amp;lt;/p&amp;gt; &amp;lt;/footer&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;environment include=&quot;Development&quot;&amp;gt; &amp;lt;script src=&quot;~/lib/jquery/jquery-3.2.1.min.js&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;script src=&quot;~/lib/tether/tether-1.4.0.min.js&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;script src=&quot;~/lib/bootstrap/js/bootstrap.min.js&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;script src=&quot;~/js/site.js&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;/environment&amp;gt; &amp;lt;environment names=&quot;Staging,Production&quot;&amp;gt; &amp;lt;!-- jQuery library --&amp;gt; &amp;lt;script src=&quot;https://code.jquery.com/jquery-3.1.1.slim.min.js&quot; integrity=&quot;sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n&quot; crossorigin=&quot;anonymous&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;!-- Tether --&amp;gt; &amp;lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js&quot; integrity=&quot;sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb&quot; crossorigin=&quot;anonymous&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;!-- Latest compiled JavaScript --&amp;gt; &amp;lt;script src=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js&quot; integrity=&quot;sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn&quot; crossorigin=&quot;anonymous&quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;/environment&amp;gt; @RenderSection(&quot;Scripts&quot;, required: false) &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; Index.cshtml: @{ ViewData[&quot;Title&quot;] = &quot;Home&quot;; } &amp;lt;h2&amp;gt;Index&amp;lt;/h2&amp;gt; &amp;lt;p&amp;gt;Hello from our View Template!&amp;lt;/p&amp;gt; Add Controllers: /Controllers /Controllers/HomeController.cs HomeController.cs: using Microsoft.AspNetCore.Mvc; namespace RPi3.WebUI.Controllers { public class HomeController : Controller { public IActionResult Index() { return View(); } } } Go ahead and run dotnet run and navigate to http://localhost:5000, so we can verify that our modification works.</summary></entry><entry><title type="html">RPi 3: Wifi config</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/alpine/2017/07/11/alpine-wifi.html" rel="alternate" type="text/html" title="RPi 3: Wifi config" /><published>2017-07-11T00:00:00+08:00</published><updated>2017-07-11T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/alpine/2017/07/11/alpine-wifi</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/alpine/2017/07/11/alpine-wifi.html">&lt;p&gt;Alpine linux network interface configuration are very different from what i used on ubuntu. 
+But &lt;code class=&quot;highlighter-rouge&quot;&gt;wpa_supplicant.conf&lt;/code&gt; are still the same.
+For the &lt;code class=&quot;highlighter-rouge&quot;&gt;interface&lt;/code&gt; file:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;auto lo
+iface lo inet loopback
+
+allow-hotplug eth0
+iface eth0 inet dhcp
+        hostname [your hostname]
+
+auto wlan0
+iface wlan0 inet dhcp
+        hostname [your hostname]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And for the &lt;code class=&quot;highlighter-rouge&quot;&gt;wpa_supplicant.conf&lt;/code&gt; : (WPA2)&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;network={
+        ssid=&quot;your network name&quot;
+        psk=&quot;your password&quot;
+        proto=RSN
+        key_mgmt=WPA-PSK
+        pairwise=CCMP
+        auth_alg=OPEN
+        scan_ssid=1     // To be able to connect to hidden network
+        mode=0
+        group=CCMP
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;hr /&gt;</content><author><name></name></author><category term="alpine" /><summary type="html">Alpine linux network interface configuration are very different from what i used on ubuntu. But wpa_supplicant.conf are still the same. For the interface file: auto lo iface lo inet loopback allow-hotplug eth0 iface eth0 inet dhcp hostname [your hostname] auto wlan0 iface wlan0 inet dhcp hostname [your hostname] And for the wpa_supplicant.conf : (WPA2) network={ ssid=&quot;your network name&quot; psk=&quot;your password&quot; proto=RSN key_mgmt=WPA-PSK pairwise=CCMP auth_alg=OPEN scan_ssid=1 // To be able to connect to hidden network mode=0 group=CCMP }</summary></entry><entry><title type="html">RPi 3: GPIO on .Net Core inside Docker using bcm2835 library ported to C#: #4</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/07/01/rpi3-docker-gpio-4.html" rel="alternate" type="text/html" title="RPi 3: GPIO on .Net Core inside Docker using bcm2835 library ported to C#: #4" /><published>2017-07-01T00:00:00+08:00</published><updated>2017-07-01T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/07/01/rpi3-docker-gpio-4</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/07/01/rpi3-docker-gpio-4.html">&lt;p&gt;Since we now have tested our previous scenarios… Now let’s try to translate bcm2835 library C code to C# and only importing some C functions. That means we only need to have a glibc library present in our system. There are already C# library out there… like:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/raspberry-sharp/raspberry-sharp-io&quot;&gt;Raspberry# IO&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/cypherkey/RaspberryPi.Net/&quot;&gt;RaspberryPi.Net&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.raspberrypi.org/forums/viewtopic.php?f=34&amp;amp;t=152940&quot;&gt;BCM2835 port to C#&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;
+Seems fine to use with mono installed… although i never tried to use them. And i have not read all their codes on which part are the Mono part. But there are some imports C function that are common to them. Among those three, the last one is a direct port of BCM2835 library to full C# code. But still use a few Mono system calls. So for now what i did is use his codes &lt;code class=&quot;highlighter-rouge&quot;&gt;BCM2835 port to C#&lt;/code&gt;, remove and modify some of it.
+So far this is what i’ve done and still not finished:&lt;/p&gt;
+
+&lt;h4 id=&quot;some-c-functions&quot;&gt;Some C functions.&lt;/h4&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;using System;
+using System.Runtime.InteropServices;
+
+namespace RPi3
+{
+    public static class Interop
+    {
+
+        #region Enum
+           
+            public enum OpenFlags : int // Open
+            {
+                O_RDWR = 2,
+                O_SYNC = 10000
+            }
+            
+            
+            public enum MmapProts : int //mmap
+            {
+                PROT_READ = 1,  // Page can be read.
+                PROT_WRITE = 2,  // Page can be written.
+                PROT_EXEC = 4,  // Page can be executed.
+                PROT_READWRITE = PROT_READ | PROT_WRITE
+            }
+
+            
+            public enum MmapFlags : int // mmap
+            {
+                MAP_SHARED = 1,     // Share changes.
+                MAP_PRIVATE = 2     // Changes are private.
+            }
+
+            public struct timespec  //Delay under test
+            {
+                public IntPtr tv_sec; /* seconds */
+                public IntPtr tv_nsec; /* nanoseconds */
+            }
+        #endregion
+        
+        #region Libc
+            [DllImport(&quot;libc.so.6&quot;)]
+            public static extern int geteuid();
+
+            [DllImport(&quot;libc.so.6&quot;)]
+            public static extern int open(string pathname, OpenFlags flags);
+
+            [DllImport(&quot;libc.so.6&quot;)]
+            public static extern int close(int fd);
+
+            [DllImport(&quot;libc.so.6&quot;)]
+            public static extern void sync();
+
+            [DllImport(&quot;libc.so.6&quot;)]
+            public static extern IntPtr mmap(IntPtr addr, uint length, MmapProts prot, MmapFlags flags, int fd, uint offset);
+
+            [DllImport(&quot;libc.so.6&quot;)]
+            public static extern int munmap(IntPtr addr, uint length);
+
+            [DllImport(&quot;libc.so.6&quot;)]
+            public static extern int nanosleep(ref timespec req, ref timespec rem);
+
+        #endregion
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You must include an &lt;code class=&quot;highlighter-rouge&quot;&gt;EntryPoint&lt;/code&gt; on your &lt;code class=&quot;highlighter-rouge&quot;&gt;DllImport&lt;/code&gt; in you ever want to change its name.. like so:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[DllImport(&quot;libc.so.6&quot;, EntryPoint = &quot;open&quot;)]
+private static extern IntPtr OpenSename(string pathname, OpenFlags flags);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And replace all code that use &lt;code class=&quot;highlighter-rouge&quot;&gt;Syscall&lt;/code&gt; to use this &lt;code class=&quot;highlighter-rouge&quot;&gt;Interop&lt;/code&gt; and remove Mono directive.
+I also remove this code below for now: and just use it’s type pointer instead like in the orginal but without having it volatile.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public unsafe struct VolatilePointer
+    {
+        public volatile uint* Address;
+
+        public VolatilePointer(uint Address)
+        {
+            this.Address = (uint*)Address;
+        }
+
+        public VolatilePointer(uint* Address)
+        {
+            this.Address = Address;
+        }
+
+        public static implicit operator VolatilePointer(uint* Address)
+        {
+            return new VolatilePointer(Address);
+        }
+
+        public static implicit operator VolatilePointer(uint Address)
+        {
+            return new VolatilePointer(Address);
+        }
+    }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;So from these:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[MethodImpl(MethodImplOptions.AggressiveInlining)] // &amp;lt;- I still need more time to grasp what this is for so i removed it for now
+public static uint bcm2835_peri_read(VolatilePointer paddr)
+{
+    uint ret;
+
+    Thread.MemoryBarrier();
+    ret = *paddr.Address;
+    Thread.MemoryBarrier();
+    return ret;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;into these:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public static uint bcm2835_peri_read(uint* paddr)
+{
+    uint ret;
+
+    Thread.MemoryBarrier();
+    ret = *paddr;
+    Thread.MemoryBarrier();
+    return ret;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;For simple output test these are the basic function that is needed from &lt;a href=&quot;https://www.raspberrypi.org/forums/viewtopic.php?f=34&amp;amp;t=152940&quot;&gt;BCM2835 port to C#&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bcm2835_init()
+mapmem
+bcm2835_peri_read
+bcm2835_peri_write
+bcm2835_peri_set_bits
+bcm2835_gpio_fsel
+bcm2835_gpio_set
+bcm2835_gpio_clr
+bcm2835_gpio_write
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">Since we now have tested our previous scenarios… Now let’s try to translate bcm2835 library C code to C# and only importing some C functions. That means we only need to have a glibc library present in our system. There are already C# library out there… like: Raspberry# IO RaspberryPi.Net BCM2835 port to C# Seems fine to use with mono installed… although i never tried to use them. And i have not read all their codes on which part are the Mono part. But there are some imports C function that are common to them. Among those three, the last one is a direct port of BCM2835 library to full C# code. But still use a few Mono system calls. So for now what i did is use his codes BCM2835 port to C#, remove and modify some of it. So far this is what i’ve done and still not finished: Some C functions. using System; using System.Runtime.InteropServices; namespace RPi3 { public static class Interop { #region Enum public enum OpenFlags : int // Open { O_RDWR = 2, O_SYNC = 10000 } public enum MmapProts : int //mmap { PROT_READ = 1, // Page can be read. PROT_WRITE = 2, // Page can be written. PROT_EXEC = 4, // Page can be executed. PROT_READWRITE = PROT_READ | PROT_WRITE } public enum MmapFlags : int // mmap { MAP_SHARED = 1, // Share changes. MAP_PRIVATE = 2 // Changes are private. } public struct timespec //Delay under test { public IntPtr tv_sec; /* seconds */ public IntPtr tv_nsec; /* nanoseconds */ } #endregion #region Libc [DllImport(&quot;libc.so.6&quot;)] public static extern int geteuid(); [DllImport(&quot;libc.so.6&quot;)] public static extern int open(string pathname, OpenFlags flags); [DllImport(&quot;libc.so.6&quot;)] public static extern int close(int fd); [DllImport(&quot;libc.so.6&quot;)] public static extern void sync(); [DllImport(&quot;libc.so.6&quot;)] public static extern IntPtr mmap(IntPtr addr, uint length, MmapProts prot, MmapFlags flags, int fd, uint offset); [DllImport(&quot;libc.so.6&quot;)] public static extern int munmap(IntPtr addr, uint length); [DllImport(&quot;libc.so.6&quot;)] public static extern int nanosleep(ref timespec req, ref timespec rem); #endregion } } You must include an EntryPoint on your DllImport in you ever want to change its name.. like so: [DllImport(&quot;libc.so.6&quot;, EntryPoint = &quot;open&quot;)] private static extern IntPtr OpenSename(string pathname, OpenFlags flags); And replace all code that use Syscall to use this Interop and remove Mono directive. I also remove this code below for now: and just use it’s type pointer instead like in the orginal but without having it volatile. public unsafe struct VolatilePointer { public volatile uint* Address; public VolatilePointer(uint Address) { this.Address = (uint*)Address; } public VolatilePointer(uint* Address) { this.Address = Address; } public static implicit operator VolatilePointer(uint* Address) { return new VolatilePointer(Address); } public static implicit operator VolatilePointer(uint Address) { return new VolatilePointer(Address); } } So from these: [MethodImpl(MethodImplOptions.AggressiveInlining)] // &amp;lt;- I still need more time to grasp what this is for so i removed it for now public static uint bcm2835_peri_read(VolatilePointer paddr) { uint ret; Thread.MemoryBarrier(); ret = *paddr.Address; Thread.MemoryBarrier(); return ret; } into these: public static uint bcm2835_peri_read(uint* paddr) { uint ret; Thread.MemoryBarrier(); ret = *paddr; Thread.MemoryBarrier(); return ret;; } For simple output test these are the basic function that is needed from BCM2835 port to C#: bcm2835_init() mapmem bcm2835_peri_read bcm2835_peri_write bcm2835_peri_set_bits bcm2835_gpio_fsel bcm2835_gpio_set bcm2835_gpio_clr bcm2835_gpio_write</summary></entry><entry><title type="html">RPi 3: GPIO on .Net Core webApi inside Docker using bcm2835 library: #3</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/30/rpi3-docker-gpio-3.html" rel="alternate" type="text/html" title="RPi 3: GPIO on .Net Core webApi inside Docker using bcm2835 library: #3" /><published>2017-06-30T00:00:00+08:00</published><updated>2017-06-30T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/30/rpi3-docker-gpio-3</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/30/rpi3-docker-gpio-3.html">&lt;h5 id=&quot;17-07-11-the-problem-i-encounter-below-are-fixed-on-the-latest-version-of-net-core&quot;&gt;***17-07-11: The problem i encounter below are fixed on the latest version of .Net Core&lt;/h5&gt;
+
+&lt;p&gt;&lt;br /&gt;
+In our previous &lt;a href=&quot;../27/rpi3-docker-gpio-2&quot;&gt;post&lt;/a&gt;… we tried a console app. This time we’ll try a web api. So we’ll create a new project and named it &lt;code class=&quot;highlighter-rouge&quot;&gt;testWebApi&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;dotnet new piwebapi -n testWebApi
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Above code runned in  windows cmd prompt because i use visual studio code as my editor. Run &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet new --help&lt;/code&gt; to see a list of available templates.
+Now Open the created &lt;code class=&quot;highlighter-rouge&quot;&gt;/ControllersValuesController&lt;/code&gt; and rename it in my case to &lt;code class=&quot;highlighter-rouge&quot;&gt;TestpinController&lt;/code&gt; or just leave it as it is.
+we’ll modify our code like so:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+
+using System.Runtime.InteropServices;
+
+namespace testWebApi.Controllers
+{
+    [Route(&quot;[controller]&quot;)]
+    public class TestpinController : Controller
+    {
+        private static uint HIGH = 0x1;
+        private static uint LOW  = 0x0;
+        private static byte BCM2835_GPIO_FSEL_OUTP = 0x01;
+        private static byte RPI_GPIO_P1_07 = 4;
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern int bcm2835_init();
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern void bcm2835_close();
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern void bcm2835_delay(uint millis);
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern void bcm2835_gpio_fsel(byte pin, byte mode);
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern void bcm2835_gpio_write(byte pin, uint on);
+
+        [DllImport(&quot;libc.so.6&quot;)]
+        public static extern int geteuid();
+
+        [HttpGet]
+        public IEnumerable&amp;lt;string&amp;gt; Get()
+        {
+            return new string[] { &quot;value1&quot;, &quot;value2&quot; };
+        }
+
+        [HttpPost]
+        public void SwitchPin(int pinId)
+        {
+            if(bcm2835_init() == pinId)
+                bcm2835_gpio_fsel(RPI_GPIO_P1_07, BCM2835_GPIO_FSEL_OUTP);
+
+            switch (pinId)
+            {
+                case 1:
+                    bcm2835_gpio_write(RPI_GPIO_P1_07, HIGH);
+                    break;
+                case 0:
+                    bcm2835_gpio_write(RPI_GPIO_P1_07, LOW);
+                    break;
+                default:
+                    break;
+            }
+
+            bcm2835_close();
+        }
+        
+    }
+   
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Just like before let’s build and publish it for ubuntu.16.04-arm. Then copy it to our RPi3;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;testWebApi&amp;gt;dotnet build .
+testWebApi&amp;gt;dotnet publish -r ubuntu.16.04-arm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;So when we run it now inside our docker… and browse it at &lt;code class=&quot;highlighter-rouge&quot;&gt;http://192.168.254.102:5000/Testpin&lt;/code&gt; we’ll have an output:
+&lt;img src=&quot;/ubuntu/images/testWebApi.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+But we have no way of sending value &lt;code class=&quot;highlighter-rouge&quot;&gt;[HttpPost]&lt;/code&gt; to our RPi3. For that i use &lt;code class=&quot;highlighter-rouge&quot;&gt;Postman&lt;/code&gt; which is a Chrome extension app for testing Web Apis.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+When we send &lt;code class=&quot;highlighter-rouge&quot;&gt;Get&lt;/code&gt; command using &lt;code class=&quot;highlighter-rouge&quot;&gt;Postman&lt;/code&gt; we’ll have an output like these: Displaying the values when we use a WebBrowser.
+&lt;img src=&quot;/ubuntu/images/Postman-Get.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+In order to send a value to our Rpi3… Well use &lt;code class=&quot;highlighter-rouge&quot;&gt;POST&lt;/code&gt; then click &lt;code class=&quot;highlighter-rouge&quot;&gt;Params&lt;/code&gt; right before &lt;code class=&quot;highlighter-rouge&quot;&gt;SEND&lt;/code&gt;. On the &lt;code class=&quot;highlighter-rouge&quot;&gt;key&lt;/code&gt; column type &lt;code class=&quot;highlighter-rouge&quot;&gt;pinId&lt;/code&gt; and a &lt;code class=&quot;highlighter-rouge&quot;&gt;Value&lt;/code&gt; of &lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt; for HIGH[led on] and &lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt; for LOW[led off]. On our first &lt;code class=&quot;highlighter-rouge&quot;&gt;Send&lt;/code&gt;…our RPi3 will complain a &lt;code class=&quot;highlighter-rouge&quot;&gt;fail&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;Postman&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;Status:500 Internal Server Error&lt;/code&gt;. for now i don’t know how to fixe this.
+&lt;img src=&quot;/ubuntu/images/Postman-Post-1.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+But if we press &lt;code class=&quot;highlighter-rouge&quot;&gt;Send&lt;/code&gt; again…. it works, our led is light up and and a &lt;code class=&quot;highlighter-rouge&quot;&gt;Status:200 OK&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;Postman&lt;/code&gt;.
+&lt;img src=&quot;/ubuntu/images/Postman-Post-2.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+On to &lt;a href=&quot;../../07/01/rpi3-docker-gpio-4&quot;&gt;part4&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">***17-07-11: The problem i encounter below are fixed on the latest version of .Net Core In our previous post… we tried a console app. This time we’ll try a web api. So we’ll create a new project and named it testWebApi. &amp;gt;dotnet new piwebapi -n testWebApi Above code runned in windows cmd prompt because i use visual studio code as my editor. Run dotnet new --help to see a list of available templates. Now Open the created /ControllersValuesController and rename it in my case to TestpinController or just leave it as it is. we’ll modify our code like so: using System; using System.Collections.Generic; using System.Linq; using System.Threading.Tasks; using Microsoft.AspNetCore.Mvc; using System.Runtime.InteropServices; namespace testWebApi.Controllers { [Route(&quot;[controller]&quot;)] public class TestpinController : Controller { private static uint HIGH = 0x1; private static uint LOW = 0x0; private static byte BCM2835_GPIO_FSEL_OUTP = 0x01; private static byte RPI_GPIO_P1_07 = 4; [DllImport(&quot;libbcm2835.so&quot;)] public static extern int bcm2835_init(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_close(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_delay(uint millis); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_fsel(byte pin, byte mode); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_write(byte pin, uint on); [DllImport(&quot;libc.so.6&quot;)] public static extern int geteuid(); [HttpGet] public IEnumerable&amp;lt;string&amp;gt; Get() { return new string[] { &quot;value1&quot;, &quot;value2&quot; }; } [HttpPost] public void SwitchPin(int pinId) { if(bcm2835_init() == pinId) bcm2835_gpio_fsel(RPI_GPIO_P1_07, BCM2835_GPIO_FSEL_OUTP); switch (pinId) { case 1: bcm2835_gpio_write(RPI_GPIO_P1_07, HIGH); break; case 0: bcm2835_gpio_write(RPI_GPIO_P1_07, LOW); break; default: break; } bcm2835_close(); } } } Just like before let’s build and publish it for ubuntu.16.04-arm. Then copy it to our RPi3; testWebApi&amp;gt;dotnet build . testWebApi&amp;gt;dotnet publish -r ubuntu.16.04-arm So when we run it now inside our docker… and browse it at http://192.168.254.102:5000/Testpin we’ll have an output: But we have no way of sending value [HttpPost] to our RPi3. For that i use Postman which is a Chrome extension app for testing Web Apis. When we send Get command using Postman we’ll have an output like these: Displaying the values when we use a WebBrowser. In order to send a value to our Rpi3… Well use POST then click Params right before SEND. On the key column type pinId and a Value of 1 for HIGH[led on] and 0 for LOW[led off]. On our first Send…our RPi3 will complain a fail and Postman Status:500 Internal Server Error. for now i don’t know how to fixe this. But if we press Send again…. it works, our led is light up and and a Status:200 OK in Postman. On to part4</summary></entry><entry><title type="html">RPi 3: GPIO on .Net Core consoleApp inside Docker using bcm2835 library: #2</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/27/rpi3-docker-gpio-2.html" rel="alternate" type="text/html" title="RPi 3: GPIO on .Net Core consoleApp inside Docker using bcm2835 library: #2" /><published>2017-06-27T00:00:00+08:00</published><updated>2017-06-27T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/27/rpi3-docker-gpio-2</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/27/rpi3-docker-gpio-2.html">&lt;h3 id=&quot;gpio&quot;&gt;GPIO&lt;/h3&gt;
+&lt;p&gt;Now let’s try our RPi3 GPIO. In our testapp project we created &lt;a href=&quot;../26/rpi3-docker-gpio&quot;&gt;earlier&lt;/a&gt;…we’ll have a directory tree like mine:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/bin
+/obj
+testapp.csproj
+Program.cs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then modify &lt;code class=&quot;highlighter-rouge&quot;&gt;Program.cs&lt;/code&gt; with these codes. What it does is we use &lt;code class=&quot;highlighter-rouge&quot;&gt;libbcm2835.so&lt;/code&gt; C internal commands into our C# app using PInvoke.
+Take note of the &lt;code class=&quot;highlighter-rouge&quot;&gt;PIN Numbering&lt;/code&gt;: bcm2835 library use physical numbering so &lt;code class=&quot;highlighter-rouge&quot;&gt;RPI_GPIO_P1_07&lt;/code&gt; is equal to GPIO4 of our RPi3.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/ubuntu/images/Raspberry-Pi-3-GPIO-Layout-Model-B.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;using System;
+using System.Runtime.InteropServices;
+
+namespace testapp
+{
+    class Program
+    {
+        private static uint HIGH = 0x1;
+        private static uint LOW  = 0x0;
+        private static byte RPI_GPIO_P1_07 = 4;
+        private static byte BCM2835_GPIO_FSEL_OUTP = 0x01;
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern int bcm2835_init();
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern void bcm2835_close();
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern void bcm2835_delay(uint millis);
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern void bcm2835_gpio_fsel(byte pin, byte mode);
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern void bcm2835_gpio_write(byte pin, uint on);
+
+        static void Main(string[] args)
+        {
+            Console.WriteLine(&quot;Hello World!&quot;);
+
+            if (bcm2835_init() == 1)
+            {
+                
+                    bcm2835_gpio_fsel(RPI_GPIO_P1_07, BCM2835_GPIO_FSEL_OUTP);
+                    
+                    // Blink
+                    while(true)
+                    {
+                        // Turn it on
+                        bcm2835_gpio_write(RPI_GPIO_P1_07, HIGH);
+                        // wait
+                        bcm2835_delay(500);
+                        // turn it off
+                        bcm2835_gpio_write(RPI_GPIO_P1_07, LOW);
+                        // wait 
+                        bcm2835_delay(500);
+                    }
+                
+            }
+            bcm2835_close();
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then publish and get our new &lt;code class=&quot;highlighter-rouge&quot;&gt;/publish&lt;/code&gt; folder contents. And copy it inside our RPi3.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;testapp&amp;gt; dotnet publish -r ubuntu.16.04-arm     //then copy /publish folder into our RPi3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Assuming you know how to and already hook up our test circuit: a led attach to our GPIO4 or rather PIN7 on the RPi3 physical Pin header.
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Please be careful and you should know how to properly hook up our test led to avoid breaking our RPi3&lt;/code&gt;.
+In RPi3, let us run our updated docker image then test our testapp on it.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo docker run -it --privileged --rm -p 5000:5000 -v /home/pi3:/home/share
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h6 id=&quot;note---rm--means-that-once-we-exit-docker-it-will-clean-our-previouly-runned-docker-image&quot;&gt;Note :&lt;code class=&quot;highlighter-rouge&quot;&gt;--rm&lt;/code&gt;  means that once we exit docker it will clean our previouly runned docker image.&lt;/h6&gt;
+
+&lt;p&gt;&lt;br /&gt;
+Make sure that you have &lt;code class=&quot;highlighter-rouge&quot;&gt;libbcm2835.so&lt;/code&gt; inside the &lt;code class=&quot;highlighter-rouge&quot;&gt;/lib/arm-~&lt;/code&gt; folder or it will complain about running it in SDK.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# cd /home/share/publish
+/home/share/publish# /opt/dotnet/dotnet ./testapp.dll
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Your led should be blinking right now…. &lt;a href=&quot;../30/rpi3-docker-gpio-3&quot;&gt;part3&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">GPIO Now let’s try our RPi3 GPIO. In our testapp project we created earlier…we’ll have a directory tree like mine: /bin /obj testapp.csproj Program.cs Then modify Program.cs with these codes. What it does is we use libbcm2835.so C internal commands into our C# app using PInvoke. Take note of the PIN Numbering: bcm2835 library use physical numbering so RPI_GPIO_P1_07 is equal to GPIO4 of our RPi3. using System; using System.Runtime.InteropServices; namespace testapp { class Program { private static uint HIGH = 0x1; private static uint LOW = 0x0; private static byte RPI_GPIO_P1_07 = 4; private static byte BCM2835_GPIO_FSEL_OUTP = 0x01; [DllImport(&quot;libbcm2835.so&quot;)] public static extern int bcm2835_init(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_close(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_delay(uint millis); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_fsel(byte pin, byte mode); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_write(byte pin, uint on); static void Main(string[] args) { Console.WriteLine(&quot;Hello World!&quot;); if (bcm2835_init() == 1) { bcm2835_gpio_fsel(RPI_GPIO_P1_07, BCM2835_GPIO_FSEL_OUTP); // Blink while(true) { // Turn it on bcm2835_gpio_write(RPI_GPIO_P1_07, HIGH); // wait bcm2835_delay(500); // turn it off bcm2835_gpio_write(RPI_GPIO_P1_07, LOW); // wait bcm2835_delay(500); } } bcm2835_close(); } } } Then publish and get our new /publish folder contents. And copy it inside our RPi3. testapp&amp;gt; dotnet publish -r ubuntu.16.04-arm //then copy /publish folder into our RPi3 Assuming you know how to and already hook up our test circuit: a led attach to our GPIO4 or rather PIN7 on the RPi3 physical Pin header. Please be careful and you should know how to properly hook up our test led to avoid breaking our RPi3. In RPi3, let us run our updated docker image then test our testapp on it. $ sudo docker run -it --privileged --rm -p 5000:5000 -v /home/pi3:/home/share Note :--rm means that once we exit docker it will clean our previouly runned docker image. Make sure that you have libbcm2835.so inside the /lib/arm-~ folder or it will complain about running it in SDK. # cd /home/share/publish /home/share/publish# /opt/dotnet/dotnet ./testapp.dll Your led should be blinking right now…. part3</summary></entry><entry><title type="html">RPi 3: GPIO on .Net Core inside Docker using bcm2835 library: #1</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/26/rpi3-docker-gpio.html" rel="alternate" type="text/html" title="RPi 3: GPIO on .Net Core inside Docker using bcm2835 library: #1" /><published>2017-06-26T00:00:00+08:00</published><updated>2017-06-26T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/26/rpi3-docker-gpio</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/26/rpi3-docker-gpio.html">&lt;p&gt;I wan’t to try .Net Core on linux-arm64… but unfortunately, there’s no available yet except Win-arm64 and linux-arm32. So instead of using qemu for VM inside RPi3… i encounter docker and try it out. For now i’ll use ubuntu-arm32 as the base image then later try alpine-linux.&lt;/p&gt;
+
+&lt;h4 id=&quot;prerequisites&quot;&gt;Prerequisites:&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/dotnet/core-setup/files/716356/dotnet-ubuntu.16.04-arm.1.2.0-beta-001291-00.tar.gz&quot;&gt;dotnet-runtime-latest-linux-arm.tar.gz&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.airspayce.com/mikem/bcm2835/bcm2835-1.52.tar.gz&quot;&gt;bcm2835-1.52.tar.gz&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.Net Core SDK&lt;/code&gt;     // on your developtment host&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;libbcm2835.so&lt;/code&gt;     // We’ll create from bcm2835-library&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker.io&lt;/code&gt;         // To be installed on our RPi3&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;make&lt;/code&gt;              // To be installed inside docker&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;gcc&lt;/code&gt;              // To be installed inside docker&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;docker-container&quot;&gt;Docker Container&lt;/h3&gt;
+&lt;p&gt;Assuming you already install &lt;code class=&quot;highlighter-rouge&quot;&gt;docker.io&lt;/code&gt;. Go ahead and pull an armhf/ubuntu image to be use.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo docker pull armhf/ubuntu     //This is what i use for now
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then run it using these command:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo docker run -it --privileged -p 5000:5000 -v /home/user:/home/share armhf/ubuntu
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h5 id=&quot;note-docker-options-that-well-use&quot;&gt;Note: Docker options that we’ll use:&lt;/h5&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-it
+-v  /[folder to share]:/[folder destination]
+-p  5000:5000   //port to expose. [any port you like on host]:[any port you'll set on .net core]
+--privileged    //to have acces on /dev/mem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then install these packages for &lt;code class=&quot;highlighter-rouge&quot;&gt;.Net Core&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# apt-get install libunwind8 libunwind8-dev gettext libicu-dev liblttng-ust-dev libcurl4-openssl-dev libssl-dev uuid-dev
+# apt-get install make gcc      // can be remove after we created our libbcm2835.so
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We’re going to extract &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet-runtime-latest-linux-arm.tar.gz&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;/opt/dotnet&lt;/code&gt; folder.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# mkdir /opt/dotnet
+# tar -zxvf dotnet-runtime-latest-linux-arm.tar.gz -C /opt/dotnet
+# ln -s /opt/dotnet/dotnet /usr/bin/dotnet 
+# dotnet --info           // to verify that it works
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Extract &lt;code class=&quot;highlighter-rouge&quot;&gt;bcm2835-1.52.tar.gz&lt;/code&gt; anywhere you like, because where going to remove it once we have &lt;code class=&quot;highlighter-rouge&quot;&gt;libbcm2835.so&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# tar -zxvf bcm2835-1.52.tar.gz
+# cd bcm2835-1.52/src
+# gcc -fPIC -c bcm2835.c
+# gcc -shared bcm2835.o -o libbcm2835.so
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You can now remove the &lt;code class=&quot;highlighter-rouge&quot;&gt;bcm2835-1.52 folder&lt;/code&gt; and be sure to put &lt;code class=&quot;highlighter-rouge&quot;&gt;libbcm2835.so&lt;/code&gt; inside &lt;code class=&quot;highlighter-rouge&quot;&gt;/lib/arm-&lt;/code&gt; folder.
+And now lets exit docker and save our updated docker image.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# exit
+$ sudo docker commit $(sudo docker ps -aq) armhf/ubuntu     // # sudo docker ps -aq get the id of the docker image we just exited.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;net-core&quot;&gt;.Net Core&lt;/h3&gt;
+&lt;p&gt;Once &lt;code class=&quot;highlighter-rouge&quot;&gt;.Net Core SDK&lt;/code&gt; is installed, create a simple console application that we can try to test first. I use windows for development. So from cmd prompt i ran this command to create a test app.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; dotnet new console -n testapp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then make sure the we have the same configuration like this for our test app in &lt;code class=&quot;highlighter-rouge&quot;&gt;testapp.csproj&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;Project&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;Sdk=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Microsoft.NET.Sdk&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;PropertyGroup&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;OutputType&amp;gt;&lt;/span&gt;Exe&lt;span class=&quot;nt&quot;&gt;&amp;lt;/OutputType&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;TargetFramework&amp;gt;&lt;/span&gt;netcoreapp2.0&lt;span class=&quot;nt&quot;&gt;&amp;lt;/TargetFramework&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;RuntimeFrameworkVersion&amp;gt;&lt;/span&gt;2.0.0-preview1-002028-00&lt;span class=&quot;nt&quot;&gt;&amp;lt;/RuntimeFrameworkVersion&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;RuntimeIdentifiers&amp;gt;&lt;/span&gt;ubuntu.16.04-arm&lt;span class=&quot;nt&quot;&gt;&amp;lt;/RuntimeIdentifiers&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/PropertyGroup&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/Project&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;For now aside from the above… we’ll leave everything as it is and then run these commands:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; cd testapp
+testapp&amp;gt; dotnet restore .
+testapp&amp;gt; dotnet build .
+testapp&amp;gt; dotnet publish -r ubuntu.16.04-arm   //or use a generic 'linux-arm' as runtime
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The command &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet publish -r ubuntu.16.04-arm&lt;/code&gt; will create the necessary files that we need to run our console app in ubuntu.
+Now let’s go to: &lt;code class=&quot;highlighter-rouge&quot;&gt;/testapp/bin/debug/netcoreapp2.0/ubuntu.16.04-arm&lt;/code&gt; folder and the &lt;code class=&quot;highlighter-rouge&quot;&gt;/publish folder&lt;/code&gt; is what we need to copy into our RPi3. You can use any SFTP app you like to do it. Once your done transfering that folder… let’s navigate into it and test if it will run. let us run again our docker image above and then In my case i’ll use this as my shared folder: &lt;code class=&quot;highlighter-rouge&quot;&gt;/home/pi3:/home/share&lt;/code&gt; [my RPi3 folder]:[docker folder that is created automatically]&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo docker run -it --privileged -p 5000:5000 -v /home/pi3:/home/share armhf/ubuntu
+# cd /home/share/publish
+# /opt/dotnet/dotnet ./testapp.dll
+
+    Hellow World!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Those last 2 commands are run inside the docker image. Yes! it’s alive…Now for the &lt;a href=&quot;../27/rpi3-docker-gpio-2&quot;&gt;part 2&lt;/a&gt;&lt;/p&gt;
+
+&lt;h5 id=&quot;reference&quot;&gt;Reference:&lt;/h5&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://dotnetcorechris.github.io/dotnetcoreonraspberrypi.html&quot;&gt;https://dotnetcorechris.github.io/dotnetcoreonraspberrypi.html&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.yolinux.com/TUTORIALS/LibraryArchives-StaticAndDynamic.html&quot;&gt;http://www.yolinux.com/TUTORIALS/LibraryArchives-StaticAndDynamic.html&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://jeremylindsayni.wordpress.com/2017/04/02/installing-ubuntu-16-04-on-a-raspberry-pi-3-installing-net-core-2-and-running-a-sample-net-core-2-app/&quot;&gt;https://jeremylindsayni.wordpress.com/2017/04/02/installing-ubuntu-16-04-on-a-raspberry-pi-3-installing-net-core-2-and-running-a-sample-net-core-2-app/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">I wan’t to try .Net Core on linux-arm64… but unfortunately, there’s no available yet except Win-arm64 and linux-arm32. So instead of using qemu for VM inside RPi3… i encounter docker and try it out. For now i’ll use ubuntu-arm32 as the base image then later try alpine-linux. Prerequisites: dotnet-runtime-latest-linux-arm.tar.gz bcm2835-1.52.tar.gz .Net Core SDK // on your developtment host libbcm2835.so // We’ll create from bcm2835-library docker.io // To be installed on our RPi3 make // To be installed inside docker gcc // To be installed inside docker Docker Container Assuming you already install docker.io. Go ahead and pull an armhf/ubuntu image to be use. $ sudo docker pull armhf/ubuntu //This is what i use for now Then run it using these command: $ sudo docker run -it --privileged -p 5000:5000 -v /home/user:/home/share armhf/ubuntu Note: Docker options that we’ll use: -it -v /[folder to share]:/[folder destination] -p 5000:5000 //port to expose. [any port you like on host]:[any port you'll set on .net core] --privileged //to have acces on /dev/mem Then install these packages for .Net Core: # apt-get install libunwind8 libunwind8-dev gettext libicu-dev liblttng-ust-dev libcurl4-openssl-dev libssl-dev uuid-dev # apt-get install make gcc // can be remove after we created our libbcm2835.so We’re going to extract dotnet-runtime-latest-linux-arm.tar.gz in /opt/dotnet folder. # mkdir /opt/dotnet # tar -zxvf dotnet-runtime-latest-linux-arm.tar.gz -C /opt/dotnet # ln -s /opt/dotnet/dotnet /usr/bin/dotnet # dotnet --info // to verify that it works Extract bcm2835-1.52.tar.gz anywhere you like, because where going to remove it once we have libbcm2835.so. # tar -zxvf bcm2835-1.52.tar.gz # cd bcm2835-1.52/src # gcc -fPIC -c bcm2835.c # gcc -shared bcm2835.o -o libbcm2835.so You can now remove the bcm2835-1.52 folder and be sure to put libbcm2835.so inside /lib/arm- folder. And now lets exit docker and save our updated docker image. # exit $ sudo docker commit $(sudo docker ps -aq) armhf/ubuntu // # sudo docker ps -aq get the id of the docker image we just exited. .Net Core Once .Net Core SDK is installed, create a simple console application that we can try to test first. I use windows for development. So from cmd prompt i ran this command to create a test app. &amp;gt; dotnet new console -n testapp Then make sure the we have the same configuration like this for our test app in testapp.csproj: &amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&amp;gt; &amp;lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&amp;gt; &amp;lt;PropertyGroup&amp;gt; &amp;lt;OutputType&amp;gt;Exe&amp;lt;/OutputType&amp;gt; &amp;lt;TargetFramework&amp;gt;netcoreapp2.0&amp;lt;/TargetFramework&amp;gt; &amp;lt;RuntimeFrameworkVersion&amp;gt;2.0.0-preview1-002028-00&amp;lt;/RuntimeFrameworkVersion&amp;gt; &amp;lt;RuntimeIdentifiers&amp;gt;ubuntu.16.04-arm&amp;lt;/RuntimeIdentifiers&amp;gt; &amp;lt;/PropertyGroup&amp;gt; &amp;lt;/Project&amp;gt; For now aside from the above… we’ll leave everything as it is and then run these commands: &amp;gt; cd testapp testapp&amp;gt; dotnet restore . testapp&amp;gt; dotnet build . testapp&amp;gt; dotnet publish -r ubuntu.16.04-arm //or use a generic 'linux-arm' as runtime The command dotnet publish -r ubuntu.16.04-arm will create the necessary files that we need to run our console app in ubuntu. Now let’s go to: /testapp/bin/debug/netcoreapp2.0/ubuntu.16.04-arm folder and the /publish folder is what we need to copy into our RPi3. You can use any SFTP app you like to do it. Once your done transfering that folder… let’s navigate into it and test if it will run. let us run again our docker image above and then In my case i’ll use this as my shared folder: /home/pi3:/home/share [my RPi3 folder]:[docker folder that is created automatically] $ sudo docker run -it --privileged -p 5000:5000 -v /home/pi3:/home/share armhf/ubuntu # cd /home/share/publish # /opt/dotnet/dotnet ./testapp.dll Hellow World! Those last 2 commands are run inside the docker image. Yes! it’s alive…Now for the part 2 Reference: https://dotnetcorechris.github.io/dotnetcoreonraspberrypi.html http://www.yolinux.com/TUTORIALS/LibraryArchives-StaticAndDynamic.html https://jeremylindsayni.wordpress.com/2017/04/02/installing-ubuntu-16-04-on-a-raspberry-pi-3-installing-net-core-2-and-running-a-sample-net-core-2-app/</summary></entry><entry><title type="html">RPi 3: Bluetooth Setup</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/16/rpi3-bluetooth-setup.html" rel="alternate" type="text/html" title="RPi 3: Bluetooth Setup" /><published>2017-06-16T00:00:00+08:00</published><updated>2017-06-16T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/16/rpi3-bluetooth-setup</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/ubuntu/2017/06/16/rpi3-bluetooth-setup.html">&lt;p&gt;In order for the Bluetooth to work.. we need to have this file.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/OpenELEC/misc-firmware/blob/master/firmware/brcm/BCM43430A1.hcd&quot;&gt;BCM43430A1.hcd&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;
+Make sure this are installed:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;bluetooth&lt;/li&gt;
+  &lt;li&gt;bluez&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;
+Put this file: &lt;code class=&quot;highlighter-rouge&quot;&gt;BCM43430A1.hcd&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;/lib/firmware/brcm&lt;/code&gt; folder… then create a symlink of it in &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/firmware&lt;/code&gt; folder.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo mkdir /etc/firmware
+$ sudo ln -s /lib/firmware/brcm/BCM43430A1.hcd /etc/firmware/BCM43430A1.hcd
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then to test it.. run this twice:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo /usr/bin/hciattach /dev/ttyAMA0 bc43xx 921600 noflow
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;First run we’ll encouter &lt;code class=&quot;highlighter-rouge&quot;&gt;Initialization timed out&lt;/code&gt;. But on the second time we’ll get this &lt;code class=&quot;highlighter-rouge&quot;&gt;Device setup complete&lt;/code&gt;.
+Then try it out now if our device is present.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ hcitool dev
+
+    Devices:
+        hci0   [your device id shows here]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then run your friendly &lt;code class=&quot;highlighter-rouge&quot;&gt;bluetoothctl&lt;/code&gt;. To automate this at boot, just follow the scripts from the reference below.&lt;/p&gt;
+
+&lt;h5 id=&quot;reference&quot;&gt;Reference:&lt;/h5&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.adelpha.be/blog/index.php/2016/09/24/raspberry-pi-3-native-wifi-and-bluetooth/&quot;&gt;http://www.adelpha.be/blog/index.php/2016/09/24/raspberry-pi-3-native-wifi-and-bluetooth/&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/xbianonpi/xbian/issues/813&quot;&gt;https://github.com/xbianonpi/xbian/issues/813&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">In order for the Bluetooth to work.. we need to have this file. BCM43430A1.hcd Make sure this are installed: bluetooth bluez Put this file: BCM43430A1.hcd in /lib/firmware/brcm folder… then create a symlink of it in /etc/firmware folder. $ sudo mkdir /etc/firmware $ sudo ln -s /lib/firmware/brcm/BCM43430A1.hcd /etc/firmware/BCM43430A1.hcd Then to test it.. run this twice: $ sudo /usr/bin/hciattach /dev/ttyAMA0 bc43xx 921600 noflow First run we’ll encouter Initialization timed out. But on the second time we’ll get this Device setup complete. Then try it out now if our device is present. $ hcitool dev Devices: hci0 [your device id shows here] Then run your friendly bluetoothctl. To automate this at boot, just follow the scripts from the reference below. Reference: http://www.adelpha.be/blog/index.php/2016/09/24/raspberry-pi-3-native-wifi-and-bluetooth/ https://github.com/xbianonpi/xbian/issues/813</summary></entry><entry><title type="html">RPi 3 Alpine Linux arm64</title><link href="http://a-delacruz.github.io/a-DelaCruz.github.io/alpine/2017/06/15/alpine-linux.html" rel="alternate" type="text/html" title="RPi 3 Alpine Linux arm64" /><published>2017-06-15T00:00:00+08:00</published><updated>2017-06-15T00:00:00+08:00</updated><id>http://a-delacruz.github.io/a-DelaCruz.github.io/alpine/2017/06/15/alpine-linux</id><content type="html" xml:base="http://a-delacruz.github.io/a-DelaCruz.github.io/alpine/2017/06/15/alpine-linux.html">&lt;h4 id=&quot;-17-07-06-to-fix-brcmfmac-loading-error-directly-place-brcm-folder-inside-our-custom-initramfs-rpi3-file&quot;&gt;*** 17-07-06: To fix brcmfmac loading error: directly place &lt;code class=&quot;highlighter-rouge&quot;&gt;brcm&lt;/code&gt; folder inside our custom &lt;code class=&quot;highlighter-rouge&quot;&gt;initramfs-rpi3&lt;/code&gt; file.&lt;/h4&gt;
+&lt;h4 id=&quot;-17-07-06-b43-in-optional&quot;&gt;*** 17-07-06: &lt;code class=&quot;highlighter-rouge&quot;&gt;b43&lt;/code&gt; in optional…&lt;/h4&gt;
+
+&lt;p&gt;As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3.&lt;/p&gt;
+
+&lt;h4 id=&quot;prerequisites&quot;&gt;Prerequisites:&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;Alpine linux Generic Arm - &lt;a href=&quot;https://nl.alpinelinux.org/alpine/v3.6/releases/aarch64/alpine-uboot-3.6.1-aarch64.tar.gz&quot;&gt;aarch64&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;For the kernel and U-boot…just follow my previous &lt;a href=&quot;rpi3-64bit-kernel-and-Uboot-booting-up&quot;&gt;post&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;note-enable-squashfs-support--file-systems---miscellaneous-filesystems----squashfs-40&quot;&gt;Note: Enable Squashfs support @ File systems -&amp;gt; Miscellaneous filesystems -&amp;gt; &amp;lt;*&amp;gt; SquashFS 4.0&lt;/h4&gt;
+
+&lt;p&gt;The files that we need from alpine to modify is &lt;code class=&quot;highlighter-rouge&quot;&gt;initramfs-vanilla&lt;/code&gt;, and a copy of &lt;code class=&quot;highlighter-rouge&quot;&gt;apk&lt;/code&gt; folder (&lt;code class=&quot;highlighter-rouge&quot;&gt;alpine.apkovl.tar.gz&lt;/code&gt; is optional). so go ahead and extract them.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;initramfs-vanilla&lt;/code&gt; is a compressed cpio archive. To extract it we do this:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkdir temp
+$ cd temp
+$ sudo gunzip -c /boot/initramfs-vanilla | cpio -i
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then we need to install our latest modules into it…assuming you already compiled kernel 4.11. following this &lt;a href=&quot;rpi3-64bit-kernel-and-Uboot-booting-up&quot;&gt;post&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make modules_install INSTALL_MOD_PATH=../temp/
+        when it is done go back to /temp/ folder where we extract the initramfs and into the modules folder.
+$ cd temp/lib/modules/
+        and remove the kernel previous version and optional: the build, source folder symlink in temp/lib/modules/4.11~/ folder
+$ sudo rm -rf 4.9~
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now we have our custom initramfs and then recreate the compressed cpio archive again.
+Inside the folder run:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo find . | cpio -H newc -o | gzip -9 &amp;gt; [file destination]/initramfs-rpi3-cpio
+$ cd ..
+$ sudo mkimage -A arm64 -O linux -T ramdisk -d initramfs-rpi3-cpio initramfs-rpi3 // For U-boot
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;modloop-vanilla&lt;/code&gt; is a squashfs file. We can make from scratch or unsquash it using this command:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo unsquashfs -f -d [file destination] [file location]/file.squashfs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To create our own &lt;code class=&quot;highlighter-rouge&quot;&gt;modloop&lt;/code&gt; file let start by making a folder&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo mkdir modules // Then inside this module, let's install again our rpi-4.11y modules from above
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After you’ve installed &lt;code class=&quot;highlighter-rouge&quot;&gt;our modules from above&lt;/code&gt; on the modules folder that we’ve just created.. you’ll have a folder structure like so:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/modules
+        |- /lib
+                |- /firmware    // firmware_install INSTALL_FW_PATH=[in this location or just use from the moodlop-vanilla] 
+                |- /modules     // again remove build and source symlink folder here
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Rearrange above modules folder to:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/modules/modules/firmware
+/modules/modules/4.11~
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Squash it using this command:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo mksquashfs [folder to be squash] [filename] -comp [compression method: I use 'xz' -Xdict-size 100%
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And now we have our own &lt;code class=&quot;highlighter-rouge&quot;&gt;initramfs-rpi3&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;modloop-rpi3&lt;/code&gt;. Our µsd card should now look like this:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/apk
+/boot/Image
+/boot/kernel8.img
+/boot/boot.scr
+/boot/initramfs-rpi3
+/boot/modloop-rpi3
+bcm2710-rpi-3-b.dtb
+bootcode.bin
+start.elf 
+fixup.dat 
+config.txt
+cmdline.txt
+alpine.apkovl.tar.gz // optional will be created once we setup our alpine linux
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We’ll modify the &lt;code class=&quot;highlighter-rouge&quot;&gt;cmdline.txt&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;boot.scr&lt;/code&gt; for alpine linux.&lt;/p&gt;
+&lt;h5 id=&quot;cmdlinetxt&quot;&gt;cmdline.txt&lt;/h5&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;modules=loop,squashfs,sd-mod,usb-storage quiet net.ifnames=0 dwc_otg.lpm_enable=0 console=ttyS0,115200 fsck.repair=yes rootwait
+// the quiet command can be remove: it just hide the message buffer of kernel. `ttyS0` can be replace by `ttyAMA0`
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h5 id=&quot;bootscr&quot;&gt;boot.scr&lt;/h5&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fdt addr 0x100
+fdt get value bootargs /chosen bootargs
+setenv kernel_addr_r 0x01000000
+setenv ramdisk_addr_r 0x02100000
+fatload mmc 0:1 ${kernel_addr_r} boot/Image
+fatload mmc 0:1 ${ramdisk_addr_r} boot/initramfs-rpi3
+setenv initrdsize $filesize
+fatload mmc 0:1 ${fdt_addr_r} bcm2710-rpi-3-b.dtb
+booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Go ahead noew and try to boot it up. You should have an output like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/alpine/images/alpine-linux-arm64-rpi3.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see… there’s a hwclock error since our raspberry pi 3 don’t have any. So after you run &lt;code class=&quot;highlighter-rouge&quot;&gt;setup-alpine&lt;/code&gt; and use &lt;code class=&quot;highlighter-rouge&quot;&gt;lbu commit &lt;/code&gt; to save changes…run this:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# rc-update add swclock boot    # enable the software clock
+# rc-update del hwclock boot    # disable the hardware clock
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;In my case i use &lt;code class=&quot;highlighter-rouge&quot;&gt;Busybox NTP&lt;/code&gt; as it might be the most lightweight solution. Save the changes and reboot.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# lbu commit
+# apk add wireless-tools wpa_supplicant  // will be installed even when not connected to the net
+# reboot
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;wifi-optional&quot;&gt;Wifi: (optional…)&lt;/h4&gt;
+&lt;p&gt;I didn’t include the &lt;code class=&quot;highlighter-rouge&quot;&gt;brcm&lt;/code&gt; above because i encouter a &lt;code class=&quot;highlighter-rouge&quot;&gt;brcmf_sdio_htclk&lt;/code&gt; error but can be resolve by reloading the module: &lt;code class=&quot;highlighter-rouge&quot;&gt;brcmfmac&lt;/code&gt;
+The good thing about alpine linux is if you make a &lt;code class=&quot;highlighter-rouge&quot;&gt;firmware folder&lt;/code&gt; on the root directory of our µsd card, it’ll be recognized by alpine and load it once alpine boot up. Don’t worry if the rest of the folder inside the OS fimrware folder is gone(it’s  just hidden in plain site). So i place my brcm folder there for now.&lt;/p&gt;
+
+&lt;p&gt;According to alpine linux… &lt;a href=&quot;https://wiki.alpinelinux.org/wiki/Connecting_to_a_wireless_access_point&quot;&gt;Connecting to a wireless access point&lt;/a&gt; Broadcom Wi-Fi Chipset Users: we need &lt;code class=&quot;highlighter-rouge&quot;&gt;b43-firmware&lt;/code&gt; so go ahead and follow that or we can compile it somewhere else like what i did.&lt;/p&gt;
+
+&lt;p&gt;On ubuntu 16.04 i install &lt;code class=&quot;highlighter-rouge&quot;&gt;b43-fwcutter&lt;/code&gt; then get &lt;a href=&quot;http://mirror2.openwrt.org/sources/broadcom-wl-4.150.10.5.tar.bz2&quot;&gt;b43-firmware&lt;/a&gt; and follow the instruction &lt;a href=&quot;http://linuxwireless.org/en/users/Drivers/b43/&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ tar -xjf broadcom-wl-4.150.10.5.tar.bz2       // make sure bzip is installed
+$ b43-fwcutter -w [$FIRMWARE_INSTALL_DIR/b43] broadcom-wl-4.150.10.5/driver/wl_apsta_mimo.o
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then copy that &lt;code class=&quot;highlighter-rouge&quot;&gt;b43&lt;/code&gt; folder to firmware folder on the root of our µsd card.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/apk
+/boot/Image
+/boot/kernel8.img
+/boot/boot.scr
+/boot/initramfs-rpi3
+/boot/modloop-rpi3
+/firmware/b43
+/firmware/brcm
+bcm2710-rpi-3-b.dtb
+bootcode.bin
+start.elf 
+fixup.dat 
+config.txt
+cmdline.txt
+alpine.apkovl.tar.gz // optional will be created once we setup our alpine linux
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Load the &lt;code class=&quot;highlighter-rouge&quot;&gt;b43&lt;/code&gt; kernel and enable it at boot up:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ modprobe b43
+$ echo b43 &amp;gt;&amp;gt; /etc/modules
+$ lbu commit    //To save changes
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If you run &lt;code class=&quot;highlighter-rouge&quot;&gt;dmesg&lt;/code&gt; command and display a brcmfmac error just reload &lt;code class=&quot;highlighter-rouge&quot;&gt;brcmfmac module&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ modprobe -r brcmfmac  // For now
+$ modprobe brcmfmac
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Feedback is at most welcome…&lt;/p&gt;
+
+&lt;h5 id=&quot;reference&quot;&gt;Reference:&lt;/h5&gt;
+&lt;ul&gt;
+  &lt;li&gt;http://backreference.org/2010/07/04/modifying-initrdinitramfs-files/&lt;/li&gt;
+  &lt;li&gt;https://askubuntu.com/questions/437880/extract-a-squashfs-to-an-existing-directory&lt;/li&gt;
+  &lt;li&gt;https://wiki.alpinelinux.org/wiki/DIY_Fully_working_Alpine_Linux_for_Allwinner_and_Other_ARM_SOCs&lt;/li&gt;
+  &lt;li&gt;https://wiki.alpinelinux.org/wiki/Raspberry_Pi&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;</content><author><name></name></author><category term="alpine" /><summary type="html">*** 17-07-06: To fix brcmfmac loading error: directly place brcm folder inside our custom initramfs-rpi3 file. *** 17-07-06: b43 in optional… As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3. Prerequisites: Alpine linux Generic Arm - aarch64 For the kernel and U-boot…just follow my previous post. Note: Enable Squashfs support @ File systems -&amp;gt; Miscellaneous filesystems -&amp;gt; &amp;lt;*&amp;gt; SquashFS 4.0 The files that we need from alpine to modify is initramfs-vanilla, and a copy of apk folder (alpine.apkovl.tar.gz is optional). so go ahead and extract them. initramfs-vanilla is a compressed cpio archive. To extract it we do this: $ mkdir temp $ cd temp $ sudo gunzip -c /boot/initramfs-vanilla | cpio -i Then we need to install our latest modules into it…assuming you already compiled kernel 4.11. following this post. $ sudo ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make modules_install INSTALL_MOD_PATH=../temp/ when it is done go back to /temp/ folder where we extract the initramfs and into the modules folder. $ cd temp/lib/modules/ and remove the kernel previous version and optional: the build, source folder symlink in temp/lib/modules/4.11~/ folder $ sudo rm -rf 4.9~ Now we have our custom initramfs and then recreate the compressed cpio archive again. Inside the folder run: $ sudo find . | cpio -H newc -o | gzip -9 &amp;gt; [file destination]/initramfs-rpi3-cpio $ cd .. $ sudo mkimage -A arm64 -O linux -T ramdisk -d initramfs-rpi3-cpio initramfs-rpi3 // For U-boot modloop-vanilla is a squashfs file. We can make from scratch or unsquash it using this command: $ sudo unsquashfs -f -d [file destination] [file location]/file.squashfs To create our own modloop file let start by making a folder $ sudo mkdir modules // Then inside this module, let's install again our rpi-4.11y modules from above After you’ve installed our modules from above on the modules folder that we’ve just created.. you’ll have a folder structure like so: /modules |- /lib |- /firmware // firmware_install INSTALL_FW_PATH=[in this location or just use from the moodlop-vanilla] |- /modules // again remove build and source symlink folder here Rearrange above modules folder to: /modules/modules/firmware /modules/modules/4.11~ Squash it using this command: $ sudo mksquashfs [folder to be squash] [filename] -comp [compression method: I use 'xz' -Xdict-size 100% And now we have our own initramfs-rpi3 and modloop-rpi3. Our µsd card should now look like this: /apk /boot/Image /boot/kernel8.img /boot/boot.scr /boot/initramfs-rpi3 /boot/modloop-rpi3 bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt alpine.apkovl.tar.gz // optional will be created once we setup our alpine linux We’ll modify the cmdline.txt and boot.scr for alpine linux. cmdline.txt modules=loop,squashfs,sd-mod,usb-storage quiet net.ifnames=0 dwc_otg.lpm_enable=0 console=ttyS0,115200 fsck.repair=yes rootwait // the quiet command can be remove: it just hide the message buffer of kernel. `ttyS0` can be replace by `ttyAMA0` boot.scr fdt addr 0x100 fdt get value bootargs /chosen bootargs setenv kernel_addr_r 0x01000000 setenv ramdisk_addr_r 0x02100000 fatload mmc 0:1 ${kernel_addr_r} boot/Image fatload mmc 0:1 ${ramdisk_addr_r} boot/initramfs-rpi3 setenv initrdsize $filesize fatload mmc 0:1 ${fdt_addr_r} bcm2710-rpi-3-b.dtb booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r} Go ahead noew and try to boot it up. You should have an output like this: As you can see… there’s a hwclock error since our raspberry pi 3 don’t have any. So after you run setup-alpine and use lbu commit to save changes…run this: # rc-update add swclock boot # enable the software clock # rc-update del hwclock boot # disable the hardware clock In my case i use Busybox NTP as it might be the most lightweight solution. Save the changes and reboot. # lbu commit # apk add wireless-tools wpa_supplicant // will be installed even when not connected to the net # reboot Wifi: (optional…) I didn’t include the brcm above because i encouter a brcmf_sdio_htclk error but can be resolve by reloading the module: brcmfmac The good thing about alpine linux is if you make a firmware folder on the root directory of our µsd card, it’ll be recognized by alpine and load it once alpine boot up. Don’t worry if the rest of the folder inside the OS fimrware folder is gone(it’s just hidden in plain site). So i place my brcm folder there for now. According to alpine linux… Connecting to a wireless access point Broadcom Wi-Fi Chipset Users: we need b43-firmware so go ahead and follow that or we can compile it somewhere else like what i did. On ubuntu 16.04 i install b43-fwcutter then get b43-firmware and follow the instruction here $ tar -xjf broadcom-wl-4.150.10.5.tar.bz2 // make sure bzip is installed $ b43-fwcutter -w [$FIRMWARE_INSTALL_DIR/b43] broadcom-wl-4.150.10.5/driver/wl_apsta_mimo.o Then copy that b43 folder to firmware folder on the root of our µsd card. /apk /boot/Image /boot/kernel8.img /boot/boot.scr /boot/initramfs-rpi3 /boot/modloop-rpi3 /firmware/b43 /firmware/brcm bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt alpine.apkovl.tar.gz // optional will be created once we setup our alpine linux Load the b43 kernel and enable it at boot up: $ modprobe b43 $ echo b43 &amp;gt;&amp;gt; /etc/modules $ lbu commit //To save changes If you run dmesg command and display a brcmfmac error just reload brcmfmac module: $ modprobe -r brcmfmac // For now $ modprobe brcmfmac Feedback is at most welcome… Reference: http://backreference.org/2010/07/04/modifying-initrdinitramfs-files/ https://askubuntu.com/questions/437880/extract-a-squashfs-to-an-existing-directory https://wiki.alpinelinux.org/wiki/DIY_Fully_working_Alpine_Linux_for_Allwinner_and_Other_ARM_SOCs https://wiki.alpinelinux.org/wiki/Raspberry_Pi</summary></entry></feed>
