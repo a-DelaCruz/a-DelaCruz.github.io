@@ -104,7 +104,7 @@ img.navi-left {
 .issue-box span:empty {
   display: none; }
 
-.container-home {
+.container.home {
   display: grid;
   grid-template-columns: 40px 40px 1fr;
   grid-gap: 10px;
