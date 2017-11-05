@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Raspberry Pi 3 64-bit kernel</title>
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href=" /assets/img/AJ.png ">
+    
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({google_ad_client: "ca-pub-6013311002995151", enable_page_level_ads: true});
+    </script>
+
+    <!-- Begin Jekyll SEO tag v2.3.0 -->
+<title>Raspberry Pi 3 64-bit kernel | My Personal Notes</title>
+<meta property="og:title" content="Raspberry Pi 3 64-bit kernel" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Cross-Build Prerequisites" />
+<meta property="og:description" content="Cross-Build Prerequisites" />
+<link rel="canonical" href="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-kernel.html" />
+<meta property="og:url" content="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-kernel.html" />
+<meta property="og:site_name" content="My Personal Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-11-03T00:00:00+08:00" />
+<script type="application/ld+json">
+{"name":null,"description":"Cross-Build Prerequisites","author":null,"@type":"BlogPosting","url":"http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-kernel.html","publisher":null,"image":null,"headline":"Raspberry Pi 3 64-bit kernel","dateModified":"2017-11-03T00:00:00+08:00","datePublished":"2017-11-03T00:00:00+08:00","sameAs":null,"mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-kernel.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+    <body>
+        <div class="container-body">
+           <div class="header brand">
+      <img src="/assets/img/AJ.png" />
+</div>
+
+<div class="header adsA">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- Ad 2 Horizontal -->
+      <ins class="adsbygoogle"
+      style="display:inline-block;width:320px;height:50px"
+      data-ad-client="ca-pub-6013311002995151"
+      data-ad-slot="3839663239"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+</div>
+
+<div class="header adsB">
+      <script style="text/javascript">
+  document.write('<a style="display:none!important" id="4600057"></a>');
+  if (window.AED_SHOW) {
+    window.AED_SHOW({wid: '4600057',shortkey:'MNvrvZN', size:'468x60', custom:{}});
+  } else {
+    window.AED_ONLOAD = window.AED_ONLOAD || [];
+    window.AED_ONLOAD.push({wid:'4600057',shortkey:'MNvrvZN',size:'468x60',custom:{}});
+    if (!document.getElementById("ae-ad-script-$")) {
+      var s = document.createElement("script"),
+      h = document.getElementsByTagName("head")[0];
+      s.id = 'ae-ad-script-$';
+      s.charset = "utf-8";
+      s.async = !0;
+      s.src = "//i.alicdn.com/ae-game/thirdparty/show-window/index.js";
+      h.insertBefore(s, h.firstChild)
+    }
+  }
+</script>
+
+</div>
+
+<div class="header adsC">
+      <a href="https://www.banggood.com/collection-4465.html?utmid=2369&utm_campaign=collection4465&utm_content=Klaus&p=T0021915747907201711&bid=40062&utm_design=3" target="_blank"><img src="http://img.banggood.com/deals/affiliate_member_banner/4cc574cdc8da2b49b46e9bed5255cece81.jpg" /></a>
+</div>
+        
+            <section class="wrapper-body">
+
+            <div class="navi-side-left">
+    <nav class="navi-side-left">
+    <a href="/"><img src="/assets/img/home.png" /></a>
+    <div class="dropdown">
+        <a href="#"><img src="/assets/img/sub-menu.png" /></a>
+        <div class="dropdown-content">
+            
+                
+                <li>
+                    <a href="/ubuntu/rpi3-setup-i2c.html">Enabling I2C for Raspberry Pi 3</a>
+                </li>
+                
+            
+                
+                <li>
+                    <a href="/ubuntu/rpi3-setup-wifi.html">RPi 3: Wifi Setup</a>
+                </li>
+                
+            
+                
+                <li>
+                    <a href="/ubuntu/rpi3-setup-filesystem.html">Using Ubuntu-base arm64 rootfs for Raspberry Pi 3</a>
+                </li>
+                
+            
+                
+                <li>
+                    <a href="/ubuntu/rpi3-setup-64bit-uboot.html">Raspberry Pi 3 with 64-bit U-Boot</a>
+                </li>
+                
+            
+                
+                <li>
+                    <a href="/ubuntu/rpi3-setup-64bit-kernel.html">Raspberry Pi 3 64-bit kernel</a>
+                </li>
+                
+            
+        </div>
+    </div>
+</nav>
+</div>
+
+<div class="container-posts">
+    <h2 class="post title">Raspberry Pi 3 64-bit kernel</h2>
+
+    <div class="post content">
+        <h2 id="cross-build-prerequisites">Cross-Build Prerequisites</h2>
+
+<p>For building our own 64-bit kernel fom scratch using the mainstream or the Raspberry kernel, we must have a lnux machine <code class="highlighter-rouge">(or Windows 10's Bash shell)</code> with the required packages in order to compile the kernel.
+<br /></p>
+
+<blockquote>
+  <p>Built on Ubuntu Server 16.04.03 LTS</p>
+</blockquote>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    bc      device-tree-compiler            ncurses-dev      
+    gcc     gcc-arch64-linux-gnu            libncurses5-dev
+    git     pkg-config-aarch64-linux-gnu    qemu-user-static
+    make    u-boot-tools
+</code></pre></div></div>
+
+<p>Software files that we also need:</p>
+<blockquote>
+  <p><a href="https://www.kernel.org/">💿RPi3 kernel Upstream</a> or
+  <a href="https://github.com/raspberrypi/linux.git">💿RPi3 kernel Official v.4.11.y</a></p>
+</blockquote>
+
+<blockquote>
+  <p><a href="href=&quot;https://github.com/raspberrypi/firmware/tree/master/boot">💿RPi3 firmware v.latest</a> (bootcode.bin, start.elf as this are the min. files to boot)
+fixup.dat and the rest of star.* and fixup.* files for graphical desktop</p>
+</blockquote>
+
+<p><br /></p>
+
+<h2 id="our-tasks-at-hand-">Our tasks at hand 📝</h2>
+<ul>
+  <li>[ ] Compile the Kernel</li>
+  <li>[ ] Create <code class="highlighter-rouge">config.txt</code> and <code class="highlighter-rouge">cmdline.txt</code></li>
+  <li>[ ] Transfer the necessary files to the MicroSD</li>
+  <li>[ ] Boot to test</li>
+</ul>
+
+<p><br /></p>
+
+<h2 id="compile-the-kernel">Compile the Kernel</h2>
+
+<p>Use a Linux machine of your choice or Windows 10’s Bash Shell to compile the kernel is up to you. To get the kernel we need, we can either download it in a compressed file form using the links above or we could use <code class="highlighter-rouge">git</code> to make it simpler.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    [~]$ git clone --depth 1 --branch rpi-4.11.y --single-branch https://github.com/raspberrypi/linux.git folder-name
+</code></pre></div></div>
+
+<p>Once the download or rather cloning complete, go to  <code class="highlighter-rouge">folder-name</code>.</p>
+<blockquote>
+  <p><code class="highlighter-rouge">bcmrpi3_defconfig</code> - For the RPi3 kernel config. Then configure it further if you want.</p>
+</blockquote>
+
+<blockquote>
+  <p><code class="highlighter-rouge">O=~/output-folder</code> - To place the built files in a different directory.</p>
+</blockquote>
+
+<blockquote>
+  <p><code class="highlighter-rouge">-jX</code> - To build the kernel in a multithreaded way. <code class="highlighter-rouge">X = [Num of core x 2]</code></p>
+</blockquote>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    [~folder-name]$ sudo make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- bcmrpi3_defconfig
+    [~folder-name]$ sudo make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j4 O=../rpi3-build
+</code></pre></div></div>
+
+<blockquote>
+  <p>Locate <code class="highlighter-rouge">Image</code> file at <code class="highlighter-rouge">[~rpi3-build/arch/arm64/boot/]</code> and <code class="highlighter-rouge">bcm2710-rpi-3-b.dtb</code> at <code class="highlighter-rouge">[~rpi3-build/arch/arm64/boot/dts/]</code></p>
+</blockquote>
+
+<blockquote>
+  <ul>
+    <li>[x] Compile the Kernel 👌</li>
+  </ul>
+</blockquote>
+
+<p><br /></p>
+
+<h2 id="create-configtxt-and-cmdlinetxt">Create config.txt and cmdline.txt</h2>
+
+<p>For the <code class="highlighter-rouge">config.txt</code> and <code class="highlighter-rouge">cmdline.txt</code>, we have to create them and include this lines.</p>
+<blockquote>
+  <p><code class="highlighter-rouge">config.txt</code></p>
+</blockquote>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    arm_control=0x200
+    enable_uart=1
+    device_tree_address=0x100
+    device_tree_end=0x8000
+    dtparam=i2c_arm=on
+    dtparam=spi=on
+
+    kernel8.img
+</code></pre></div></div>
+<blockquote>
+  <p><code class="highlighter-rouge">cmdline.txt</code></p>
+</blockquote>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    net.ifnames=0 dwc_otg.lpm_enable=0 console=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait
+</code></pre></div></div>
+
+<blockquote>
+  <ul>
+    <li>[x] Create <code class="highlighter-rouge">config.txt</code> and <code class="highlighter-rouge">cmdline.txt</code> 👌</li>
+  </ul>
+</blockquote>
+
+<p><br /></p>
+
+<h2 id="transfer-the-necessary-files-to-the-microsd">Transfer the necessary files to the MicroSD</h2>
+
+<p>Since we dont have a Ramdisk yet, we are using this <a href="https://www.finnie.org/software/raspberrypi/ubuntu-rpi3/20160517-raspi3-arm64-firmware-kernel.tar">initrd.img</a> for now.</p>
+
+<p>Rename the <code class="highlighter-rouge">Image</code> file we had earlier to <code class="highlighter-rouge">kernel8.img</code>. <code class="highlighter-rouge">start.elf</code> file knows <code class="highlighter-rouge">kernel8.img</code> file is a kernel to load.</p>
+<blockquote>
+  <p>MicroSD card should now contain these files below:</p>
+</blockquote>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    bootcode.bin
+    start.elf
+    config.txt
+    cmdline.txt
+    kernel8.img
+    initrd.img
+    bcm2710-rpi-3-b.dtb
+</code></pre></div></div>
+<blockquote>
+  <ul>
+    <li>[x] Transfer the necessary files to the MicroSD 👌</li>
+  </ul>
+</blockquote>
+
+<p><br /></p>
+
+<h2 id="boot-to-test">Boot to test</h2>
+
+<p>Place the MicroSD on to the Raspberry Pi 3 and power it on.
+You can now then verify at this point that our kernel boot as well and <code class="highlighter-rouge">will stop at some point</code> 
+since we still do not have a filesystem.</p>
+
+<p>If it did not boot or no display at all, we will use <code class="highlighter-rouge">U-Boot</code>.</p>
+
+<blockquote>
+  <ul>
+    <li>[x] Boot to test 👌</li>
+  </ul>
+</blockquote>
+
+<p><br /></p>
+
+<p>Next is <a href="rpi3-setup-filesystem">Creating the filesystem</a> for our Raspberry Pi 3 using Ubuntu Base.</p>
+
+<p><br /></p>
+<hr />
+
+<h4 id="reference-">Reference :</h4>
+<blockquote>
+  <p><a href="https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3">https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3</a></p>
+</blockquote>
+
+<blockquote>
+  <p><a href="https://wiki.ubuntu.com/Base">https://wiki.ubuntu.com/Base</a></p>
+</blockquote>
+
+<blockquote>
+  <p><a href="https://www.raspberrypi.org/documentation/linux/kernel/building.md">https://www.raspberrypi.org/documentation/linux/kernel/building.md</a></p>
+</blockquote>
+
+<blockquote>
+  <p><a href="https://kernelnomicon.org/?p=682">https://kernelnomicon.org/?p=682</a></p>
+</blockquote>
+
+<hr />
+
+
+
+        <!-- Comments -->
+        
+            <div>
+                
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'a-delacruz'; // required: replace example with your forum shortname
+    // var disqus_developer = 1; // Comment out when the site is live
+    var disqus_identifier = "/ubuntu/rpi3-setup-64bit-kernel.html";
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+            </div>
+         
+        
+    </div>
+</div>
+
+            </section>
+            
+            <div class="footer adsA">
+      <a href="https://www.banggood.com/brands-Geekcreit-b-40.html?utm_campaign=12geekc&utm_content=east&p=T0021915747907201711&bid=40312&utm_design=5" target="_blank"><img src="http://img.banggood.com/deals/affiliate_member_banner/2edfb49eafd8d8946543d4504bf90c3840.jpg" /></a>
+</div>
+
+            <script src="/assets/js/scale.fix.js"></script>
+
+            <!-- Google Analytics -->
+            
+                <script>
+                    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+                    ga('create', 'UA-99256627-1', 'auto');
+                    ga('send', 'pageview');
+                </script>
+        </div>        
+    </body>
+    
+</html>

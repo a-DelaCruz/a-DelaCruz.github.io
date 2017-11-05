@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2017-11-05T13:59:36+08:00</updated><id>http://a-delacruz.github.io/</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 - 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">Enabling I2C for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/ubuntu/rpi3-setup-i2c.html" rel="alternate" type="text/html" title="Enabling I2C for Raspberry Pi 3" /><published>2017-11-04T00:00:00+08:00</published><updated>2017-11-04T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/rpi3-setup-i2c</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/rpi3-setup-i2c.html">&lt;p&gt;A little modification in the &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel CONFIG&lt;/code&gt; to enable &lt;code class=&quot;highlighter-rouge&quot;&gt;I2C&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;For &lt;code class=&quot;highlighter-rouge&quot;&gt;I2C&lt;/code&gt; to work, Enable &lt;code class=&quot;highlighter-rouge&quot;&gt;I2C device interface&lt;/code&gt;  instead of setting it up as a &lt;code class=&quot;highlighter-rouge&quot;&gt;module&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    Device Drivers
+        |- I2C support
+            |- [*] I2C device interface
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Afterwards, you can see &lt;code class=&quot;highlighter-rouge&quot;&gt;i2c-1&lt;/code&gt; present under &lt;code class=&quot;highlighter-rouge&quot;&gt;/dev&lt;/code&gt; folder. &lt;code class=&quot;highlighter-rouge&quot;&gt;i2c-bcm2835&lt;/code&gt; are loaded as module instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;i2c-bcm2708&lt;/code&gt; while both being set as &lt;code class=&quot;highlighter-rouge&quot;&gt;modules&lt;/code&gt; on &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel CONFIG&lt;/code&gt;.
+No need to add &lt;code class=&quot;highlighter-rouge&quot;&gt;i2c-dev&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/modules&lt;/code&gt; as it is loaded by kernel itself.
+Then just install &lt;code class=&quot;highlighter-rouge&quot;&gt;i2c-tools&lt;/code&gt; to verify that it works and we can now detect the device address connected to &lt;code class=&quot;highlighter-rouge&quot;&gt;I2c-1&lt;/code&gt;.&lt;/p&gt;
+
+&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">A little modification in the kernel CONFIG to enable I2C.</summary></entry><entry><title type="html">RPi 3: Wifi Setup</title><link href="http://a-delacruz.github.io/ubuntu/rpi3-setup-wifi.html" rel="alternate" type="text/html" title="RPi 3: Wifi Setup" /><published>2017-11-03T00:00:00+08:00</published><updated>2017-11-03T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/rpi3-setup-wifi</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/rpi3-setup-wifi.html">&lt;p&gt;To make the Raspberry pi 3 Wifi to work…we need to get or have atleast 2 files. But first we must create a
+folder inside the &lt;code class=&quot;highlighter-rouge&quot;&gt;/lib/firmware/&lt;/code&gt; and name it &lt;code class=&quot;highlighter-rouge&quot;&gt;brcm&lt;/code&gt;. And in that folder we’ll put
+&lt;code class=&quot;highlighter-rouge&quot;&gt;brcmfmac43430-sdio.bin&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;brcmfmac43430-sdio.txt&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;prerequisite&quot;&gt;Prerequisite:&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;https://github.com/RPi-Distro/firmware-nonfree/tree/master/brcm80211/brcm&quot;&gt;brcmfmac43430-sdio.bin&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;https://github.com/RPi-Distro/firmware-nonfree/tree/master/brcm80211/brcm&quot;&gt;brcmfmac43430-sdio.txt&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;wpa-supplicant&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;wireless-tools&lt;/code&gt; installed on Raspberry Pi 3&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Download and place the &lt;code class=&quot;highlighter-rouge&quot;&gt;brcmfmac43430-sdio.bin&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;brcmfmac43430-sdio.txt&lt;/code&gt; inside the &lt;code class=&quot;highlighter-rouge&quot;&gt;/lib/firmware/brcm&lt;/code&gt; folder.
+If the file above doesn’t make your wifi to work get it directly from the &lt;a href=&quot;git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git&quot;&gt;Upstream linux&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Next we’ll modify &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/network/interfaces&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ sudo nano /etc/network/interfaces
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Copy paste this following lines:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    allow-hotplug wlan0
+    iface wlan0 inet dhcp
+    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+    iface default inet dhcp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;For this setup, my wifi interfaces id is  &lt;code class=&quot;highlighter-rouge&quot;&gt;wlan0&lt;/code&gt;… yours might be named differently so replace it
+that matches yours.
+You can set your wifi to static…just browse the references at the bottom of this page..&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Then we’ll configure &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/wpa_supplicant/wpa_supplicant.conf&lt;/code&gt; … so create/edit the file &lt;code class=&quot;highlighter-rouge&quot;&gt;wpa_supplicant.conf&lt;/code&gt; and place this lines:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    network={
+        ssid=&quot;NetworkEssid&quot;
+        scan_ssid=1 # only needed if your access point uses a hidden ssid
+        proto=RSN
+        key_mgmt=WPA-PSK
+        psk=&quot;NetworkPassword&quot;
+        pairwise=CCMP
+        auth_alg=OPEN
+    }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Reboot and verify that wifi is now working and connected to the network.
+or you could try this:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ sudo ifconfig wlan0 down
+    [~]$ sudo ifconfig wlan0 up
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;hr /&gt;
+
+&lt;h4 id=&quot;reference-&quot;&gt;Reference :&lt;/h4&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;https://github.com/RPi-Distro/firmware-nonfree/tree/master/brcm80211/brcm&quot;&gt;https://github.com/RPi-Distro/firmware-nonfree/tree/master/brcm80211/brcm&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;https://help.ubuntu.com/community/WifiDocs/WPAHowTo&quot;&gt;https://help.ubuntu.com/community/WifiDocs/WPAHowTo&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;https://w1.fi/cgit/hostap/plain/wpa_supplicant/wpa_supplicant.conf&quot;&gt;https://w1.fi/cgit/hostap/plain/wpa_supplicant/wpa_supplicant.conf&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;</content><author><name></name></author><category term="ubuntu" /><summary type="html">To make the Raspberry pi 3 Wifi to work…we need to get or have atleast 2 files. But first we must create a folder inside the /lib/firmware/ and name it brcm. And in that folder we’ll put brcmfmac43430-sdio.bin and brcmfmac43430-sdio.txt.</summary></entry><entry><title type="html">Using Ubuntu-base arm64 rootfs for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/ubuntu/rpi3-setup-filesystem.html" rel="alternate" type="text/html" title="Using Ubuntu-base arm64 rootfs for Raspberry Pi 3" /><published>2017-11-03T00:00:00+08:00</published><updated>2017-11-03T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/rpi3-setup-filesystem</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/rpi3-setup-filesystem.html">&lt;h2 id=&quot;extract-the-rootfs&quot;&gt;Extract the Rootfs&lt;/h2&gt;
+
+&lt;p&gt;To create our bare filesystem, we need:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;http://cdimage.ubuntu.com/ubuntu-base/releases/16.04/release/ubuntu-base-16.04.3-base-arm64.tar.gz&quot;&gt;💿Ubuntu Base 16.04.3 LTS&lt;/a&gt;
+  &lt;code class=&quot;highlighter-rouge&quot;&gt;-C&lt;/code&gt; - To extract the files in a different directory&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ wget http://cdimage.ubuntu.com/ubuntu-base/releases/16.04/release/ubuntu-base-16.04.3-base-arm64.tar.gz
+    [~]$ mkdir rootfs
+    [~]$ sudo tar -xzvf ubuntu-base-16.04.3-base-arm64.tar.gz -C rootfs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;modifying-the-rootfs&quot;&gt;Modifying the Rootfs&lt;/h2&gt;
+
+&lt;p&gt;Going back from when we compile the Raspberry Pi 3 kernel, We are goig to install the kernel module and firmware into the rootfs folder that we just created above.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~folder-name]$ sudo make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- modules_install INSTALL_MOD_PATH=~/rootfs/
+    [~folder-name]$ sudo make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- firmware_install INSTALL_FW_PATH=~/rootfs/lib/firmware/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Verify that it was installed correctly. And remove &lt;code class=&quot;highlighter-rouge&quot;&gt;build&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;source&lt;/code&gt; folder.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ ls rootfs/lib/modules/4.11~
+
+	modules.builtin     modules.devname        modules.symbols.bin
+	kernel              modules.builtin.bin    modules.order        
+	modules.alias       modules.dep            modules.softdep
+	modules.alias.bin   modules.dep.bin        modules.symbols
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Well use &lt;code class=&quot;highlighter-rouge&quot;&gt;chroot&lt;/code&gt; to further setup our filesystem.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ sudo cp -av /usr/bin/qemu-aarch64-static ~/rootfs/usr/bin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then we need to copy &lt;code class=&quot;highlighter-rouge&quot;&gt;resolv.conf&lt;/code&gt; from our host machine for internet connection to &lt;code class=&quot;highlighter-rouge&quot;&gt;~/rootfs/etc/&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ sudo cp -av /run/resolvconf/resolv.conf ~/rootfs/etc/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Enter chroot environment:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ sudo chroot ~/rootfs/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now that you’re in the chroot environment, we can now add an admin user with sudo permission.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ useradd -G sudo -m -s /bin/bash pi3
+    [~]$ echo pi3:pi3 | chpasswd
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;The format input line of chpasswd is: user_name:password.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Change root password with these command:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ passwd root
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You can setup your &lt;code class=&quot;highlighter-rouge&quot;&gt;hostname&lt;/code&gt; here for your target device or in the kernel configuration making sure that the hostname is empty.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ echo U-Base_min &amp;gt; /etc/hostname
+    [~]$ echo 127.0.0.1 localhost &amp;gt; /etc/hosts
+    [~]$ echo 127.0.1.1 U-Base_min &amp;gt;&amp;gt; /etc/hosts
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Fetch the latest package lists from server then upgrade.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ apt-get update
+    [~]$ apt-get upgrade
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then install these first:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ apt-get install dialog perl
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We need those installed first to correct some error messages about locale: If &lt;code class=&quot;highlighter-rouge&quot;&gt;locale-gen&lt;/code&gt; command is missing, &lt;code class=&quot;highlighter-rouge&quot;&gt;apt-get install locales&lt;/code&gt; first.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ locale-gen &quot;en_US.UTF-8&quot;
+        Generating locales...
+            en_US.UTF-8... done
+        Generation complete.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Install minimal packages:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ apt-get install sudo ifupdown net-tools ethtool udev wireless-tools iputils-ping resolvconf wget apt-utils wpasupplicant initramfs-tools
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Create our Ramdisk.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ mkinitramfs -o /boot/initrd.img /lib/modules/4.11~
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;When everything you want are done, exit chroot:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ exit
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We need to add &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/fstab&lt;/code&gt; file entry below coz’ if not…it will run on read-only mode. Below are &lt;code class=&quot;highlighter-rouge&quot;&gt;Tab&lt;/code&gt; not &lt;code class=&quot;highlighter-rouge&quot;&gt;spacebar&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ echo /dev/mmcblk0p2	/	ext4	defaults,noatime	0	1 &amp;gt;&amp;gt; /etc/fstab
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;removing-unwanted-files&quot;&gt;Removing unwanted files&lt;/h2&gt;
+
+&lt;p&gt;To reduce the rootfs/ size we can remove some unwanted files.
+Create a file &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/dpkg/dpkg.cfg.d/01_nodoc&lt;/code&gt; which specifies the desired filters. Example:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    path-exclude /usr/share/doc/*
+    # we need to keep copyright files for legal reasons
+    path-include /usr/share/doc/*/copyright
+    path-exclude /usr/share/man/*
+    path-exclude /usr/share/groff/*
+    path-exclude /usr/share/info/*
+    # lintian stuff is small, but really unnecessary
+    path-exclude /usr/share/lintian/*
+    path-exclude /usr/share/linda/*
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then you can manually remove any documentation already installed:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ sudo find rootfs/usr/share/doc -depth -type f ! -name copyright|xargs rm || true
+    [~]$ sudo find rootfs/usr/share/doc -empty|xargs rmdir || true
+    [~]$ sudo rm -rf rootfs/usr/share/man/* rootfs/usr/share/groff/* rootfs/usr/share/info/*
+    [~]$ sudo rm -rf rootfs/usr/share/lintian/* rootfs/usr/share/linda/* rootfs/var/cache/man/*
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then copy the &lt;code class=&quot;highlighter-rouge&quot;&gt;~/rootfs/*&lt;/code&gt; content to the 2nd partition of your MicroSD card.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;creating-the-image-file-optional&quot;&gt;Creating the Image file (Optional)&lt;/h2&gt;
+
+&lt;p&gt;We could make an image file with several partition on it. 
+We will create a 2gb empty img file:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ sudo dd if=/dev/zero of=myimage.img bs=1024 count=2M
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then partition it using &lt;code class=&quot;highlighter-rouge&quot;&gt;fdisk&lt;/code&gt; in my case:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ sudo fdisk myimage.img
+        Result:
+        | Device     | Boot | Start 	| End	  | Sectors |
+        |:-----------|:-----|:----------|:--------|:--------|
+        | myimage1   |      | 2048  	| 1026047 | 1024000 | Fat
+        | myimage2   |      | 1026048 	| 4194303 | 3168256 | Linux
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Display the name of the assigned loop device:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ sudo losetup --find --show myimage.img
+	
+	    /dev/loop0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then we can use &lt;code class=&quot;highlighter-rouge&quot;&gt;fdisk&lt;/code&gt; to identify our image file partitions assinged loop&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ sudo fdisk /dev/loop0
+
+        Device:
+            /dev/loop1
+            /dev/loop2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then, to assign a loopback device: and format it.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ sudo losetup /dev/loop1 myimage.img 
+    [~]$ sudo losetup /dev/loop2 myimage.img
+    [~]$ sudo mkfs.vfat /dev/loop1
+    [~]$ sudo mkfs.ext4 /dev/loop2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;mkfs.vfat -n &lt;code class=&quot;highlighter-rouge&quot;&gt;partition name&lt;/code&gt; /dev/loop1&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Mount and Copy those necessary files that we need to their respected partition.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ sudo mount /dev/loop1 /mnt/boot
+    [~]$ sudo mount /dev/loop2 /mnt/rootfs
+
+        then umount and detach:
+    [~]$ sudo umount /dev/loop1
+    [~]$ sudo umount /dev/loop2
+    [~]$ sudo losetup --detach /dev/loop1
+    [~]$ sudo losetup --detach /dev/loop2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You can now burn that myimage.img to yor MicoSD card.
+Now boot it up and you should now be able to login.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;hr /&gt;
+
+&lt;h4 id=&quot;reference-&quot;&gt;Reference :&lt;/h4&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;http://docs.khadas.com/social/BuildUbuntuRootfsViaUbuntuBase/&quot;&gt;http://docs.khadas.com/social/BuildUbuntuRootfsViaUbuntuBase/&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;https://gnu-linux.org/building-ubuntu-rootfs-for-arm.html&quot;&gt;https://gnu-linux.org/building-ubuntu-rootfs-for-arm.html&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html&quot;&gt;http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;</content><author><name></name></author><summary type="html">Extract the Rootfs</summary></entry><entry><title type="html">Raspberry Pi 3 with 64-bit U-Boot</title><link href="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-uboot.html" rel="alternate" type="text/html" title="Raspberry Pi 3 with 64-bit U-Boot" /><published>2017-11-03T00:00:00+08:00</published><updated>2017-11-03T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-uboot</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-uboot.html">&lt;p&gt;This time let’s try to use &lt;code class=&quot;highlighter-rouge&quot;&gt;U-Boot&lt;/code&gt; to load the Linux kernel and boot our Raspberry Pi 3.
+We need :&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;💿&lt;a href=&quot;ftp://ftp.denx.de/pub/u-boot/u-boot-2017.05.tar.bz2&quot;&gt;U-Boot v.2017.05&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;get-the-sourcecode&quot;&gt;Get The SourceCode&lt;/h2&gt;
+
+&lt;p&gt;Get the source code by cloning the U-Boot git repository :&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ git clone depth 1 branch v2017.05 single-branch git://git.denx.de/u-boot.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;or download the tar file :&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ wget ftp://ftp.denx.de/pub/u-boot/u-boot-2017.05.tar.bz2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;compile-u-boot&quot;&gt;Compile U-Boot&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;rpi_3_defconfig&lt;/code&gt; - Config to use for our Raspberry Pi 3&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ cd u-boot/
+    [~u-boot]$ sudo make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig
+    [~u-boot]$ sudo make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After it has been built. Locate &lt;code class=&quot;highlighter-rouge&quot;&gt;u-boot.bin&lt;/code&gt; in your output_path as this is the file we need.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;create-the-bootscript&quot;&gt;Create the Bootscript&lt;/h2&gt;
+
+&lt;p&gt;Create a &lt;code class=&quot;highlighter-rouge&quot;&gt;bootscript.txt&lt;/code&gt; file and copy paste the code below :&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;setenv kernel_addr_r 0x01000000
+setenv ramdisk_addr_r 0x02100000
+fatload mmc 0:1 ${kernel_addr_r} boot/Image
+fatload mmc 0:1 ${ramdisk_addr_r} boot/initrd.img
+setenv initrdsize $filesize
+booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;boot/Image&lt;/code&gt; - The Linux kernel we compile from &lt;a href=&quot;rpi3-setup-64bit-kernel&quot;&gt;Raspberry Pi 3 64-bit kernel&lt;/a&gt; and place under a folder &lt;code class=&quot;highlighter-rouge&quot;&gt;boot&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;boot/initrd.img&lt;/code&gt; - Ramdisk image we created from &lt;a href=&quot;rpi3-setup-filesystem&quot;&gt;Using Ubuntu-base arm64 rootfs for Raspberry Pi 3&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;If you dont have a Ramdisk yet, replace &lt;code class=&quot;highlighter-rouge&quot;&gt;${ramdisk_addr_r}:${initrdsize}&lt;/code&gt; with &lt;code class=&quot;highlighter-rouge&quot;&gt;-&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;mkimage -T script -n &quot;Bootscript&quot; -C none -d ~/&amp;lt;input_file&amp;gt; ~/&amp;lt;output_file&amp;gt;.scr&lt;/code&gt; - Syntax for creating the bootscript&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Now to create a bootscript from the text file above :&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ sudo mkimage -A arm64 -O linux -T script -d ~/bootscript.txt ~/rpi3-bootscript.scr
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Copy &lt;code class=&quot;highlighter-rouge&quot;&gt;rpi3-bootscript.scr&lt;/code&gt; to your MicroSD card inside &lt;code class=&quot;highlighter-rouge&quot;&gt;/boot&lt;/code&gt; folder.&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;u-boot.bin&lt;/code&gt; - Can be renamed to &lt;code class=&quot;highlighter-rouge&quot;&gt;any-name&lt;/code&gt; and modify it’s entry in config.txt &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel=boot/u-boot.bin-to-any-name&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arm_control=0x200
+enable_uart=1
+device_tree_address=0x100
+device_tree_end=0x8000
+dtparam=i2c_arm=on
+dtparam=spi=on
+
+kernel=boot/u-boot.bin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then verify your MicroSD directory structure like below :&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/boot/Image
+/boot/rpi3-bootscript.scr
+/boot/u-boot.bin
+/boot/initrd.img
+bcm2710-rpi-3-b.dtb
+bootcode.bin
+start.elf 
+fixup.dat 
+config.txt
+cmdline.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Boot it up to confirm that its working.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;hr /&gt;
+
+&lt;h4 id=&quot;reference-&quot;&gt;Reference :&lt;/h4&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;http://www.denx.de/wiki/U-Boot/WebHome&quot;&gt;http://www.denx.de/wiki/U-Boot/WebHome&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;</content><author><name></name></author><summary type="html">This time let’s try to use U-Boot to load the Linux kernel and boot our Raspberry Pi 3. We need : 💿U-Boot v.2017.05</summary></entry><entry><title type="html">Raspberry Pi 3 64-bit kernel</title><link href="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-kernel.html" rel="alternate" type="text/html" title="Raspberry Pi 3 64-bit kernel" /><published>2017-11-03T00:00:00+08:00</published><updated>2017-11-03T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-kernel</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-kernel.html">&lt;h2 id=&quot;cross-build-prerequisites&quot;&gt;Cross-Build Prerequisites&lt;/h2&gt;
+
+&lt;p&gt;For building our own 64-bit kernel fom scratch using the mainstream or the Raspberry kernel, we must have a lnux machine &lt;code class=&quot;highlighter-rouge&quot;&gt;(or Windows 10's Bash shell)&lt;/code&gt; with the required packages in order to compile the kernel.
+&lt;br /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Built on Ubuntu Server 16.04.03 LTS&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    bc      device-tree-compiler            ncurses-dev      
+    gcc     gcc-arch64-linux-gnu            libncurses5-dev
+    git     pkg-config-aarch64-linux-gnu    qemu-user-static
+    make    u-boot-tools
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Software files that we also need:&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;https://www.kernel.org/&quot;&gt;💿RPi3 kernel Upstream&lt;/a&gt; or
+  &lt;a href=&quot;https://github.com/raspberrypi/linux.git&quot;&gt;💿RPi3 kernel Official v.4.11.y&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;href=&amp;quot;https://github.com/raspberrypi/firmware/tree/master/boot&quot;&gt;💿RPi3 firmware v.latest&lt;/a&gt; (bootcode.bin, start.elf as this are the min. files to boot)
+fixup.dat and the rest of star.* and fixup.* files for graphical desktop&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;our-tasks-at-hand-&quot;&gt;Our tasks at hand 📝&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;[ ] Compile the Kernel&lt;/li&gt;
+  &lt;li&gt;[ ] Create &lt;code class=&quot;highlighter-rouge&quot;&gt;config.txt&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;cmdline.txt&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;[ ] Transfer the necessary files to the MicroSD&lt;/li&gt;
+  &lt;li&gt;[ ] Boot to test&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;compile-the-kernel&quot;&gt;Compile the Kernel&lt;/h2&gt;
+
+&lt;p&gt;Use a Linux machine of your choice or Windows 10’s Bash Shell to compile the kernel is up to you. To get the kernel we need, we can either download it in a compressed file form using the links above or we could use &lt;code class=&quot;highlighter-rouge&quot;&gt;git&lt;/code&gt; to make it simpler.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ git clone --depth 1 --branch rpi-4.11.y --single-branch https://github.com/raspberrypi/linux.git folder-name
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Once the download or rather cloning complete, go to  &lt;code class=&quot;highlighter-rouge&quot;&gt;folder-name&lt;/code&gt;.&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;bcmrpi3_defconfig&lt;/code&gt; - For the RPi3 kernel config. Then configure it further if you want.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;O=~/output-folder&lt;/code&gt; - To place the built files in a different directory.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-jX&lt;/code&gt; - To build the kernel in a multithreaded way. &lt;code class=&quot;highlighter-rouge&quot;&gt;X = [Num of core x 2]&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~folder-name]$ sudo make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- bcmrpi3_defconfig
+    [~folder-name]$ sudo make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j4 O=../rpi3-build
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Locate &lt;code class=&quot;highlighter-rouge&quot;&gt;Image&lt;/code&gt; file at &lt;code class=&quot;highlighter-rouge&quot;&gt;[~rpi3-build/arch/arm64/boot/]&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;bcm2710-rpi-3-b.dtb&lt;/code&gt; at &lt;code class=&quot;highlighter-rouge&quot;&gt;[~rpi3-build/arch/arm64/boot/dts/]&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;ul&gt;
+    &lt;li&gt;[x] Compile the Kernel 👌&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;create-configtxt-and-cmdlinetxt&quot;&gt;Create config.txt and cmdline.txt&lt;/h2&gt;
+
+&lt;p&gt;For the &lt;code class=&quot;highlighter-rouge&quot;&gt;config.txt&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;cmdline.txt&lt;/code&gt;, we have to create them and include this lines.&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;config.txt&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    arm_control=0x200
+    enable_uart=1
+    device_tree_address=0x100
+    device_tree_end=0x8000
+    dtparam=i2c_arm=on
+    dtparam=spi=on
+
+    kernel8.img
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cmdline.txt&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    net.ifnames=0 dwc_otg.lpm_enable=0 console=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;ul&gt;
+    &lt;li&gt;[x] Create &lt;code class=&quot;highlighter-rouge&quot;&gt;config.txt&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;cmdline.txt&lt;/code&gt; 👌&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;transfer-the-necessary-files-to-the-microsd&quot;&gt;Transfer the necessary files to the MicroSD&lt;/h2&gt;
+
+&lt;p&gt;Since we dont have a Ramdisk yet, we are using this &lt;a href=&quot;https://www.finnie.org/software/raspberrypi/ubuntu-rpi3/20160517-raspi3-arm64-firmware-kernel.tar&quot;&gt;initrd.img&lt;/a&gt; for now.&lt;/p&gt;
+
+&lt;p&gt;Rename the &lt;code class=&quot;highlighter-rouge&quot;&gt;Image&lt;/code&gt; file we had earlier to &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel8.img&lt;/code&gt;. &lt;code class=&quot;highlighter-rouge&quot;&gt;start.elf&lt;/code&gt; file knows &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel8.img&lt;/code&gt; file is a kernel to load.&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;MicroSD card should now contain these files below:&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    bootcode.bin
+    start.elf
+    config.txt
+    cmdline.txt
+    kernel8.img
+    initrd.img
+    bcm2710-rpi-3-b.dtb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+  &lt;ul&gt;
+    &lt;li&gt;[x] Transfer the necessary files to the MicroSD 👌&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;boot-to-test&quot;&gt;Boot to test&lt;/h2&gt;
+
+&lt;p&gt;Place the MicroSD on to the Raspberry Pi 3 and power it on.
+You can now then verify at this point that our kernel boot as well and &lt;code class=&quot;highlighter-rouge&quot;&gt;will stop at some point&lt;/code&gt; 
+since we still do not have a filesystem.&lt;/p&gt;
+
+&lt;p&gt;If it did not boot or no display at all, we will use &lt;code class=&quot;highlighter-rouge&quot;&gt;U-Boot&lt;/code&gt;.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;ul&gt;
+    &lt;li&gt;[x] Boot to test 👌&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Next is &lt;a href=&quot;rpi3-setup-filesystem&quot;&gt;Creating the filesystem&lt;/a&gt; for our Raspberry Pi 3 using Ubuntu Base.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;hr /&gt;
+
+&lt;h4 id=&quot;reference-&quot;&gt;Reference :&lt;/h4&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3&quot;&gt;https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;https://wiki.ubuntu.com/Base&quot;&gt;https://wiki.ubuntu.com/Base&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;https://www.raspberrypi.org/documentation/linux/kernel/building.md&quot;&gt;https://www.raspberrypi.org/documentation/linux/kernel/building.md&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;https://kernelnomicon.org/?p=682&quot;&gt;https://kernelnomicon.org/?p=682&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;</content><author><name></name></author><summary type="html">Cross-Build Prerequisites</summary></entry></feed>
