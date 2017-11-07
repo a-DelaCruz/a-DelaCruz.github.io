@@ -84,82 +84,107 @@
             <div class="container-home">
     <div class="container-title">
   <div class="title grid1">
-    <div>
-      <div class="titledesc ubuntu">
-          <p>64-Bit Kernel v.4.11.y (RPi 3 repository)
-              <br/>U-Boot v.2017.05
-              <br/>Ubuntu Base v16.04.03-arm64
-          </p>
+    <div class="wrapper-title">
+      <div>
+        <div class="titledesc ubuntu">
+            <p>64-Bit Kernel v.4.11.y (RPi 3 repository)
+                <br/>U-Boot v.2017.05
+                <br/>Ubuntu Base v16.04.03-arm64
+            </p>
+        </div>
+        <div class="issue-box ubuntu">
+            <span class="issue-title"></span>
+        </div>
       </div>
-      <div class="issue-box ubuntu">
-          <span class="issue-title"></span>
-      </div>
-    </div>
-    <div class="container-show">
-        <div class="hidden">
-          <div class='listBox'>
-            <ul>
-              
+      <div class="container-show">
+          <div class="hidden">
+            <div class='listBox'>
+              <ul>
                 
-                  <li>
-                    <a href="/ubuntu/rpi3-setup-i2c.html">Enabling I2C for Raspberry Pi 3</a>
-                  </li>
+                  
+                    <li>
+                      <a href="/ubuntu/rpi3-setup-i2c.html">Enabling I2C for Raspberry Pi 3</a>
+                    </li>
+                  
                 
-              
+                  
+                    <li>
+                      <a href="/ubuntu/rpi3-setup-wifi.html">RPi 3: Wifi Setup</a>
+                    </li>
+                  
                 
-                  <li>
-                    <a href="/ubuntu/rpi3-setup-wifi.html">RPi 3: Wifi Setup</a>
-                  </li>
+                  
+                    <li>
+                      <a href="/ubuntu/rpi3-setup-filesystem.html">Using Ubuntu-base arm64 rootfs for Raspberry Pi 3</a>
+                    </li>
+                  
                 
-              
+                  
+                    <li>
+                      <a href="/ubuntu/rpi3-setup-64bit-uboot.html">Raspberry Pi 3 with 64-bit U-Boot</a>
+                    </li>
+                  
                 
-                  <li>
-                    <a href="/ubuntu/rpi3-setup-filesystem.html">Using Ubuntu-base arm64 rootfs for Raspberry Pi 3</a>
-                  </li>
+                  
+                    <li>
+                      <a href="/ubuntu/rpi3-setup-64bit-kernel.html">Raspberry Pi 3 64-bit kernel</a>
+                    </li>
+                  
                 
-              
-                
-                  <li>
-                    <a href="/ubuntu/rpi3-setup-64bit-uboot.html">Raspberry Pi 3 with 64-bit U-Boot</a>
-                  </li>
-                
-              
-                
-                  <li>
-                    <a href="/ubuntu/rpi3-setup-64bit-kernel.html">Raspberry Pi 3 64-bit kernel</a>
-                  </li>
-                
-              
-            </ul>
+              </ul>
+            </div>
           </div>
-        </div>
-        <div class="visible">
-          <img src="/assets/img/rpi-ubuntu.png" />
-        </div>
+          <div class="visible">
+            <img src="/assets/img/rpi-ubuntu.png" />
+          </div>
+      </div>
     </div>
   </div>
   <div class="title grid2">
-    <div>
-      <div class="titledesc alpine">
-          <p>64-Bit Kernel v.4.11.y (RPi 3 repository)
-              <br/>U-Boot v.2017.05
-              <br/>Alpine linux aarch64
-          </p>
-      </div>
-      <div class="issue-box alpine">
-          <span class="issue-title"></span>
-      </div>
-    </div>
-    <div class="container-show">
-        <div class="hidden">
-          <img src="/assets/img/comming-soon.png" />
+    <div class="wrapper-title">
+      <div>
+        <div class="titledesc alpine">
+            <p>64-Bit Kernel v.4.11.y (RPi 3 repository)
+                <br/>U-Boot v.2017.05
+                <br/>Alpine linux aarch64
+            </p>
         </div>
-        <div class="visible">
-          <img src="/assets/img/rpi-alpine.png" />
+        <div class="issue-box alpine">
+            <span class="issue-title"></span>
         </div>
+      </div>
+      <div class="container-show">
+          <div class="hidden">
+            <img src="/assets/img/comming-soon.png" />
+          </div>
+          <div class="visible">
+            <img src="/assets/img/rpi-alpine.png" />
+          </div>
+      </div>
     </div>
   </div>
-  
+  <div class="title grid3">
+    <div class="wrapper-title">
+      <div>
+        <div class="titledesc other-stuff">
+            <p style="font-size:18px"><br />
+            Other Stuff
+            </p>
+        </div>
+        <div class="issue-box other-stuff">
+            <span class="issue-title"></span>
+        </div>
+      </div>
+      <div class="container-show">
+          <div class="hidden">
+            <img src="/assets/img/comming-soon.png" />
+          </div>
+          <div class="visible">
+            <img src="/assets/img/workplace.png" />
+          </div>
+      </div>
+    </div>
+  </div>
 </div>   
 </div>
 
@@ -170,8 +195,9 @@
             <div class="footer adsA">
       <a href="https://www.banggood.com/brands-Geekcreit-b-40.html?utm_campaign=12geekc&utm_content=east&p=T0021915747907201711&bid=40312&utm_design=5" target="_blank"><img src="http://img.banggood.com/deals/affiliate_member_banner/2edfb49eafd8d8946543d4504bf90c3840.jpg" /></a>
 </div>
+        </div>    
 
-            <script src="/assets/js/scale.fix.js"></script>
+        <script src="/assets/js/scale.fix.js"></script>
 
             <!-- Google Analytics -->
             
@@ -183,7 +209,16 @@
                     ga('create', 'UA-99256627-1', 'auto');
                     ga('send', 'pageview');
                 </script>
-        </div>        
+
+            <!-- Firebase Comment -->
+   
+                <script src="https://www.gstatic.com/firebasejs/4.6.1/firebase.js"></script>
+                
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.7.0/js/md5.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
+
+                <script src="/assets/js/comment.js"></script>   
     </body>
     
 </html>

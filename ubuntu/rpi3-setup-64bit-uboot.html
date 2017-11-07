@@ -236,29 +236,31 @@ cmdline.txt
 <hr />
 
 
-
+        
         <!-- Comments -->
         
-            <div>
-                
-<!-- Add Disqus comments. -->
-<div id="disqus_thread"></div>
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    var disqus_shortname = 'a-delacruz'; // required: replace example with your forum shortname
-    // var disqus_developer = 1; // Comment out when the site is live
-    var disqus_identifier = "/ubuntu/rpi3-setup-64bit-uboot.html";
+            
+<form id="comment">
+  <ul>
+    <li>
+      <h3>Leave a comment</h3>
+    </li>
+    <li>
+        <input type="text" id="name" class="field-style field-split align-left" placeholder="Name" />
+        <input type="text" id="email" class="field-style field-split align-right" placeholder="Email for Gravatar Image" />
+    </li>
+    <li>
+      <textarea id="message" class="field-style" placeholder="Message"></textarea>
+    </li>
+    <li>
+      <input id="postBtn" type="submit" value="Post Comment" />
+    </li>
+  </ul>
+</form>
 
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function () {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-
-            </div>
-         
+            <div class="comments"></div> 
+            <hr /> 
+        
         
     </div>
 </div>
@@ -268,8 +270,9 @@ cmdline.txt
             <div class="footer adsA">
       <a href="https://www.banggood.com/brands-Geekcreit-b-40.html?utm_campaign=12geekc&utm_content=east&p=T0021915747907201711&bid=40312&utm_design=5" target="_blank"><img src="http://img.banggood.com/deals/affiliate_member_banner/2edfb49eafd8d8946543d4504bf90c3840.jpg" /></a>
 </div>
+        </div>    
 
-            <script src="/assets/js/scale.fix.js"></script>
+        <script src="/assets/js/scale.fix.js"></script>
 
             <!-- Google Analytics -->
             
@@ -281,7 +284,16 @@ cmdline.txt
                     ga('create', 'UA-99256627-1', 'auto');
                     ga('send', 'pageview');
                 </script>
-        </div>        
+
+            <!-- Firebase Comment -->
+   
+                <script src="https://www.gstatic.com/firebasejs/4.6.1/firebase.js"></script>
+                
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.7.0/js/md5.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
+
+                <script src="/assets/js/comment.js"></script>   
     </body>
     
 </html>
