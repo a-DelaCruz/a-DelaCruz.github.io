@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>My Personal Notes</title>
+    <title>Firebase as your Realtime Comment System</title>
 
     <link rel="stylesheet" href="/assets/css/style.css?v=">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
@@ -21,16 +21,18 @@
     </script>
 
     <!-- Begin Jekyll SEO tag v2.3.0 -->
-<title>My Personal Notes | Raspberry Pi 3 - 64-Bit kernel and arm64 rootfs</title>
-<meta property="og:title" content="My Personal Notes" />
+<title>Firebase as your Realtime Comment System | My Personal Notes</title>
+<meta property="og:title" content="Firebase as your Realtime Comment System" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Raspberry Pi 3 - 64-Bit kernel and arm64 rootfs" />
-<meta property="og:description" content="Raspberry Pi 3 - 64-Bit kernel and arm64 rootfs" />
-<link rel="canonical" href="http://a-delacruz.github.io/" />
-<meta property="og:url" content="http://a-delacruz.github.io/" />
+<meta name="description" content="As i searched the net for alternatives to Github, i stumbled upon this Firebase.com" />
+<meta property="og:description" content="As i searched the net for alternatives to Github, i stumbled upon this Firebase.com" />
+<link rel="canonical" href="http://a-delacruz.github.io/otherstuff/firebase-comment.html" />
+<meta property="og:url" content="http://a-delacruz.github.io/otherstuff/firebase-comment.html" />
 <meta property="og:site_name" content="My Personal Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-11-06T00:00:00+08:00" />
 <script type="application/ld+json">
-{"name":"My Personal Notes","description":"Raspberry Pi 3 - 64-Bit kernel and arm64 rootfs","author":null,"@type":"WebSite","url":"http://a-delacruz.github.io/","publisher":null,"image":null,"headline":"My Personal Notes","dateModified":null,"datePublished":null,"sameAs":null,"mainEntityOfPage":null,"@context":"http://schema.org"}</script>
+{"name":null,"description":"As i searched the net for alternatives to Github, i stumbled upon this Firebase.com","author":null,"@type":"BlogPosting","url":"http://a-delacruz.github.io/otherstuff/firebase-comment.html","publisher":null,"image":null,"headline":"Firebase as your Realtime Comment System","dateModified":"2017-11-06T00:00:00+08:00","datePublished":"2017-11-06T00:00:00+08:00","sameAs":null,"mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/otherstuff/firebase-comment.html"},"@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -81,136 +83,84 @@
         
             <section class="wrapper-body">
 
-            <div class="container-home">
-    <div class="container-title">
-  <div class="title grid1">
-    <div class="wrapper-title">
-      <div>
-        <div class="titledesc ubuntu">
-            <p>64-Bit Kernel v.4.11.y (RPi 3 repository)
-                <br/>U-Boot v.2017.05
-                <br/>Ubuntu Base v16.04.03-arm64
-            </p>
+            <div class="navi-side-left">
+    <nav class="navi-side-left">
+    <a href="/"><img src="/assets/img/home.png" /></a>
+    <div class="dropdown">
+        <a href="#"><img src="/assets/img/sub-menu.png" /></a>
+        <div class="dropdown-content">
+            
+                
+            
+                
+                <li>
+                    <a href="/ubuntu/rpi3-setup-i2c.html">Enabling I2C for Raspberry Pi 3</a>
+                </li>
+                
+            
+                
+                <li>
+                    <a href="/ubuntu/rpi3-setup-wifi.html">RPi 3: Wifi Setup</a>
+                </li>
+                
+            
+                
+                <li>
+                    <a href="/ubuntu/rpi3-setup-filesystem.html">Using Ubuntu-base arm64 rootfs for Raspberry Pi 3</a>
+                </li>
+                
+            
+                
+                <li>
+                    <a href="/ubuntu/rpi3-setup-64bit-uboot.html">Raspberry Pi 3 with 64-bit U-Boot</a>
+                </li>
+                
+            
+                
+                <li>
+                    <a href="/ubuntu/rpi3-setup-64bit-kernel.html">Raspberry Pi 3 64-bit kernel</a>
+                </li>
+                
+            
         </div>
-        <div class="issue-box ubuntu">
-            <span class="issue-title"></span>
-        </div>
-      </div>
-      <div class="container-show">
-          <div class="hidden">
-            <div class='listBox'>
-              <ul>
-                
-                  
-                
-                  
-                    <li>
-                      <a href="/ubuntu/rpi3-setup-i2c.html">Enabling I2C for Raspberry Pi 3</a>
-                    </li>
-                  
-                
-                  
-                    <li>
-                      <a href="/ubuntu/rpi3-setup-wifi.html">RPi 3: Wifi Setup</a>
-                    </li>
-                  
-                
-                  
-                    <li>
-                      <a href="/ubuntu/rpi3-setup-filesystem.html">Using Ubuntu-base arm64 rootfs for Raspberry Pi 3</a>
-                    </li>
-                  
-                
-                  
-                    <li>
-                      <a href="/ubuntu/rpi3-setup-64bit-uboot.html">Raspberry Pi 3 with 64-bit U-Boot</a>
-                    </li>
-                  
-                
-                  
-                    <li>
-                      <a href="/ubuntu/rpi3-setup-64bit-kernel.html">Raspberry Pi 3 64-bit kernel</a>
-                    </li>
-                  
-                
-              </ul>
-            </div>
-          </div>
-          <div class="visible">
-            <img src="/assets/img/rpi-ubuntu.png" />
-          </div>
-      </div>
     </div>
-  </div>
-  <div class="title grid2">
-    <div class="wrapper-title">
-      <div>
-        <div class="titledesc alpine">
-            <p>64-Bit Kernel v.4.11.y (RPi 3 repository)
-                <br/>U-Boot v.2017.05
-                <br/>Alpine linux aarch64
-            </p>
-        </div>
-        <div class="issue-box alpine">
-            <span class="issue-title"></span>
-        </div>
-      </div>
-      <div class="container-show">
-          <div class="hidden">
-            <img src="/assets/img/comming-soon.png" />
-          </div>
-          <div class="visible">
-            <img src="/assets/img/rpi-alpine.png" />
-          </div>
-      </div>
-    </div>
-  </div>
-  <div class="title grid3">
-    <div class="wrapper-title">
-      <div>
-        <div class="titledesc other-stuff">
-            <p style="font-size:18px"><br />
-            Other Stuff
-            </p>
-        </div>
-        <div class="issue-box other-stuff">
-            <span class="issue-title"></span>
-        </div>
-      </div>
-      <div class="container-show">
-          <div class="hidden">
-            <div class='listBox'>
-              <ul>
-                
-                  
-                    <li>
-                      <a href="/otherstuff/firebase-comment.html">Firebase as your Realtime Comment System</a>
-                    </li>
-                  
-                
-                  
-                
-                  
-                
-                  
-                
-                  
-                
-                  
-                
-              </ul>
-            </div>
-          </div>
-          <div class="visible">
-            <img src="/assets/img/workplace.png" />
-          </div>
-      </div>
-    </div>
-  </div>
-</div>   
+</nav>
 </div>
 
+<div class="container-posts">
+    <h2 class="post title">Firebase as your Realtime Comment System</h2>
 
+    <div class="post content">
+        <p>As i searched the net for alternatives to Github, i stumbled upon this Firebase.com</p>
+
+        
+        <!-- Comments -->
+        
+            
+<form id="comment">
+  <ul>
+    <li>
+      <h3>Leave a comment</h3>
+    </li>
+    <li>
+        <input type="text" id="name" class="field-style field-split align-left" placeholder="Name" />
+        <input type="text" id="email" class="field-style field-split align-right" placeholder="Email for Gravatar Image" />
+    </li>
+    <li>
+      <textarea id="message" class="field-style" placeholder="Message"></textarea>
+    </li>
+    <li>
+      <input id="postBtn" type="submit" value="Post Comment" />
+    </li>
+  </ul>
+</form>
+
+            <div class="comments"></div> 
+            <hr /> 
+        
+        
+    </div>
+</div>
 
             </section>
             
