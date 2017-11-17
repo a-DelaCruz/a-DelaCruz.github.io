@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#444444">
+    <meta name="keywords" content="Raspberry Pi 3 64bit Kernel">
+
+    <title>Raspberry Pi 3 Wifi config</title>
+    <meta name="description" content="Alpine linux network interface configuration are very different from what i used on ubuntu. But wpa_supplicant.conf are still the same.For the interface file...">
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <link rel="shortcut icon" type="image/png" href=" /assets/img/AJ.png ">
+    
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({google_ad_client: "ca-pub-6013311002995151", enable_page_level_ads: true});
+    </script>
+
+    <!-- Begin Jekyll SEO tag v2.3.0 -->
+<title>Raspberry Pi 3 Wifi config | My Personal Notes</title>
+<meta property="og:title" content="Raspberry Pi 3 Wifi config" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Alpine linux network interface configuration are very different from what i used on ubuntu. But wpa_supplicant.conf are still the same. For the interface file: ``` auto lo iface lo inet loopback" />
+<meta property="og:description" content="Alpine linux network interface configuration are very different from what i used on ubuntu. But wpa_supplicant.conf are still the same. For the interface file: ``` auto lo iface lo inet loopback" />
+<link rel="canonical" href="http://a-delacruz.github.io/alpine/alpine-wifi.html" />
+<meta property="og:url" content="http://a-delacruz.github.io/alpine/alpine-wifi.html" />
+<meta property="og:site_name" content="My Personal Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-07-11T00:00:00+08:00" />
+<script type="application/ld+json">
+{"name":null,"description":"Alpine linux network interface configuration are very different from what i used on ubuntu. But wpa_supplicant.conf are still the same. For the interface file: ``` auto lo iface lo inet loopback","author":null,"@type":"BlogPosting","url":"http://a-delacruz.github.io/alpine/alpine-wifi.html","publisher":null,"image":null,"headline":"Raspberry Pi 3 Wifi config","dateModified":"2017-07-11T00:00:00+08:00","datePublished":"2017-07-11T00:00:00+08:00","sameAs":null,"mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/alpine/alpine-wifi.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+  
+  <body>
+    <div class="container-body">
+      <div class="container-header">
+    <div class="logo">
+        <a href="/"><img src="/assets/img/AJ.png"/></a>
+        <div class="desc">About</div>
+    </div>
+</div>
+  
+      <section class="section-body">
+        <div class="navi-left">
+    <nav class="navi-left">
+    <a href="/"><img src="/assets/img/home.png" /></a>
+    <div class="dropdown">
+        <a href="#"><img src="/assets/img/sub-menu.png" /></a>
+        <div class="dropdown-content">
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                        <li>
+                            <a href="/alpine/alpine-wifi.html">Raspberry Pi 3 Wifi config</a>
+                        </li>
+                    
+                
+                    
+                        <li>
+                            <a href="/alpine/alpine-linux.html">Raspberry Pi 3 Alpine Linux arm64</a>
+                        </li>
+                    
+                 
+                           
+              
+        </div>
+    </div>
+</nav>
+
+<div class="post-categories">
+  
+  
+</div>
+</div>
+
+<div class="container-posts">
+    <h2 class="post head">Raspberry Pi 3 Wifi config</h2>
+
+    <div class="post body">
+        <p>Alpine linux network interface configuration are very different from what i used on ubuntu. 
+But <code class="highlighter-rouge">wpa_supplicant.conf</code> are still the same.
+For the <code class="highlighter-rouge">interface</code> file:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>auto lo
+iface lo inet loopback
+
+allow-hotplug eth0
+iface eth0 inet dhcp
+        hostname [your hostname]
+
+auto wlan0
+iface wlan0 inet dhcp
+        hostname [your hostname]
+</code></pre></div></div>
+
+<p>And for the <code class="highlighter-rouge">wpa_supplicant.conf</code> : (WPA2)</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>network={
+        ssid="your network name"
+        psk="your password"
+        proto=RSN
+        key_mgmt=WPA-PSK
+        pairwise=CCMP
+        auth_alg=OPEN
+        scan_ssid=1     // To be able to connect to hidden network
+        mode=0
+        group=CCMP
+}
+</code></pre></div></div>
+
+<hr />
+
+
+        
+        <!-- Comments -->
+        
+            
+
+            <div class="comments"></div> 
+            
+        
+        
+    </div>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- Ad-1 -->
+    <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-6013311002995151"
+        data-ad-slot="2377202477"
+        data-ad-format="auto"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+
+
+      </section>
+      
+      <div class="container-footer">
+    
+</div>
+    </div>
+
+    <!-- Google Analytics -->
+            
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-99256627-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+  </body>
+</html>
