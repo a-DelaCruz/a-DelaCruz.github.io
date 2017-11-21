@@ -57,13 +57,19 @@
                 
                     
                         <li>
+                            <a href="/ubuntu/rpi3-setup-bluetooth.html">Raspberry Pi 3 Bluetooth Setup</a>
+                        </li>
+                    
+                
+                    
+                        <li>
                             <a href="/ubuntu/rpi3-setup-i2c.html">Enabling I2C for Raspberry Pi 3</a>
                         </li>
                     
                 
                     
                         <li>
-                            <a href="/ubuntu/rpi3-setup-wifi.html">RPi 3: Wifi Setup</a>
+                            <a href="/ubuntu/rpi3-setup-wifi.html">Raspberry Pi 3 Wifi Setup</a>
                         </li>
                     
                 
@@ -122,12 +128,9 @@
 
 <p>Software files that we also need:</p>
 <blockquote>
-  <p><a href="https://www.kernel.org/">💿RPi3 kernel Upstream</a> or
-  <a href="https://github.com/raspberrypi/linux.git">💿RPi3 kernel Official v.4.11.y</a></p>
-</blockquote>
-
-<blockquote>
-  <p><a href="href=&quot;https://github.com/raspberrypi/firmware/tree/master/boot">💿RPi3 firmware v.latest</a> (bootcode.bin, start.elf as this are the min. files to boot)
+  <p><a href="https://www.kernel.org/">💿RPi3 kernel Upstream</a> or<br />
+  <a href="https://github.com/raspberrypi/linux.git">💿RPi3 kernel Official v.4.11.y</a><br />
+  <a href="href=&quot;https://github.com/raspberrypi/firmware/tree/master/boot">💿RPi3 firmware v.latest</a> (bootcode.bin, start.elf as this are the min. files to boot)
 fixup.dat and the rest of star.* and fixup.* files for graphical desktop</p>
 </blockquote>
 
@@ -151,15 +154,9 @@ fixup.dat and the rest of star.* and fixup.* files for graphical desktop</p>
 
 <p>Once the download or rather cloning complete, go to  <code class="highlighter-rouge">folder-name</code>.</p>
 <blockquote>
-  <p><code class="highlighter-rouge">bcmrpi3_defconfig</code> - For the RPi3 kernel config. Then configure it further if you want.</p>
-</blockquote>
-
-<blockquote>
-  <p><code class="highlighter-rouge">O=~/output-folder</code> - To place the built files in a different directory.</p>
-</blockquote>
-
-<blockquote>
-  <p><code class="highlighter-rouge">-jX</code> - To build the kernel in a multithreaded way. <code class="highlighter-rouge">X = [Num of core x 2]</code></p>
+  <p><code class="highlighter-rouge">bcmrpi3_defconfig</code> - For the RPi3 kernel config. Then configure it further if you want.<br />
+  <code class="highlighter-rouge">O=~/output-folder</code> - To place the built files in a different directory.<br />
+  <code class="highlighter-rouge">-jX</code> - To build the kernel in a multithreaded way. <code class="highlighter-rouge">X = [Num of core x 2]</code></p>
 </blockquote>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    [~folder-name]$ sudo make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- bcmrpi3_defconfig
@@ -257,19 +254,10 @@ since we still do not have a filesystem.</p>
 
 <h4 id="reference-">Reference :</h4>
 <blockquote>
-  <p><a href="https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3">https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3</a></p>
-</blockquote>
-
-<blockquote>
-  <p><a href="https://wiki.ubuntu.com/Base">https://wiki.ubuntu.com/Base</a></p>
-</blockquote>
-
-<blockquote>
-  <p><a href="https://www.raspberrypi.org/documentation/linux/kernel/building.md">https://www.raspberrypi.org/documentation/linux/kernel/building.md</a></p>
-</blockquote>
-
-<blockquote>
-  <p><a href="https://kernelnomicon.org/?p=682">https://kernelnomicon.org/?p=682</a></p>
+  <p><a href="https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3">https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3</a><br />
+  <a href="https://wiki.ubuntu.com/Base">https://wiki.ubuntu.com/Base</a>
+  <a href="https://www.raspberrypi.org/documentation/linux/kernel/building.md">https://www.raspberrypi.org/documentation/linux/kernel/building.md</a><br />
+  <a href="https://kernelnomicon.org/?p=682">https://kernelnomicon.org/?p=682</a></p>
 </blockquote>
 
 <hr />

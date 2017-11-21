@@ -66,6 +66,8 @@
                     
                 
                     
+                
+                    
                         <li>
                             <a href="/alpine/alpine-wifi.html">Raspberry Pi 3 Wifi config</a>
                         </li>
@@ -93,18 +95,18 @@
     <h2 class="post head">Raspberry Pi 3 Alpine Linux arm64</h2>
 
     <div class="post body">
-        <h4 id="-17-07-06-to-fix-brcmfmac-loading-error-directly-place-brcm-folder-inside-our-custom-initramfs-rpi3-file">*** 17-07-06: To fix brcmfmac loading error: directly place <code class="highlighter-rouge">brcm</code> folder inside our custom <code class="highlighter-rouge">initramfs-rpi3</code> file.</h4>
-<h4 id="-17-07-06-b43-in-optional">*** 17-07-06: <code class="highlighter-rouge">b43</code> in optional…</h4>
+        <h5 id="-17-07-06-to-fix-brcmfmac-loading-error-directly-place-brcm-folder-inside-our-custom-initramfs-rpi3-file">*** 17-07-06: To fix brcmfmac loading error: directly place <code class="highlighter-rouge">brcm</code> folder inside our custom <code class="highlighter-rouge">initramfs-rpi3</code> file.</h5>
+<h5 id="-17-07-06-b43-in-optional">*** 17-07-06: <code class="highlighter-rouge">b43</code> in optional…</h5>
 
 <p>As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3.</p>
 
-<h4 id="prerequisites">Prerequisites:</h4>
+<h2 id="prerequisites">Prerequisites:</h2>
 <ul>
   <li>Alpine linux Generic Arm - <a href="https://nl.alpinelinux.org/alpine/v3.6/releases/aarch64/alpine-uboot-3.6.1-aarch64.tar.gz">aarch64</a></li>
-  <li>For the kernel and U-boot…just follow my previous <a href="rpi3-64bit-kernel-and-Uboot-booting-up">post</a>.</li>
+  <li>For the kernel and U-boot…just follow <a href="/ubuntu/rpi3-setup-64bit-kernel">Raspberry Pi 3 64-bit kernel</a>.</li>
 </ul>
 
-<h4 id="note-enable-squashfs-support--file-systems---miscellaneous-filesystems----squashfs-40">Note: Enable Squashfs support @ File systems -&gt; Miscellaneous filesystems -&gt; &lt;*&gt; SquashFS 4.0</h4>
+<h5 id="note-enable-squashfs-support--file-systems---miscellaneous-filesystems----squashfs-40">Note: Enable Squashfs support @ File systems -&gt; Miscellaneous filesystems -&gt; &lt;*&gt; SquashFS 4.0</h5>
 
 <p>The files that we need from alpine to modify is <code class="highlighter-rouge">initramfs-vanilla</code>, and a copy of <code class="highlighter-rouge">apk</code> folder (<code class="highlighter-rouge">alpine.apkovl.tar.gz</code> is optional). so go ahead and extract them.</p>
 
@@ -170,12 +172,12 @@ alpine.apkovl.tar.gz // optional will be created once we setup our alpine linux
 </code></pre></div></div>
 
 <p>We’ll modify the <code class="highlighter-rouge">cmdline.txt</code> and <code class="highlighter-rouge">boot.scr</code> for alpine linux.</p>
-<h5 id="cmdlinetxt">cmdline.txt</h5>
+<h4 id="cmdlinetxt">cmdline.txt</h4>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>modules=loop,squashfs,sd-mod,usb-storage quiet net.ifnames=0 dwc_otg.lpm_enable=0 console=ttyS0,115200 fsck.repair=yes rootwait
 // the quiet command can be remove: it just hide the message buffer of kernel. `ttyS0` can be replace by `ttyAMA0`
 </code></pre></div></div>
 
-<h5 id="bootscr">boot.scr</h5>
+<h4 id="bootscr">boot.scr</h4>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fdt addr 0x100
 fdt get value bootargs /chosen bootargs
 setenv kernel_addr_r 0x01000000
@@ -200,8 +202,10 @@ booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r}
 # apk add wireless-tools wpa_supplicant  // will be installed even when not connected to the net
 # reboot
 </code></pre></div></div>
+<p><br /></p>
 
-<h4 id="wifi-optional">Wifi: (optional…)</h4>
+<h2 id="wifi-optional">Wifi: (optional…)</h2>
+
 <p>I didn’t include the <code class="highlighter-rouge">brcm</code> above because i encouter a <code class="highlighter-rouge">brcmf_sdio_htclk</code> error but can be resolve by reloading the module: <code class="highlighter-rouge">brcmfmac</code>
 The good thing about alpine linux is if you make a <code class="highlighter-rouge">firmware folder</code> on the root directory of our µsd card, it’ll be recognized by alpine and load it once alpine boot up. Don’t worry if the rest of the folder inside the OS fimrware folder is gone(it’s  just hidden in plain site). So i place my brcm folder there for now.</p>
 
@@ -241,15 +245,16 @@ $ lbu commit    //To save changes
 $ modprobe brcmfmac
 </code></pre></div></div>
 
-<p>Feedback is at most welcome…</p>
+<p><br /></p>
 
-<h5 id="reference">Reference:</h5>
-<ul>
-  <li>http://backreference.org/2010/07/04/modifying-initrdinitramfs-files/</li>
-  <li>https://askubuntu.com/questions/437880/extract-a-squashfs-to-an-existing-directory</li>
-  <li>https://wiki.alpinelinux.org/wiki/DIY_Fully_working_Alpine_Linux_for_Allwinner_and_Other_ARM_SOCs</li>
-  <li>https://wiki.alpinelinux.org/wiki/Raspberry_Pi</li>
-</ul>
+<h4 id="reference-">Reference :</h4>
+
+<blockquote>
+  <p><a href="http://backreference.org/2010/07/04/modifying-initrdinitramfs-files/">http://backreference.org/2010/07/04/modifying-initrdinitramfs-files/</a><br />
+   <a href="https://askubuntu.com/questions/437880/extract-a-squashfs-to-an-existing-directory">https://askubuntu.com/questions/437880/extract-a-squashfs-to-an-existing-directory</a>
+   <a href="https://wiki.alpinelinux.org/wiki/DIY_Fully_working_Alpine_Linux_for_Allwinner_and_Other_ARM_SOCs">https://wiki.alpinelinux.org/wiki/DIY_Fully_working_Alpine_Linux_for_Allwinner_and_Other_ARM_SOCs</a><br />
+   <a href="https://wiki.alpinelinux.org/wiki/Raspberry_Pi">https://wiki.alpinelinux.org/wiki/Raspberry_Pi</a></p>
+</blockquote>
 
 <hr />
 
