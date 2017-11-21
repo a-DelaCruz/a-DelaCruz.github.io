@@ -8,8 +8,8 @@
     <meta name="theme-color" content="#444444">
     <meta name="keywords" content="Raspberry Pi 3 64bit Kernel">
 
-    <title>Enabling I2C for Raspberry Pi 3</title>
-    <meta name="description" content="A little modification in the kernel CONFIG to enable I2C.">
+    <title>Raspberry Pi 3 Bluetooth Setup</title>
+    <meta name="description" content="In order for the Bluetooth to work.. we need to have this file.  BCM43430A1.hcd">
 
     <link rel="stylesheet" href="/assets/css/style.css?v=">
     <link rel="shortcut icon" type="image/png" href=" /assets/img/AJ.png ">
@@ -20,18 +20,18 @@
     </script>
 
     <!-- Begin Jekyll SEO tag v2.3.0 -->
-<title>Enabling I2C for Raspberry Pi 3 | My Personal Notes</title>
-<meta property="og:title" content="Enabling I2C for Raspberry Pi 3" />
+<title>Raspberry Pi 3 Bluetooth Setup | My Personal Notes</title>
+<meta property="og:title" content="Raspberry Pi 3 Bluetooth Setup" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="A little modification in the kernel CONFIG to enable I2C." />
-<meta property="og:description" content="A little modification in the kernel CONFIG to enable I2C." />
-<link rel="canonical" href="http://a-delacruz.github.io/ubuntu/rpi3-setup-i2c.html" />
-<meta property="og:url" content="http://a-delacruz.github.io/ubuntu/rpi3-setup-i2c.html" />
+<meta name="description" content="In order for the Bluetooth to work.. we need to have this file. BCM43430A1.hcd" />
+<meta property="og:description" content="In order for the Bluetooth to work.. we need to have this file. BCM43430A1.hcd" />
+<link rel="canonical" href="http://a-delacruz.github.io/ubuntu/rpi3-setup-bluetooth.html" />
+<meta property="og:url" content="http://a-delacruz.github.io/ubuntu/rpi3-setup-bluetooth.html" />
 <meta property="og:site_name" content="My Personal Notes" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2017-11-04T00:00:00+08:00" />
+<meta property="article:published_time" content="2017-11-17T00:00:00+08:00" />
 <script type="application/ld+json">
-{"name":null,"description":"A little modification in the kernel CONFIG to enable I2C.","author":null,"@type":"BlogPosting","url":"http://a-delacruz.github.io/ubuntu/rpi3-setup-i2c.html","publisher":null,"image":null,"headline":"Enabling I2C for Raspberry Pi 3","dateModified":"2017-11-04T00:00:00+08:00","datePublished":"2017-11-04T00:00:00+08:00","sameAs":null,"mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/ubuntu/rpi3-setup-i2c.html"},"@context":"http://schema.org"}</script>
+{"name":null,"description":"In order for the Bluetooth to work.. we need to have this file. BCM43430A1.hcd","author":null,"@type":"BlogPosting","url":"http://a-delacruz.github.io/ubuntu/rpi3-setup-bluetooth.html","publisher":null,"image":null,"headline":"Raspberry Pi 3 Bluetooth Setup","dateModified":"2017-11-17T00:00:00+08:00","datePublished":"2017-11-17T00:00:00+08:00","sameAs":null,"mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/ubuntu/rpi3-setup-bluetooth.html"},"@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -108,21 +108,46 @@
 </div>
 
 <div class="container-posts">
-    <h2 class="post head">Enabling I2C for Raspberry Pi 3</h2>
+    <h2 class="post head">Raspberry Pi 3 Bluetooth Setup</h2>
 
     <div class="post body">
-        <p>A little modification in the <code class="highlighter-rouge">kernel CONFIG</code> to enable <code class="highlighter-rouge">I2C</code>.</p>
+        <p>In order for the Bluetooth to work.. we need to have this file.</p>
+<ul>
+  <li><a href="https://github.com/OpenELEC/misc-firmware/blob/master/firmware/brcm/BCM43430A1.hcd">BCM43430A1.hcd</a></li>
+</ul>
 
-<p>For <code class="highlighter-rouge">I2C</code> to work, Enable <code class="highlighter-rouge">I2C device interface</code>  instead of setting it up as a <code class="highlighter-rouge">module</code>.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    Device Drivers
-        |- I2C support
-            |- [*] I2C device interface
+<p>Make sure this are installed:</p>
+<ul>
+  <li>bluetooth</li>
+  <li>bluez</li>
+</ul>
+
+<p>Put this file: <code class="highlighter-rouge">BCM43430A1.hcd</code> in <code class="highlighter-rouge">/lib/firmware/brcm</code> folder… then create a symlink of it in <code class="highlighter-rouge">/etc/firmware</code> folder.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo mkdir /etc/firmware
+$ sudo ln -s /lib/firmware/brcm/BCM43430A1.hcd /etc/firmware/BCM43430A1.hcd
 </code></pre></div></div>
 
-<p><br />
-Afterwards, you can see <code class="highlighter-rouge">i2c-1</code> present under <code class="highlighter-rouge">/dev</code> folder. <code class="highlighter-rouge">i2c-bcm2835</code> are loaded as module instead of <code class="highlighter-rouge">i2c-bcm2708</code> while both being set as <code class="highlighter-rouge">modules</code> on <code class="highlighter-rouge">kernel CONFIG</code>.
-No need to add <code class="highlighter-rouge">i2c-dev</code> in <code class="highlighter-rouge">/etc/modules</code> as it is loaded by kernel itself.
-Then just install <code class="highlighter-rouge">i2c-tools</code> to verify that it works and we can now detect the device address connected to <code class="highlighter-rouge">I2c-1</code>.</p>
+<p>Then to test it.. run this twice:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo /usr/bin/hciattach /dev/ttyAMA0 bc43xx 921600 noflow
+</code></pre></div></div>
+
+<p>First run we’ll encouter <code class="highlighter-rouge">Initialization timed out</code>. But on the second time we’ll get this <code class="highlighter-rouge">Device setup complete</code>.
+Then try it out now if our device is present.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hcitool dev
+
+    Devices:
+        hci0   [your device id shows here]
+</code></pre></div></div>
+
+<p>Then run your friendly <code class="highlighter-rouge">bluetoothctl</code>. To automate this at boot, just follow the scripts from the reference below.</p>
+
+<p><br /></p>
+<h4 id="reference-">Reference :</h4>
+
+<blockquote>
+  <p><a href="http://www.adelpha.be/blog/index.php/2016/09/24/raspberry-pi-3-native-wifi-and-bluetooth/">http://www.adelpha.be/blog/index.php/2016/09/24/raspberry-pi-3-native-wifi-and-bluetooth/</a><br />
+  <a href="https://github.com/xbianonpi/xbian/issues/813">https://github.com/xbianonpi/xbian/issues/813</a></p>
+</blockquote>
 
 <hr />
 

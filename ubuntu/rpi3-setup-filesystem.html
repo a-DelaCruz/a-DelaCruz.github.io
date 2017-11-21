@@ -57,13 +57,19 @@
                 
                     
                         <li>
+                            <a href="/ubuntu/rpi3-setup-bluetooth.html">Raspberry Pi 3 Bluetooth Setup</a>
+                        </li>
+                    
+                
+                    
+                        <li>
                             <a href="/ubuntu/rpi3-setup-i2c.html">Enabling I2C for Raspberry Pi 3</a>
                         </li>
                     
                 
                     
                         <li>
-                            <a href="/ubuntu/rpi3-setup-wifi.html">RPi 3: Wifi Setup</a>
+                            <a href="/ubuntu/rpi3-setup-wifi.html">Raspberry Pi 3 Wifi Setup</a>
                         </li>
                     
                 
@@ -110,7 +116,7 @@
 <p>To create our bare filesystem, we need:</p>
 
 <blockquote>
-  <p><a href="http://cdimage.ubuntu.com/ubuntu-base/releases/16.04/release/ubuntu-base-16.04.3-base-arm64.tar.gz">💿Ubuntu Base 16.04.3 LTS</a>
+  <p><a href="http://cdimage.ubuntu.com/ubuntu-base/releases/16.04/release/ubuntu-base-16.04.3-base-arm64.tar.gz">💿Ubuntu Base 16.04.3 LTS</a><br />
   <code class="highlighter-rouge">-C</code> - To extract the files in a different directory</p>
 </blockquote>
 
@@ -118,6 +124,8 @@
     [~]$ mkdir rootfs
     [~]$ sudo tar -xzvf ubuntu-base-16.04.3-base-arm64.tar.gz -C rootfs
 </code></pre></div></div>
+
+<p><br /></p>
 
 <h2 id="modifying-the-rootfs">Modifying the Rootfs</h2>
 
@@ -198,6 +206,8 @@
 <p>We need to add <code class="highlighter-rouge">/etc/fstab</code> file entry below coz’ if not…it will run on read-only mode. Below are <code class="highlighter-rouge">Tab</code> not <code class="highlighter-rouge">spacebar</code></p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    [~]$ echo /dev/mmcblk0p2	/	ext4	defaults,noatime	0	1 &gt;&gt; /etc/fstab
 </code></pre></div></div>
+
+<p><br /></p>
 
 <h2 id="removing-unwanted-files">Removing unwanted files</h2>
 
@@ -284,15 +294,9 @@ Now boot it up and you should now be able to login.</p>
 
 <h4 id="reference-">Reference :</h4>
 <blockquote>
-  <p><a href="http://docs.khadas.com/social/BuildUbuntuRootfsViaUbuntuBase/">http://docs.khadas.com/social/BuildUbuntuRootfsViaUbuntuBase/</a></p>
-</blockquote>
-
-<blockquote>
-  <p><a href="https://gnu-linux.org/building-ubuntu-rootfs-for-arm.html">https://gnu-linux.org/building-ubuntu-rootfs-for-arm.html</a></p>
-</blockquote>
-
-<blockquote>
-  <p><a href="http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html">http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html</a></p>
+  <p><a href="http://docs.khadas.com/social/BuildUbuntuRootfsViaUbuntuBase/">http://docs.khadas.com/social/BuildUbuntuRootfsViaUbuntuBase/</a><br />
+  <a href="https://gnu-linux.org/building-ubuntu-rootfs-for-arm.html">https://gnu-linux.org/building-ubuntu-rootfs-for-arm.html</a><br />
+  <a href="http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html">http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html</a></p>
 </blockquote>
 
 <hr />
