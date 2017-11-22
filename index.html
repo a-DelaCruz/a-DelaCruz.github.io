@@ -39,9 +39,30 @@
       <div class="container-header">
     <div class="logo">
         <a href="/"><img src="/assets/img/AJ.png"/></a>
-        <div class="desc">About</div>
+        <div class="desc">
+            <a id="myBtn" href="#about"><img src="/assets/img/info.png"/></a>
+            <a href="#contact"><img src="/assets/img/mail.png"/></a>
+        </div>
     </div>
 </div>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close">&times;</span>
+      <h3>About</h3>
+    </div>
+    <div class="modal-body">
+      <p>This is a base Jekyll site that i constantly re-design. And a place for sharing what i learned so far on anythng that interest me.</p>
+      <p>Some post are temporarily removed for revisions.</p>
+    </div>
+  </div>
+
+</div>
+
   
       <section class="section-body">
         <div class="coontainer-titlebox">
@@ -178,5 +199,33 @@
         ga('create', 'UA-99256627-1', 'auto');
         ga('send', 'pageview');
     </script>
+
+    <script>
+// Get the modal
+var modal = document.getElementById('myModal');
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+</script>
   </body>
 </html>
