@@ -12,6 +12,7 @@
     <meta name="description" content="A little modification in the kernel CONFIG to enable I2C.">
 
     <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="shortcut icon" type="image/png" href=" /assets/img/AJ.png ">
     
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -42,36 +43,89 @@
     <div class="logo">
         <a href="/"><img src="/assets/img/AJ.png"/></a>
         <div class="desc">
-            <a id="myBtn" href="#about"><img src="/assets/img/info.png"/></a>
-            <a href="#contact"><img src="/assets/img/mail.png"/></a>
+            <a id="aboutBtn">
+              
+    <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 0h24v24H0z" fill="none"/>
+        <path d="M11 17h2v-6h-2v6zm1-15C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 9h2V7h-2v2z"/>
+    </svg>
+
+    
+            </a>
+            <a id="contactBtn">
+              
+    <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+        <path d="M0 0h24v24H0z" fill="none"/>
+    </svg>
+
+    
+            </a>
         </div>
     </div>
 </div>
 
 <!-- The Modal -->
-<div id="myModal" class="modal">
-
+<div id="modalAbout" class="modal">
   <!-- Modal content -->
   <div class="modal-content">
     <div class="modal-header">
-      <span class="close">&times;</span>
       <h3>About</h3>
+      <span class="close">&times;</span>
     </div>
     <div class="modal-body">
       <p>This is a base Jekyll site that i constantly re-design. And a place for sharing what i learned so far on anythng that interest me.</p>
       <p>Some post are temporarily removed for revisions.</p>
     </div>
   </div>
-
 </div>
 
+<div id="modalContact" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Contact</h3>
+      <span class="close2">&times;</span>
+    </div>
+    <div class="modal-body">
+      <form id="gform" method="POST" class="form-style" 
+  action="https://script.google.com/macros/s/AKfycbwWNS9whgt0iDYN7E1ze3AAuTOV4JwKstvsPFai7C8sBi4yOAs7/exec">
+    <!-- change the form action to your script url -->
+        <input type='text' id='nameR' class='field-style' name="name" placeholder='Name' />
+        <input type='text' id='emailR' class='field-style' name="email" placeholder='Email' />
+        <textarea id='messageR' class='field-style' name="message" placeholder='Message'></textarea>
+        <input id='postBtn' type='submit' value='Send' />
+      </form>
+      <!-- Customise the Thankyou Message People See when they submit the form: -->
+      <div style="display:none;" id="thankyou_message">
+        <h2><em>Thanks</em> for contacting us!
+          We will get back to you soon!</h2>
+      </div>
+    </div>
+  </div>
+</div>
   
       <section class="section-body">
         <div class="navi-left">
     <nav class="navi-left">
-    <a href="/"><img src="/assets/img/home.png" /></a>
+    <a href="/">
+        
+    <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+        <path d="M0 0h24v24H0z" fill="none"/>
+    </svg>
+
+    
+    </a>
     <div class="dropdown">
-        <a href="#"><img src="/assets/img/sub-menu.png" /></a>
+        <a href="#">
+            
+    <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 0h24v24H0z" fill="none"/>
+        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+    </svg>
+
+        </a>
         <div class="dropdown-content">
             
             
@@ -173,9 +227,6 @@ Then just install <code class="highlighter-rouge">i2c-tools</code> to verify tha
 
       </section>
       
-      <div class="container-footer">
-    
-</div>
     </div>
 
     <!-- Google Analytics -->
@@ -190,31 +241,55 @@ Then just install <code class="highlighter-rouge">i2c-tools</code> to verify tha
     </script>
 
     <script>
-// Get the modal
-var modal = document.getElementById('myModal');
+        // Get the modal
+        var modal = document.getElementById('modalAbout');
+        var modal2 = document.getElementById('modalContact');
+        var gform = document.getElementById('gform');
+        var thanks_msg = document.getElementById('thankyou_message');
 
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
+        // Get the button that opens the modal
+        var btn = document.getElementById("aboutBtn");
+        var btn2 = document.getElementById("contactBtn");
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+        var span2 = document.getElementsByClassName("close2")[0];
 
-// When the user clicks the button, open the modal 
-btn.onclick = function() {
-    modal.style.display = "block";
-}
+        // When the user clicks the button, open the modal 
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-    modal.style.display = "none";
-}
+        btn2.onclick = function() {
+            modal2.style.display = "block";
+            gform.style.display = 'block';
+            thanks_msg.style.display = 'none';
+            document.getElementById("gform").reset();
+        }
 
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-</script>
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        span2.onclick = function() {
+            modal2.style.display = "none";
+            thanks_msg.style.display = 'none';
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";   
+            }
+            if (event.target == modal2) {
+                modal2.style.display = "none";
+            }
+        }
+    </script>
+    <!-- Submit the Form to Google Using "AJAX" -->
+    <script data-cfasync="false" type="text/javascript"
+    src="https://cdn.rawgit.com/dwyl/html-form-send-email-via-google-script-without-server/master/form-submission-handler.js">
+    </script>
   </body>
 </html>
