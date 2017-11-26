@@ -5,15 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="theme-color" content="#444444">
     <meta name="keywords" content="Raspberry Pi 3 64bit Kernel">
 
     <title>Raspberry Pi 3 Alpine Linux arm64</title>
     <meta name="description" content="*** 17-07-06: To fix brcmfmac loading error: directly place brcm folder inside our custom initramfs-rpi3 file.*** 17-07-06: b43 in optional…">
 
     <link rel="stylesheet" href="/assets/css/style.css?v=">
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="shortcut icon" type="image/png" href=" /assets/img/AJ.png ">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script>
@@ -38,12 +37,16 @@
 </head>
   
   <body>
-    <div class="container-body">
-      <div class="container-header">
-    <div class="logo">
-        <a href="/"><img src="/assets/img/AJ.png"/></a>
-        <div class="desc">
-            <a id="aboutBtn">
+
+    <div class="row">
+      <div class="col s1">
+        <div class="header">
+    <div class="card">
+        <div class="card-image">
+            <a href="/"><img src="/assets/img/AJ.png"/></a>
+        </div>
+        <div class="card-action valign-wrapper center-align">
+            <a id="aboutBtn" href="#about" class="tooltipped modal-trigger" data-position="bottom" data-delay="30" data-tooltip="About">
               
     <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
         <path d="M0 0h24v24H0z" fill="none"/>
@@ -52,7 +55,7 @@
 
     
             </a>
-            <a id="contactBtn">
+            <a id="contactBtn" href="#contact" class="tooltipped modal-trigger" data-position="bottom" data-delay="30" data-tooltip="Contact">
               
     <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
         <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
@@ -65,68 +68,72 @@
     </div>
 </div>
 
-<!-- The Modal -->
-<div id="modalAbout" class="modal">
-  <!-- Modal content -->
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3>About</h3>
-      <span class="close">&times;</span>
+<!-- Modal Structure -->
+<div id="about" class="modal modal-close">
+    <div class="modal-content">
+        <span class="closeBtn modal-close">&times;</span>
+        <h4>About</h4>
+        <p>This is a base Jekyll site that i constantly re-design. And a place for sharing what i learned so far on anythng that interest me.</p>
+        <p>Some post are temporarily removed for revisions.</p>
     </div>
-    <div class="modal-body">
-      <p>This is a base Jekyll site that i constantly re-design. And a place for sharing what i learned so far on anythng that interest me.</p>
-      <p>Some post are temporarily removed for revisions.</p>
-    </div>
-  </div>
 </div>
 
-<div id="modalContact" class="modal">
-  <!-- Modal content -->
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3>Contact</h3>
-      <span class="close2">&times;</span>
+<div id="contact" class="modal">
+    <div class="modal-content">
+        <span class="closeBtn modal-close">&times;</span>
+        <h4>Contact</h4>
+
+        <form id="gform" class="col s12" method="POST" action="https://script.google.com/macros/s/AKfycbwWNS9whgt0iDYN7E1ze3AAuTOV4JwKstvsPFai7C8sBi4yOAs7/exec">
+            <div class="input-field col s6">
+                <input id="last_name" type="text" class="validate" name="name">
+                <label>Name</label>
+            </div>
+            <div class="input-field col s6">
+                <input id="email" type="email" class="validate" name="email">
+                <label data-error="wrong" data-success="right">Email</label>
+            </div>
+            <div class="input-field col s12">
+                <textarea id="message" class="materialize-textarea" name="message"></textarea>
+                <label>Message</label>
+            </div>
+            <button id="sendBtn" class="btn blue" type="submit" >Send</button>
+        </form>
+        <!-- Customise the Thankyou Message People See when they submit the form: -->
+        <div style="display:none;" id="thankyou_message">
+            <h2><em>Thanks</em> for contacting us!
+            We will get back to you soon!</h2>
+        </div>
+        
+        <div id="loader-wrapper">
+            <div id="loader"></div>
+            <div class="loader-section"></div>
+        </div>
     </div>
-    <div class="modal-body">
-      <form id="gform" method="POST" class="form-style" 
-  action="https://script.google.com/macros/s/AKfycbwWNS9whgt0iDYN7E1ze3AAuTOV4JwKstvsPFai7C8sBi4yOAs7/exec">
-    <!-- change the form action to your script url -->
-        <input type='text' id='nameR' class='field-style' name="name" placeholder='Name' />
-        <input type='text' id='emailR' class='field-style' name="email" placeholder='Email' />
-        <textarea id='messageR' class='field-style' name="message" placeholder='Message'></textarea>
-        <input id='postBtn' type='submit' value='Send' />
-      </form>
-      <!-- Customise the Thankyou Message People See when they submit the form: -->
-      <div style="display:none;" id="thankyou_message">
-        <h2><em>Thanks</em> for contacting us!
-          We will get back to you soon!</h2>
+</div>
+
+      </div>
+      <div class="col s11">
       </div>
     </div>
-  </div>
-</div>
-  
-      <section class="section-body">
-        <div class="navi-left">
-    <nav class="navi-left">
-    <a href="/">
-        
-    <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-        <path d="M0 0h24v24H0z" fill="none"/>
-    </svg>
-
-    
+    <div class="row">
+      <div class="col s12">
+        <section>
+          <nav class="fixed-action-btn vertical">
+    <a class="btn-floating btn-large red" >
+        <i class="large material-icons">more_vert</i>
     </a>
-    <div class="dropdown">
-        <a href="#">
-            
-    <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0 0h24v24H0z" fill="none"/>
-        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-    </svg>
+    <ul>
+        <li><a class="btn-floating green tooltipped" data-tooltip="Coming Soon" data-position="left"><i class="material-icons">mode_comment</i></a></li>
+        <li><a href="/" class="btn-floating blue"><i class="material-icons">home</i></a></li>
+    </ul>
+</nav>
 
-        </a>
-        <div class="dropdown-content">
+<nav class="navi-left">
+    <div class="dropdown">
+        <a class="btn-floating dropdown-button" data-activates='dropdown1'>
+        <i class="large material-icons">more_vert</i>
+    </a>
+        <div id='dropdown1' class='dropdown-content'>
             
             
                 
@@ -143,15 +150,19 @@
                     
                 
                     
-                        <li>
-                            <a href="/alpine/alpine-wifi.html">Raspberry Pi 3 Wifi config</a>
-                        </li>
+                        <ul id="staggered-test">
+                            <li>
+                                <a href="/alpine/alpine-wifi.html">Raspberry Pi 3 Wifi config</a>
+                            </li>
+                        </ul>
                     
                 
                     
-                        <li>
-                            <a href="/alpine/alpine-linux.html">Raspberry Pi 3 Alpine Linux arm64</a>
-                        </li>
+                        <ul id="staggered-test">
+                            <li>
+                                <a href="/alpine/alpine-linux.html">Raspberry Pi 3 Alpine Linux arm64</a>
+                            </li>
+                        </ul>
                     
                  
                            
@@ -160,16 +171,12 @@
     </div>
 </nav>
 
-<div class="post-categories">
-  
-  
-</div>
-</div>
+       
 
-<div class="container-posts">
-    <h2 class="post head">Raspberry Pi 3 Alpine Linux arm64</h2>
+<div class="container">
+    <h3 class="center-align">Raspberry Pi 3 Alpine Linux arm64</h3>
 
-    <div class="post body">
+    <div class="posts">
         <h5 id="-17-07-06-to-fix-brcmfmac-loading-error-directly-place-brcm-folder-inside-our-custom-initramfs-rpi3-file">*** 17-07-06: To fix brcmfmac loading error: directly place <code class="highlighter-rouge">brcm</code> folder inside our custom <code class="highlighter-rouge">initramfs-rpi3</code> file.</h5>
 <h5 id="-17-07-06-b43-in-optional">*** 17-07-06: <code class="highlighter-rouge">b43</code> in optional…</h5>
 
@@ -266,9 +273,8 @@ booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r}
 
 <p>Go ahead noew and try to boot it up. You should have an output like this:</p>
 
-<p><img src="/assets/img/alpine/alpine-linux-arm64-rpi3.jpg" alt="" /></p>
-
-<p>As you can see… there’s a hwclock error since our raspberry pi 3 don’t have any. So after you run <code class="highlighter-rouge">setup-alpine</code> and use <code class="highlighter-rouge">lbu commit </code> to save changes…run this:</p>
+<p><img src="/assets/img/alpine/alpine-linux-arm64-rpi3.jpg" alt="" class="materialboxed" />
+As you can see… there’s a hwclock error since our raspberry pi 3 don’t have any. So after you run <code class="highlighter-rouge">setup-alpine</code> and use <code class="highlighter-rouge">lbu commit </code> to save changes…run this:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># rc-update add swclock boot    # enable the software clock
 # rc-update del hwclock boot    # disable the hardware clock
 </code></pre></div></div>
@@ -338,9 +344,7 @@ $ modprobe brcmfmac
         <!-- Comments -->
         
             
-
-            <div class="comments"></div> 
-            
+                       
         
         
     </div>
@@ -355,12 +359,19 @@ $ modprobe brcmfmac
     (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
 </div>
+        </section>
+      </div>
+    </div>  
 
+    <script src="/assets/js/jquery-3.2.1.min.js"></script>
+    <script src="/assets/js/materialize.min.js"></script>
+    <script src="/assets/js/site.js"></script>
 
-      </section>
-      
-    </div>
-
+    <!-- Submit the Form to Google Using "AJAX" -->
+    <script data-cfasync="false" type="text/javascript"
+    src="/assets/js/form-submission-handler.js">
+    </script>
+    
     <!-- Google Analytics -->
             
     <script>
@@ -370,58 +381,6 @@ $ modprobe brcmfmac
         })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
         ga('create', 'UA-99256627-1', 'auto');
         ga('send', 'pageview');
-    </script>
-
-    <script>
-        // Get the modal
-        var modal = document.getElementById('modalAbout');
-        var modal2 = document.getElementById('modalContact');
-        var gform = document.getElementById('gform');
-        var thanks_msg = document.getElementById('thankyou_message');
-
-        // Get the button that opens the modal
-        var btn = document.getElementById("aboutBtn");
-        var btn2 = document.getElementById("contactBtn");
-
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
-        var span2 = document.getElementsByClassName("close2")[0];
-
-        // When the user clicks the button, open the modal 
-        btn.onclick = function() {
-            modal.style.display = "block";
-        }
-
-        btn2.onclick = function() {
-            modal2.style.display = "block";
-            gform.style.display = 'block';
-            thanks_msg.style.display = 'none';
-            document.getElementById("gform").reset();
-        }
-
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        span2.onclick = function() {
-            modal2.style.display = "none";
-            thanks_msg.style.display = 'none';
-        }
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";   
-            }
-            if (event.target == modal2) {
-                modal2.style.display = "none";
-            }
-        }
-    </script>
-    <!-- Submit the Form to Google Using "AJAX" -->
-    <script data-cfasync="false" type="text/javascript"
-    src="https://cdn.rawgit.com/dwyl/html-form-send-email-via-google-script-without-server/master/form-submission-handler.js">
     </script>
   </body>
 </html>
