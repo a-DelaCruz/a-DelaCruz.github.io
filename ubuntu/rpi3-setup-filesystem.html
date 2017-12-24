@@ -11,7 +11,6 @@
     <meta name="description" content="Extract the Rootfs">
 
     <link rel="stylesheet" href="/assets/css/style.css?v=">
-    <link rel="shortcut icon" type="image/png" href=" /assets/img/AJ.png ">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -75,6 +74,12 @@
         <h4>About</h4>
         <p>This is a base Jekyll site that i constantly re-design. And a place for sharing what i learned so far on anythng that interest me.</p>
         <p>Some post are temporarily removed for revisions.</p>
+         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Ad 2 Horizontal -->
+<ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px" data-ad-client="ca-pub-6013311002995151" data-ad-slot="3839663239"></ins>
+<script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
     </div>
 </div>
 
@@ -340,7 +345,7 @@ We will create a 2gb empty img file:</p>
         Result:
         | Device     | Boot | Start 	| End	  | Sectors |
         |:-----------|:-----|:----------|:--------|:--------|
-        | myimage1   |      | 2048  	| 1026047 | 1024000 | Fat
+        | myimage1   |      | 2048  	| 1026047 | 1024000 | Fat32
         | myimage2   |      | 1026048 	| 4194303 | 3168256 | Linux
 </code></pre></div></div>
 
@@ -354,13 +359,13 @@ We will create a 2gb empty img file:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    [~]$ sudo fdisk /dev/loop0
 
         Device:
-            /dev/loop1
-            /dev/loop2
+            /dev/loop0p1
+            /dev/loop0p2
 </code></pre></div></div>
 
 <p>Then, to assign a loopback device: and format it.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    [~]$ sudo losetup /dev/loop1 myimage.img 
-    [~]$ sudo losetup /dev/loop2 myimage.img
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    [~]$ sudo losetup -o $((512*2048)) --sizelimit $((512*1026047)) /dev/loop1 myimage.img 
+    [~]$ sudo losetup -o $((512*1026048)) --sizelimit $((512*4194303)) /dev/loop2 myimage.img
     [~]$ sudo mkfs.vfat /dev/loop1
     [~]$ sudo mkfs.ext4 /dev/loop2
 </code></pre></div></div>
@@ -368,7 +373,8 @@ We will create a 2gb empty img file:</p>
   <p>mkfs.vfat -n <code class="highlighter-rouge">partition name</code> /dev/loop1</p>
 </blockquote>
 
-<p>Mount and Copy those necessary files that we need to their respected partition.</p>
+<p>Mount and Copy those necessary files that we need to their respected partition.
+Install <code class="highlighter-rouge">dosfstools</code> if can not mount vfat</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    [~]$ sudo mount /dev/loop1 /mnt/boot
     [~]$ sudo mount /dev/loop2 /mnt/rootfs
 

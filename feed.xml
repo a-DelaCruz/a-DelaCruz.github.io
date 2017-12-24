@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2017-11-26T20:52:11+08:00</updated><id>http://a-delacruz.github.io/</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">Raspberry Pi 3 Bluetooth Setup</title><link href="http://a-delacruz.github.io/ubuntu/rpi3-setup-bluetooth.html" rel="alternate" type="text/html" title="Raspberry Pi 3 Bluetooth Setup" /><published>2017-11-17T00:00:00+08:00</published><updated>2017-11-17T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/rpi3-setup-bluetooth</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/rpi3-setup-bluetooth.html">&lt;p&gt;In order for the Bluetooth to work.. we need to have this file.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2017-12-24T14:37:13+08:00</updated><id>http://a-delacruz.github.io/</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">Raspberry Pi 3 Bluetooth Setup</title><link href="http://a-delacruz.github.io/ubuntu/rpi3-setup-bluetooth.html" rel="alternate" type="text/html" title="Raspberry Pi 3 Bluetooth Setup" /><published>2017-11-17T00:00:00+08:00</published><updated>2017-11-17T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/rpi3-setup-bluetooth</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/rpi3-setup-bluetooth.html">&lt;p&gt;In order for the Bluetooth to work.. we need to have this file.&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/OpenELEC/misc-firmware/blob/master/firmware/brcm/BCM43430A1.hcd&quot;&gt;BCM43430A1.hcd&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -246,7 +246,7 @@ We will create a 2gb empty img file:&lt;/p&gt;
         Result:
         | Device     | Boot | Start 	| End	  | Sectors |
         |:-----------|:-----|:----------|:--------|:--------|
-        | myimage1   |      | 2048  	| 1026047 | 1024000 | Fat
+        | myimage1   |      | 2048  	| 1026047 | 1024000 | Fat32
         | myimage2   |      | 1026048 	| 4194303 | 3168256 | Linux
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -260,13 +260,13 @@ We will create a 2gb empty img file:&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ sudo fdisk /dev/loop0
 
         Device:
-            /dev/loop1
-            /dev/loop2
+            /dev/loop0p1
+            /dev/loop0p2
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Then, to assign a loopback device: and format it.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ sudo losetup /dev/loop1 myimage.img 
-    [~]$ sudo losetup /dev/loop2 myimage.img
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ sudo losetup -o $((512*2048)) --sizelimit $((512*1026047)) /dev/loop1 myimage.img 
+    [~]$ sudo losetup -o $((512*1026048)) --sizelimit $((512*4194303)) /dev/loop2 myimage.img
     [~]$ sudo mkfs.vfat /dev/loop1
     [~]$ sudo mkfs.ext4 /dev/loop2
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -274,7 +274,8 @@ We will create a 2gb empty img file:&lt;/p&gt;
   &lt;p&gt;mkfs.vfat -n &lt;code class=&quot;highlighter-rouge&quot;&gt;partition name&lt;/code&gt; /dev/loop1&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;Mount and Copy those necessary files that we need to their respected partition.&lt;/p&gt;
+&lt;p&gt;Mount and Copy those necessary files that we need to their respected partition.
+Install &lt;code class=&quot;highlighter-rouge&quot;&gt;dosfstools&lt;/code&gt; if can not mount vfat&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ sudo mount /dev/loop1 /mnt/boot
     [~]$ sudo mount /dev/loop2 /mnt/rootfs
 
@@ -300,7 +301,7 @@ Now boot it up and you should now be able to login.&lt;/p&gt;
 &lt;hr /&gt;</content><author><name></name></author><category term="Ubuntu" /><summary type="html">Extract the Rootfs</summary></entry><entry><title type="html">Raspberry Pi 3 with 64-bit U-Boot</title><link href="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-uboot.html" rel="alternate" type="text/html" title="Raspberry Pi 3 with 64-bit U-Boot" /><published>2017-11-03T00:00:00+08:00</published><updated>2017-11-03T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-uboot</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-uboot.html">&lt;p&gt;This time let’s try to use &lt;code class=&quot;highlighter-rouge&quot;&gt;U-Boot&lt;/code&gt; to load the Linux kernel and boot our Raspberry Pi 3.
 We need :&lt;/p&gt;
 &lt;blockquote&gt;
-  &lt;p&gt;💿&lt;a href=&quot;ftp://ftp.denx.de/pub/u-boot/u-boot-2017.05.tar.bz2&quot;&gt;U-Boot v.2017.05&lt;/a&gt;&lt;/p&gt;
+  &lt;p&gt;💿&lt;a href=&quot;ftp://ftp.denx.de/pub/u-boot/u-boot-2017.11.tar.bz2&quot;&gt;U-Boot v.2017.11&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
@@ -308,11 +309,11 @@ We need :&lt;/p&gt;
 &lt;h2 id=&quot;get-the-sourcecode&quot;&gt;Get The SourceCode&lt;/h2&gt;
 
 &lt;p&gt;Get the source code by cloning the U-Boot git repository :&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ git clone depth 1 branch v2017.05 single-branch git://git.denx.de/u-boot.git
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ git clone depth 1 branch v2017.11 single-branch git://git.denx.de/u-boot.git
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;or download the tar file :&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ wget ftp://ftp.denx.de/pub/u-boot/u-boot-2017.05.tar.bz2
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ wget ftp://ftp.denx.de/pub/u-boot/u-boot-2017.11.tar.bz2
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
@@ -324,6 +325,10 @@ We need :&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ cd u-boot/
+    [~u-boot]$ sudo make CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig
+    [~u-boot]$ sudo make CROSS_COMPILE=aarch64-linux-gnu-
+
+    ## For v2017.05 use below
     [~u-boot]$ sudo make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig
     [~u-boot]$ sudo make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -397,7 +402,7 @@ cmdline.txt
   &lt;p&gt;&lt;a href=&quot;http://www.denx.de/wiki/U-Boot/WebHome&quot;&gt;http://www.denx.de/wiki/U-Boot/WebHome&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;hr /&gt;</content><author><name></name></author><category term="Ubuntu" /><summary type="html">This time let’s try to use U-Boot to load the Linux kernel and boot our Raspberry Pi 3. We need : 💿U-Boot v.2017.05</summary></entry><entry><title type="html">Raspberry Pi 3 64-bit kernel</title><link href="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-kernel.html" rel="alternate" type="text/html" title="Raspberry Pi 3 64-bit kernel" /><published>2017-11-03T00:00:00+08:00</published><updated>2017-11-03T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-kernel</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-kernel.html">&lt;h2 id=&quot;cross-build-prerequisites&quot;&gt;Cross-Build Prerequisites&lt;/h2&gt;
+&lt;hr /&gt;</content><author><name></name></author><category term="Ubuntu" /><summary type="html">This time let’s try to use U-Boot to load the Linux kernel and boot our Raspberry Pi 3. We need : 💿U-Boot v.2017.11</summary></entry><entry><title type="html">Raspberry Pi 3 64-bit kernel</title><link href="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-kernel.html" rel="alternate" type="text/html" title="Raspberry Pi 3 64-bit kernel" /><published>2017-11-03T00:00:00+08:00</published><updated>2017-11-03T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-kernel</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-kernel.html">&lt;h2 id=&quot;cross-build-prerequisites&quot;&gt;Cross-Build Prerequisites&lt;/h2&gt;
 
 &lt;p&gt;For building our own 64-bit kernel fom scratch using the mainstream or the Raspberry kernel, we must have a lnux machine &lt;code class=&quot;highlighter-rouge&quot;&gt;(or Windows 10's Bash shell)&lt;/code&gt; with the required packages in order to compile the kernel.
 &lt;br /&gt;&lt;/p&gt;
@@ -415,7 +420,7 @@ cmdline.txt
 &lt;p&gt;Software files that we also need:&lt;/p&gt;
 &lt;blockquote&gt;
   &lt;p&gt;&lt;a href=&quot;https://www.kernel.org/&quot;&gt;💿RPi3 kernel Upstream&lt;/a&gt; or&lt;br /&gt;
-  &lt;a href=&quot;https://github.com/raspberrypi/linux.git&quot;&gt;💿RPi3 kernel Official v.4.11.y&lt;/a&gt;&lt;br /&gt;
+  &lt;a href=&quot;https://github.com/raspberrypi/linux.git&quot;&gt;💿RPi3 kernel Official v.4.14.y&lt;/a&gt;&lt;br /&gt;
   &lt;a href=&quot;href=&amp;quot;https://github.com/raspberrypi/firmware/tree/master/boot&quot;&gt;💿RPi3 firmware v.latest&lt;/a&gt; (bootcode.bin, start.elf as this are the min. files to boot)
 fixup.dat and the rest of star.* and fixup.* files for graphical desktop&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -423,11 +428,11 @@ fixup.dat and the rest of star.* and fixup.* files for graphical desktop&lt;/p&g
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;our-tasks-at-hand-&quot;&gt;Our tasks at hand 📝&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;[ ] Compile the Kernel&lt;/li&gt;
-  &lt;li&gt;[ ] Create &lt;code class=&quot;highlighter-rouge&quot;&gt;config.txt&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;cmdline.txt&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;[ ] Transfer the necessary files to the MicroSD&lt;/li&gt;
-  &lt;li&gt;[ ] Boot to test&lt;/li&gt;
+&lt;ul class=&quot;task-list&quot;&gt;
+  &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; /&gt;Compile the Kernel&lt;/li&gt;
+  &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; /&gt;Create &lt;code class=&quot;highlighter-rouge&quot;&gt;config.txt&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;cmdline.txt&lt;/code&gt;&lt;/li&gt;
+  &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; /&gt;Transfer the necessary files to the MicroSD&lt;/li&gt;
+  &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; /&gt;Boot to test&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
@@ -435,7 +440,7 @@ fixup.dat and the rest of star.* and fixup.* files for graphical desktop&lt;/p&g
 &lt;h2 id=&quot;compile-the-kernel&quot;&gt;Compile the Kernel&lt;/h2&gt;
 
 &lt;p&gt;Use a Linux machine of your choice or Windows 10’s Bash Shell to compile the kernel is up to you. To get the kernel we need, we can either download it in a compressed file form using the links above or we could use &lt;code class=&quot;highlighter-rouge&quot;&gt;git&lt;/code&gt; to make it simpler.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ git clone --depth 1 --branch rpi-4.11.y --single-branch https://github.com/raspberrypi/linux.git folder-name
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [~]$ git clone --depth 1 --branch rpi-4.14.y --single-branch https://github.com/raspberrypi/linux.git folder-name
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Once the download or rather cloning complete, go to  &lt;code class=&quot;highlighter-rouge&quot;&gt;folder-name&lt;/code&gt;.&lt;/p&gt;
@@ -454,8 +459,8 @@ fixup.dat and the rest of star.* and fixup.* files for graphical desktop&lt;/p&g
 &lt;/blockquote&gt;
 
 &lt;blockquote&gt;
-  &lt;ul&gt;
-    &lt;li&gt;[x] Compile the Kernel 👌&lt;/li&gt;
+  &lt;ul class=&quot;task-list&quot;&gt;
+    &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; checked=&quot;checked&quot; /&gt;Compile the Kernel 👌&lt;/li&gt;
   &lt;/ul&gt;
 &lt;/blockquote&gt;
 
@@ -485,8 +490,8 @@ fixup.dat and the rest of star.* and fixup.* files for graphical desktop&lt;/p&g
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;blockquote&gt;
-  &lt;ul&gt;
-    &lt;li&gt;[x] Create &lt;code class=&quot;highlighter-rouge&quot;&gt;config.txt&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;cmdline.txt&lt;/code&gt; 👌&lt;/li&gt;
+  &lt;ul class=&quot;task-list&quot;&gt;
+    &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; checked=&quot;checked&quot; /&gt;Create &lt;code class=&quot;highlighter-rouge&quot;&gt;config.txt&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;cmdline.txt&lt;/code&gt; 👌&lt;/li&gt;
   &lt;/ul&gt;
 &lt;/blockquote&gt;
 
@@ -510,8 +515,8 @@ fixup.dat and the rest of star.* and fixup.* files for graphical desktop&lt;/p&g
     bcm2710-rpi-3-b.dtb
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;blockquote&gt;
-  &lt;ul&gt;
-    &lt;li&gt;[x] Transfer the necessary files to the MicroSD 👌&lt;/li&gt;
+  &lt;ul class=&quot;task-list&quot;&gt;
+    &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; checked=&quot;checked&quot; /&gt;Transfer the necessary files to the MicroSD 👌&lt;/li&gt;
   &lt;/ul&gt;
 &lt;/blockquote&gt;
 
@@ -526,8 +531,8 @@ since we still do not have a filesystem.&lt;/p&gt;
 &lt;p&gt;If it did not boot or no display at all, we will use &lt;code class=&quot;highlighter-rouge&quot;&gt;U-Boot&lt;/code&gt;.&lt;/p&gt;
 
 &lt;blockquote&gt;
-  &lt;ul&gt;
-    &lt;li&gt;[x] Boot to test 👌&lt;/li&gt;
+  &lt;ul class=&quot;task-list&quot;&gt;
+    &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; checked=&quot;checked&quot; /&gt;Boot to test 👌&lt;/li&gt;
   &lt;/ul&gt;
 &lt;/blockquote&gt;
 
@@ -669,8 +674,9 @@ booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r}
 
 &lt;p&gt;Go ahead noew and try to boot it up. You should have an output like this:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/img/alpine/alpine-linux-arm64-rpi3.jpg&quot; alt=&quot;&quot; class=&quot;materialboxed&quot; /&gt;
-As you can see… there’s a hwclock error since our raspberry pi 3 don’t have any. So after you run &lt;code class=&quot;highlighter-rouge&quot;&gt;setup-alpine&lt;/code&gt; and use &lt;code class=&quot;highlighter-rouge&quot;&gt;lbu commit &lt;/code&gt; to save changes…run this:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/alpine/alpine-linux-arm64-rpi3.jpg&quot; alt=&quot;&quot; class=&quot;materialboxed&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see… there’s a hwclock error since our raspberry pi 3 don’t have any. So after you run &lt;code class=&quot;highlighter-rouge&quot;&gt;setup-alpine&lt;/code&gt; and use &lt;code class=&quot;highlighter-rouge&quot;&gt;lbu commit &lt;/code&gt; to save changes…run this:&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# rc-update add swclock boot    # enable the software clock
 # rc-update del hwclock boot    # disable the hardware clock
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
