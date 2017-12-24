@@ -11,7 +11,6 @@
     <meta name="description" content="*** 17-07-06: To fix brcmfmac loading error: directly place brcm folder inside our custom initramfs-rpi3 file.*** 17-07-06: b43 in optional…">
 
     <link rel="stylesheet" href="/assets/css/style.css?v=">
-    <link rel="shortcut icon" type="image/png" href=" /assets/img/AJ.png ">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -75,6 +74,12 @@
         <h4>About</h4>
         <p>This is a base Jekyll site that i constantly re-design. And a place for sharing what i learned so far on anythng that interest me.</p>
         <p>Some post are temporarily removed for revisions.</p>
+         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Ad 2 Horizontal -->
+<ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px" data-ad-client="ca-pub-6013311002995151" data-ad-slot="3839663239"></ins>
+<script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
     </div>
 </div>
 
@@ -276,8 +281,9 @@ booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r}
 
 <p>Go ahead noew and try to boot it up. You should have an output like this:</p>
 
-<p><img src="/assets/img/alpine/alpine-linux-arm64-rpi3.jpg" alt="" class="materialboxed" />
-As you can see… there’s a hwclock error since our raspberry pi 3 don’t have any. So after you run <code class="highlighter-rouge">setup-alpine</code> and use <code class="highlighter-rouge">lbu commit </code> to save changes…run this:</p>
+<p><img src="/assets/img/alpine/alpine-linux-arm64-rpi3.jpg" alt="" class="materialboxed" /></p>
+
+<p>As you can see… there’s a hwclock error since our raspberry pi 3 don’t have any. So after you run <code class="highlighter-rouge">setup-alpine</code> and use <code class="highlighter-rouge">lbu commit </code> to save changes…run this:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># rc-update add swclock boot    # enable the software clock
 # rc-update del hwclock boot    # disable the hardware clock
 </code></pre></div></div>

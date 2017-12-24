@@ -11,7 +11,6 @@
     <meta name="description" content="Cross-Build Prerequisites">
 
     <link rel="stylesheet" href="/assets/css/style.css?v=">
-    <link rel="shortcut icon" type="image/png" href=" /assets/img/AJ.png ">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -75,6 +74,12 @@
         <h4>About</h4>
         <p>This is a base Jekyll site that i constantly re-design. And a place for sharing what i learned so far on anythng that interest me.</p>
         <p>Some post are temporarily removed for revisions.</p>
+         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Ad 2 Horizontal -->
+<ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px" data-ad-client="ca-pub-6013311002995151" data-ad-slot="3839663239"></ins>
+<script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
     </div>
 </div>
 
@@ -222,7 +227,7 @@
 <p>Software files that we also need:</p>
 <blockquote>
   <p><a href="https://www.kernel.org/">💿RPi3 kernel Upstream</a> or<br />
-  <a href="https://github.com/raspberrypi/linux.git">💿RPi3 kernel Official v.4.11.y</a><br />
+  <a href="https://github.com/raspberrypi/linux.git">💿RPi3 kernel Official v.4.14.y</a><br />
   <a href="href=&quot;https://github.com/raspberrypi/firmware/tree/master/boot">💿RPi3 firmware v.latest</a> (bootcode.bin, start.elf as this are the min. files to boot)
 fixup.dat and the rest of star.* and fixup.* files for graphical desktop</p>
 </blockquote>
@@ -230,11 +235,11 @@ fixup.dat and the rest of star.* and fixup.* files for graphical desktop</p>
 <p><br /></p>
 
 <h2 id="our-tasks-at-hand-">Our tasks at hand 📝</h2>
-<ul>
-  <li>[ ] Compile the Kernel</li>
-  <li>[ ] Create <code class="highlighter-rouge">config.txt</code> and <code class="highlighter-rouge">cmdline.txt</code></li>
-  <li>[ ] Transfer the necessary files to the MicroSD</li>
-  <li>[ ] Boot to test</li>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Compile the Kernel</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create <code class="highlighter-rouge">config.txt</code> and <code class="highlighter-rouge">cmdline.txt</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Transfer the necessary files to the MicroSD</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Boot to test</li>
 </ul>
 
 <p><br /></p>
@@ -242,7 +247,7 @@ fixup.dat and the rest of star.* and fixup.* files for graphical desktop</p>
 <h2 id="compile-the-kernel">Compile the Kernel</h2>
 
 <p>Use a Linux machine of your choice or Windows 10’s Bash Shell to compile the kernel is up to you. To get the kernel we need, we can either download it in a compressed file form using the links above or we could use <code class="highlighter-rouge">git</code> to make it simpler.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    [~]$ git clone --depth 1 --branch rpi-4.11.y --single-branch https://github.com/raspberrypi/linux.git folder-name
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    [~]$ git clone --depth 1 --branch rpi-4.14.y --single-branch https://github.com/raspberrypi/linux.git folder-name
 </code></pre></div></div>
 
 <p>Once the download or rather cloning complete, go to  <code class="highlighter-rouge">folder-name</code>.</p>
@@ -261,8 +266,8 @@ fixup.dat and the rest of star.* and fixup.* files for graphical desktop</p>
 </blockquote>
 
 <blockquote>
-  <ul>
-    <li>[x] Compile the Kernel 👌</li>
+  <ul class="task-list">
+    <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Compile the Kernel 👌</li>
   </ul>
 </blockquote>
 
@@ -292,8 +297,8 @@ fixup.dat and the rest of star.* and fixup.* files for graphical desktop</p>
 </code></pre></div></div>
 
 <blockquote>
-  <ul>
-    <li>[x] Create <code class="highlighter-rouge">config.txt</code> and <code class="highlighter-rouge">cmdline.txt</code> 👌</li>
+  <ul class="task-list">
+    <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Create <code class="highlighter-rouge">config.txt</code> and <code class="highlighter-rouge">cmdline.txt</code> 👌</li>
   </ul>
 </blockquote>
 
@@ -317,8 +322,8 @@ fixup.dat and the rest of star.* and fixup.* files for graphical desktop</p>
     bcm2710-rpi-3-b.dtb
 </code></pre></div></div>
 <blockquote>
-  <ul>
-    <li>[x] Transfer the necessary files to the MicroSD 👌</li>
+  <ul class="task-list">
+    <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Transfer the necessary files to the MicroSD 👌</li>
   </ul>
 </blockquote>
 
@@ -333,8 +338,8 @@ since we still do not have a filesystem.</p>
 <p>If it did not boot or no display at all, we will use <code class="highlighter-rouge">U-Boot</code>.</p>
 
 <blockquote>
-  <ul>
-    <li>[x] Boot to test 👌</li>
+  <ul class="task-list">
+    <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Boot to test 👌</li>
   </ul>
 </blockquote>
 
