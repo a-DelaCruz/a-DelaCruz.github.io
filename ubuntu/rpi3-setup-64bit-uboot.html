@@ -250,7 +250,7 @@ We need :</p>
 
 <h2 id="create-the-bootscript">Create the Bootscript</h2>
 
-<p>Create a <code class="highlighter-rouge">bootscript.txt</code> file and copy paste the code below :</p>
+<p>Create a <code class="highlighter-rouge">rpi3-bootscript.txt</code> file and copy paste the code below :</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>setenv kernel_addr_r 0x01000000
 setenv ramdisk_addr_r 0x02100000
 fatload mmc 0:1 ${kernel_addr_r} boot/Image
@@ -273,10 +273,10 @@ booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r}
 </blockquote>
 
 <p>Now to create a bootscript from the text file above :</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    [~]$ sudo mkimage -A arm64 -O linux -T script -d ~/bootscript.txt ~/rpi3-bootscript.scr
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    [~]$ sudo mkimage -A arm64 -O linux -T script -d ~/rpi3-bootscript.txt ~/rpi3-boot.scr
 </code></pre></div></div>
 
-<p>Copy <code class="highlighter-rouge">rpi3-bootscript.scr</code> to your MicroSD card inside <code class="highlighter-rouge">/boot</code> folder.</p>
+<p>Copy <code class="highlighter-rouge">boot.scr</code> to your MicroSD card inside <code class="highlighter-rouge">/boot</code> folder.</p>
 <blockquote>
   <p><code class="highlighter-rouge">u-boot.bin</code> - Can be renamed to <code class="highlighter-rouge">any-name</code> and modify it’s entry in config.txt <code class="highlighter-rouge">kernel=boot/u-boot.bin-to-any-name</code>.</p>
 </blockquote>
@@ -293,7 +293,7 @@ kernel=boot/u-boot.bin
 
 <p>Then verify your MicroSD directory structure like below :</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/boot/Image
-/boot/rpi3-bootscript.scr
+/boot/boot.scr
 /boot/u-boot.bin
 /boot/initrd.img
 bcm2710-rpi-3-b.dtb
