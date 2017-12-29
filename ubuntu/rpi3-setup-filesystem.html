@@ -404,8 +404,11 @@ Now boot it up and you should now be able to login.</p>
         
         <!-- Comments -->
         
-            <form method="POST" action="https://api.staticman.net/v2/entry/a-DelaCruz/a-DelaCruz.github.io/gh-pages/comments">
-    <input name="options[redirect]" type="hidden" value="https://a-DelaCruz.github.io">
+            <!-- Comment form -->
+<h3>Post a comment:</h3>
+<form method="POST" action="https://api.staticman.net/v2/entry/a-DelaCruz/a-DelaCruz.github.io/master/comments">
+    
+    <input name="options[slug]" type="hidden" value="rpi3-setup-filesystem">
     <!-- e.g. "2016-01-02-this-is-a-post" -->
     <input name="options[slug]" type="hidden" value="rpi3-setup-filesystem">
     <label>
@@ -414,9 +417,9 @@ Now boot it up and you should now be able to login.</p>
         <input name="fields[email]" type="email">E-mail</label>
     <label>
         <textarea name="fields[message]"></textarea>Message</label>
-
+    
     <button type="submit">Go!</button>
-</form>
+    </form>
                        
         
         
