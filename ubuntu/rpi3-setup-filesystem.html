@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="keywords" content="Raspberry Pi 3 64bit Kernel">
+
+    <title>Using Ubuntu-base arm64 rootfs for Raspberry Pi 3</title>
+    
+    <meta name="description" content="Extract the Rootfs">
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    
+    <meta name="theme-color" content="#FFB74D" />
+
+    <!-- Google Adsense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-6013311002995151", enable_page_level_ads: true });
+    </script>
+
+    <!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>Using Ubuntu-base arm64 rootfs for Raspberry Pi 3 | My Personal Notes</title>
+<meta name="generator" content="Jekyll v3.6.2" />
+<meta property="og:title" content="Using Ubuntu-base arm64 rootfs for Raspberry Pi 3" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Extract the Rootfs" />
+<meta property="og:description" content="Extract the Rootfs" />
+<link rel="canonical" href="http://a-delacruz.github.io/ubuntu/rpi3-setup-filesystem.html" />
+<meta property="og:url" content="http://a-delacruz.github.io/ubuntu/rpi3-setup-filesystem.html" />
+<meta property="og:site_name" content="My Personal Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-11-03T00:00:00+08:00" />
+<script type="application/ld+json">
+{"description":"Extract the Rootfs","@type":"BlogPosting","url":"http://a-delacruz.github.io/ubuntu/rpi3-setup-filesystem.html","headline":"Using Ubuntu-base arm64 rootfs for Raspberry Pi 3","dateModified":"2017-11-03T00:00:00+08:00","datePublished":"2017-11-03T00:00:00+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/ubuntu/rpi3-setup-filesystem.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+  
+  <body class="posts">
+
+    <div class="row">
+      <div class="col s2 m1 logo">
+    <div class="card">
+        <div class="card-image">
+            <a href="/"><img src="/assets/img/AJ.png"/></a>
+        </div>
+    </div>
+</div>
+      <!-- bannerA -->
+    </div>
+    <div class="row">
+      <section>
+        <!-- lower right menu -->
+<div class="fixed-action-btn toolbar">
+    <a class="btn-floating btn-large red">
+        <i class="large material-icons">more_vert</i>
+    </a>
+    <ul>
+        <li>
+            <a href="#commentlist" class="modal-trigger">
+                <i class="material-icons">mode_comment</i>
+            </a>
+        </li>
+        <li>
+            <a href="#droplist" class="modal-trigger">
+                <i class="material-icons">list</i>
+            </a>
+        </li>
+        <li>
+            <a href="/">
+                <i class="material-icons">home</i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<!-- Modal -->
+<div id="droplist" class="modal bottom-sheet center-align">
+    <div class="modal-content collection">
+        
+          
+
+        <a class="collection-item" href="/ubuntu/docker.html">.Net Core on Raspberry Pi 3</a>
+
+            
+
+        <a class="collection-item" href="/ubuntu/rpi3-setup-bluetooth.html">Raspberry Pi 3 Bluetooth Setup</a>
+
+          
+
+        <a class="collection-item" href="/ubuntu/rpi3-setup-i2c.html">Enabling I2C for Raspberry Pi 3</a>
+
+          
+
+        <a class="collection-item" href="/ubuntu/rpi3-setup-wifi.html">Raspberry Pi 3 Wifi Setup</a>
+
+          
+
+        <a class="collection-item" href="/ubuntu/rpi3-setup-filesystem.html">Using Ubuntu-base arm64 rootfs for Raspberry Pi 3</a>
+
+          
+
+        <a class="collection-item" href="/ubuntu/rpi3-setup-64bit-uboot.html">Raspberry Pi 3 with 64-bit U-Boot</a>
+
+          
+
+        <a class="collection-item" href="/ubuntu/rpi3-setup-64bit-kernel.html">Raspberry Pi 3 64-bit kernel</a>
+
+               
+    </div>
+</div>
+
+<div class="container posts-title">
+    <h3 class="center-align">Using Ubuntu-base arm64 rootfs for Raspberry Pi 3</h3>
+
+    <div class="test">
+        <h4 id="extract-the-rootfs">Extract the Rootfs</h4>
+
+<p>To create our bare filesystem, we need:</p>
+
+<p><a href="http://cdimage.ubuntu.com/ubuntu-base/releases/17.10/release/ubuntu-base-17.10-base-arm64.tar.gz" class="card btn blue">Ubuntu Base 17.10<i class="material-icons right">file_download</i></a></p>
+
+<div class="alert-info">
+    <i class="material-icons left">info</i>
+    <b>Note:</b>
+    <span><code class="highlighter-rouge">-C</code> - To extract the files in a different directory</span>
+</div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   wget http://cdimage.ubuntu.com/ubuntu-base/releases/17.10/release/ubuntu-base-17.10-base-arm64.tar.gz
+$   mkdir rootfs
+$   sudo tar xzvf ubuntu-base-16.04.3-base-arm64.tar.gz -C $HOME/rootfs
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h4 id="modifying-the-rootfs">Modifying the Rootfs</h4>
+
+<p>Going back from when we compile the Raspberry Pi 3 kernel, We are goig to install the kernel module and firmware into the rootfs folder that we just created above.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   sudo make -C rpi-4.14.14/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$HOME/bo_4.14/ modules_install INSTALL_MOD_PATH=$HOME/rootfs/
+
+    ## Starting kernel &gt; 4.14 use your debian based "linux-firmware" package:
+    ## For kernel &lt; 4.13 include below commands for firmware:
+
+$   sudo make -C rpi-4.14.14/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$HOME/bo_4.14/ firmware_install INSTALL_FW_PATH=$HOME/rootfs/lib/firmware/
+</code></pre></div></div>
+
+<p>Verify that it was installed correctly. And remove <code class="highlighter-rouge">build</code> and <code class="highlighter-rouge">source</code> links.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   ls $HOME/rootfs/lib/modules/4.11~
+
+modules.builtin     modules.devname        modules.symbols.bin  build
+kernel              modules.builtin.bin    modules.order        source
+modules.alias       modules.dep            modules.softdep
+modules.alias.bin   modules.dep.bin        modules.symbols
+
+$   sudo find $HOME/rootfs/ -name build | xargs rm -rf
+$   sudo find $HOME/rootfs/ -name source | xargs rm -rf
+</code></pre></div></div>
+
+<p>Well use <code class="highlighter-rouge">chroot</code> to further setup our filesystem.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   sudo cp -av /usr/bin/qemu-aarch64-static $HOME/rootfs/usr/bin
+</code></pre></div></div>
+
+<p>Then we need to copy <code class="highlighter-rouge">resolv.conf</code> from our host machine for internet connection to <code class="highlighter-rouge">$HOME/rootfs/etc/</code>:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        # If your host is Ubuntu 17.10
+$       sudo cp -av /run/systemd/resolve/stub-resolv.conf $HOME/rootfs/etc/resolv.conf
+
+        # For Ubuntu 16.04.3 below
+$   sudo cp -av /run/resolvconf/resolv.conf $HOME/rootfs/etc/resolv.conf
+</code></pre></div></div>
+
+<p>Enter chroot environment:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   sudo chroot $HOME/rootfs/
+</code></pre></div></div>
+
+<p>Now that you’re in the chroot environment, we can now add an admin user with sudo permission.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   useradd -G sudo -m -s /bin/bash pi3
+$   echo pi3:pi3 | chpasswd
+</code></pre></div></div>
+<blockquote>
+  <p>The format input line of chpasswd is: user_name:password.</p>
+</blockquote>
+
+<p><br />
+Change root password with these command:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   passwd root
+</code></pre></div></div>
+
+<p>You can setup your <code class="highlighter-rouge">hostname</code> here for your target device or in the kernel configuration making sure that the hostname is empty.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   echo U-Base_min &gt; /etc/hostname
+$   echo 127.0.0.1	localhost &gt; /etc/hosts
+$   echo 127.0.1.1	U-Base_min &gt;&gt; /etc/hosts
+</code></pre></div></div>
+
+<p>Fetch the latest package lists from server then upgrade.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   apt-get update
+$   apt-get upgrade
+</code></pre></div></div>
+
+<p>Then install these first:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   apt-get install dialog perl
+</code></pre></div></div>
+
+<p>We need those installed first to correct some error messages about locale: If <code class="highlighter-rouge">locale-gen</code> command is missing, <code class="highlighter-rouge">apt-get install locales</code> first.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   locale-gen "en_US.UTF-8"
+        Generating locales...
+            en_US.UTF-8... done
+        Generation complete.
+</code></pre></div></div>
+
+<p>Install minimal packages:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   apt-get install sudo ifupdown net-tools ethtool udev wireless-tools iputils-ping resolvconf wget apt-utils wpasupplicant initramfs-tools
+</code></pre></div></div>
+
+<p>Create our Ramdisk.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   mkinitramfs -o /boot/initrd.img /lib/modules/4.11~
+</code></pre></div></div>
+
+<p>When everything you want are done, exit chroot:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   exit
+</code></pre></div></div>
+
+<p>We need to add <code class="highlighter-rouge">/etc/fstab</code> file entry below coz’ if not…it will run on read-only mode. Below are <code class="highlighter-rouge">Tab</code> not <code class="highlighter-rouge">spacebar</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   echo /dev/mmcblk0p2	/	ext4	defaults,noatime	0	1 &gt;&gt; $HOME/rootfs/etc/fstab
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h4 id="removing-unwanted-files">Removing unwanted files</h4>
+
+<p>To reduce the rootfs/ size we can remove some unwanted files.
+Create a file <code class="highlighter-rouge">/etc/dpkg/dpkg.cfg.d/01_nodoc</code> which specifies the desired filters. Example:</p>
+<div class="alert-code">
+    <b></b>
+    <br />
+<code class="highlighter-rouge">
+path-exclude /usr/share/doc/*
+# we need to keep copyright files for legal reasons
+path-include /usr/share/doc/*/copyright
+path-exclude /usr/share/man/*
+path-exclude /usr/share/groff/*
+path-exclude /usr/share/info/*
+# lintian stuff is small, but really unnecessary
+path-exclude /usr/share/lintian/*
+path-exclude /usr/share/linda/*
+</code>
+</div>
+
+<p>Then you can manually remove any documentation already installed:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   sudo find rootfs/usr/share/doc -depth -type f ! -name copyright|xargs rm || true
+$   sudo find rootfs/usr/share/doc -empty|xargs rmdir || true
+$   sudo rm -rf rootfs/usr/share/man/* rootfs/usr/share/groff/* rootfs/usr/share/info/*
+$   sudo rm -rf rootfs/usr/share/lintian/* rootfs/usr/share/linda/* rootfs/var/cache/man/*
+</code></pre></div></div>
+
+<p>Then copy the <code class="highlighter-rouge">$HOME/rootfs/*</code> content to the 2nd partition of your MicroSD card.</p>
+
+<p><br /></p>
+
+<h4 id="creating-the-image-file-optional">Creating the Image file (Optional)</h4>
+
+<p>We could make an image file with several partition on it. 
+We will create a 700M empty img file:</p>
+<div class="alert-info">
+    <i class="material-icons left">info</i>
+    <b>Note:</b>
+    <span>Modify the desired image size according to your needs. I use <code class="highlighter-rouge">resize2fs</code> after i boot this up</span>
+</div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   sudo dd if=/dev/zero of=myimage.img bs=700K count=1024
+</code></pre></div></div>
+
+<p>Then partition it using <code class="highlighter-rouge">fdisk</code> in my case:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   sudo fdisk -l myimage.img
+        Result:
+        | Device     | Boot | Start 	| End	  | Sectors |
+        |:-----------|:-----|:----------|:--------|:--------|
+        | myimage1   |      | 2048  	| 264191  | 1024000 | Fat32
+        | myimage2   |      | 264192 	| 1433599 | 3168256 | Linux
+</code></pre></div></div>
+
+<p>Display the name of the assigned loop device:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   sudo losetup --find --show myimage.img
+	
+	    /dev/loop0
+</code></pre></div></div>
+
+<p>Then we can use <code class="highlighter-rouge">fdisk</code> to identify our image file partitions assinged loop</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   sudo fdisk /dev/loop0
+
+        Device:
+            /dev/loop0p1
+            /dev/loop0p2
+</code></pre></div></div>
+
+<p>Then, to assign a loopback device: and format it.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   sudo losetup -o $((512*2048)) --sizelimit $((512*264191)) /dev/loop1 myimage.img 
+$   sudo losetup -o $((512*264192)) --sizelimit $((512*1433599)) /dev/loop2 myimage.img
+$   sudo mkfs.vfat -F 32 -n 'SYS-BOOT' /dev/loop1
+$   sudo mkfs.ext4 /dev/loop2
+</code></pre></div></div>
+<blockquote>
+  <p>mkfs.vfat -n <code class="highlighter-rouge">partition name</code> /dev/loop1</p>
+</blockquote>
+
+<p>Mount and Copy those necessary files that we need to their respected partition.
+Install <code class="highlighter-rouge">dosfstools</code> if cannot mount vfat</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   sudo mount /dev/loop1 /mnt/boot
+$   sudo mount /dev/loop2 /mnt/rootfs
+
+        then umount and detach:
+$   sudo umount /dev/loop1
+$   sudo umount /dev/loop2
+$   sudo losetup --detach /dev/loop1
+$   sudo losetup --detach /dev/loop2
+</code></pre></div></div>
+
+<p>You can now burn that myimage.img to yor MicoSD card.
+Now boot it up and you should now be able to login.</p>
+
+<p><br /></p>
+
+<h5 id="reference-">Reference :</h5>
+<blockquote>
+  <p><a href="http://docs.khadas.com/social/BuildUbuntuRootfsViaUbuntuBase/">http://docs.khadas.com/social/BuildUbuntuRootfsViaUbuntuBase/</a><br />
+  <a href="https://gnu-linux.org/building-ubuntu-rootfs-for-arm.html">https://gnu-linux.org/building-ubuntu-rootfs-for-arm.html</a><br />
+  <a href="http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html">http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html</a></p>
+</blockquote>
+
+<hr />
+
+
+        
+        <!-- Comments -->
+        
+            <div id="commentlist" class="modal bottom-sheet">
+    <div class="modal-content comment-list">
+        <h4>Comments</h4>
+        <ul class="collection">
+             
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/287de6c6c6b38b1f34963b4b126f4a63?s=100&d=mm" class="circle">
+                <span class="name">Jack</span>
+                <span class="date">12/11/17</span>
+                <p class="message">Thank you Eduardo,
+
+But, unfortunately, my raw html looks like wrapping in <code>, but thanks to @Danny, it fixed by wrapping all code <figure> into <div>.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/50c6f777e399404075076ba1268160ff?s=100&d=mm" class="circle">
+                <span class="name">quartoxuna</span>
+                <span class="date">11/28/17</span>
+                <p class="message">Great solution! Thank you very much! :-)</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/d0367ac471645d74db184bed8c65d78e?s=100&d=mm" class="circle">
+                <span class="name">Timesjobs</span>
+                <span class="date">10/26/17</span>
+                <p class="message">This is a very interesting webpage and I have enjoyed reading many of the articles and posts contained on the website, keep up the good work and hope to read some more interesting content in the future.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/1e0836ae0dce5ab8b470326c45b537f1?s=100&d=mm" class="circle">
+                <span class="name">Naomi M Hanson</span>
+                <span class="date">10/7/17</span>
+                <p class="message">I'm so sad that this is down. This seemed to be the answer to my frustrations over Linkedin.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/4808bb8e569d581000bcb3e4497b9921?s=100&d=mm" class="circle">
+                <span class="name">bruce</span>
+                <span class="date">10/6/17</span>
+                <p class="message">This is what I am looking for!!
+
+One issue is that
+* No image shown if the title of post is not the same as the filename of the post.
+
+I fixed this with tweaking the relative path as follow:
+{% capture imagePath %}{{ page.path | slugify | remove: "posts-" | remove: "-md"}}/{{ include.name }}{% endcapture %}</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/088c19ef1c68263f3c97947ad8033c37?s=100&d=mm" class="circle">
+                <span class="name">Emil</span>
+                <span class="date">9/28/17</span>
+                <p class="message">To bad the service is down, would also like to use it</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/47edf7e9d49532cc8f229e2152deb3f4?s=100&d=mm" class="circle">
+                <span class="name">jlo</span>
+                <span class="date">9/8/17</span>
+                <p class="message">Thanks for this share! Very useful.
+Just noticed that, for my setup (cloned from https://github.com/barryclark/jekyll-now),
+I needed to add ".html" after the file-name to be included:
+```
+{% include image.html name="linkedin-before.png" caption="Sharing my blog on LinkedIn" %}
+```
+Dunno why, but maybe this will save someone a bit of head-scratching</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/9009530176e7bcaede209a905f2becde?s=100&d=mm" class="circle">
+                <span class="name">Shreyash Agarwal</span>
+                <span class="date">7/21/17</span>
+                <p class="message">Thank you! This was very useful for me in customizing my Jekyll Blog!</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/41246865dae97c7a06440256059d9722?s=100&d=mm" class="circle">
+                <span class="name">Todd</span>
+                <span class="date">6/17/17</span>
+                <p class="message">Many thanks for this post (& website). Teaching myself webdesign for fun, and being able to see these explanations and the GitHub material itself is incredibly helpful. 
+
+I ran into errors the first time through this, but access to the source code solved everything. :)
+
+(My errors were related to imagePath, where I was trying to refer to the simplified names of the html/md files themselves, and not the complete *titles* I was assigning each post in the front matter. Derp.)</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/d0b2a4fdecbcbd5ebfbbef6359e548df?s=100&d=mm" class="circle">
+                <span class="name">Danny</span>
+                <span class="date">5/30/17</span>
+                <p class="message">Legend, thank you. One issue:
+
+The include displays as raw HTML: wrapped in `<code>` tags. I fixed it by wrapping the include `<figure>` with a `<div>`.
+
+Might have something to do with [this GitHub issue](https://github.com/jekyll/jekyll/issues/1868).</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/44f420551e24c72fbd2f780d89d07cb4?s=100&d=mm" class="circle">
+                <span class="name">Viktar</span>
+                <span class="date">4/5/17</span>
+                <p class="message">Great! Thanks!</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/982b23c9a30aa5501e809f8a22edd8eb?s=100&d=mm" class="circle">
+                <span class="name">Yura</span>
+                <span class="date">3/25/17</span>
+                <p class="message">Thank you very much!</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/9999a35a093355570204e460eba5d7ec?s=100&d=mm" class="circle">
+                <span class="name">Harry</span>
+                <span class="date">2/13/17</span>
+                <p class="message">It is obvious that the images and other binary resources must lie with the main document in one folder. 
+
+```
+_posts/
+  2000-01-01-article/
+    2000-01-01-article.md
+    image.png
+    document.pdf
+```
+
+But no! Jekyll all about simplicity https://github.com/jekyll/jekyll/issues/881. Why do we need a convenient and simple structure of the documents? Better we will tinker with a separate directory. But it's would more convenient for developers.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/c8f2f085bbf6e830b0f262ea839e3b86?s=100&d=mm" class="circle">
+                <span class="name">James</span>
+                <span class="date">1/25/17</span>
+                <p class="message">I am confused and couldn't get an image posted</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/fe73a64af70897f2e3486c50288159c2?s=100&d=mm" class="circle">
+                <span class="name">Carlos</span>
+                <span class="date">1/10/17</span>
+                <p class="message">I get the 'Server not found' message when trying to access the butler.
+
+I'm really frustrated since one of my websites only shows the generic URL and no image nor excerpt.  OG tags look good :(</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/e09fd50165f62ce3046120ad18f1097b?s=100&d=mm" class="circle">
+                <span class="name">Christian Solorzano</span>
+                <span class="date">12/26/16</span>
+                <p class="message">Great article. 
+
+Any idea why Jekyll sometimes doesn't display photos?</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/444ad5f7295003ac83ce72fe033fae3c?s=100&d=mm" class="circle">
+                <span class="name">Rafael "bsides" Pereira</span>
+                <span class="date">12/15/16</span>
+                <p class="message">Thanks for this post, helped me a lot! Obrigado :)</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/d4beb95cb3d3e28ff4c7b3ae195b5afc?s=100&d=mm" class="circle">
+                <span class="name">Axil Bits</span>
+                <span class="date">12/2/16</span>
+                <p class="message">Good article, gave me some great ideas. I'm not using PHP but could follow your line of reasoning well.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/4f8072e22fae3cd98b876df304886bed?s=100&d=mm" class="circle">
+                <span class="name">Eduardo Bouças</span>
+                <span class="date">11/4/16</span>
+                <p class="message">Daniel, my assets folder is in the root of the site. Check [the source for this site](https://github.com/eduardoboucas/eduardoboucas.github.io) to see the implementation.
+
+And yes, you could use it for pages just the same.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/609ed84954a3a2595d837105611d13ef?s=100&d=mm" class="circle">
+                <span class="name">Daniel</span>
+                <span class="date">11/4/16</span>
+                <p class="message">Great post. I'm just a little confused on how you got it all set up. Did you include the assets folder in the '_includes' folder or in the main site file? Also if I have pages on my site and need to include images could I do the same snippet but change posts to pages?</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/413d89148cb9d72d397438959e83b931?s=100&d=mm" class="circle">
+                <span class="name">Brad West</span>
+                <span class="date">10/17/16</span>
+                <p class="message">I'm having some problems recreating this on my site. I've tried using the code you've demoed above, and got the below errors. If I copy the code from your [eduardoboucas/eduardoboucas.github.io](https://github.com/eduardoboucas/eduardoboucas.github.io/) repo I get a Liquid warning. In both cases the blog pagination pages (`/blog/page/2`, `/blog/page/3`, etc.) aren't being generated.
+
+I [setup a gist](https://gist.github.com/bradonomics/ab42dd473c602ceb713d6a56eeada2c1) to better show the problem. You can see the contents of my `/blog.html` file, my `/js/pagination.js` file, and the console error I'm getting when running the demo code above.
+
+In my config file I've got:
+
+```yaml
+paginate: 3
+paginate_path: "/blog/page/:num"
+```
+
+Any ideas where I've gone wrong?</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/c4c662e93babe92ff32fdaf6f087f09a?s=100&d=mm" class="circle">
+                <span class="name">Renshuki</span>
+                <span class="date">10/8/16</span>
+                <p class="message">Thank you for the tip!
+
+It would be nice to take in consideration image responsiveness too.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/4a07f1bedaf8b3e78724c3e3b684f39e?s=100&d=mm" class="circle">
+                <span class="name">Joren</span>
+                <span class="date">9/29/16</span>
+                <p class="message">Thank you! Also, I like the jokes you put in this article :)</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/efbc00c785b086776c4e7aac474193c9?s=100&d=mm" class="circle">
+                <span class="name">Ian</span>
+                <span class="date">9/29/16</span>
+                <p class="message">Many thanks for a brilliantly simple solution. I am currently porting my site from WP for all the usual reason and rebuilding it in Jekyll. Since I am a newbie, this is a slow and painful process. This helped solve a major issue for me. I am still researching ways to generate thumbnails of post images at the build. Any clues would be helpful.
+
+Thanks again.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/e6f30238c63fb78843060050ec3a8dba?s=100&d=mm" class="circle">
+                <span class="name">Sam Danielson</span>
+                <span class="date">9/17/16</span>
+                <p class="message">Thanks for this. I'm just now setting of a jekyll site and these tips are very useful.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+        </ul>
+    </div>
+</div>
+        
+    </div>
+
+    <!-- ads-footer.html -->
+     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- Ad-1 -->
+    <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-6013311002995151"
+        data-ad-slot="2377202477"
+        data-ad-format="auto"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+<div id="amzn-assoc-ad-e6bd1453-bb6c-4475-a349-00c923de8818"></div>
+<script async src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US&adInstanceId=e6bd1453-bb6c-4475-a349-00c923de8818"></script>
+</div>
+      </section>
+    </div>
+
+    <script src="/assets/js/jquery-3.2.1.min.js"></script>
+    <script src="/assets/js/materialize.min.js"></script>
+    <script src="/assets/js/list-pagination.js"></script>
+    <script src="/assets/js/site.js"></script>
+
+    <!-- Google Analytics -->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-99256627-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+  </body>
+</html>

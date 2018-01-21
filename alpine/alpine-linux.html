@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="keywords" content="Raspberry Pi 3 64bit Kernel">
+
+    <title>Raspberry Pi 3 Alpine Linux arm64</title>
+    
+    <meta name="description" content="*** 17-07-06: To fix brcmfmac loading error: directly place brcm folder inside our custom initramfs-rpi3 file.*** 17-07-06: b43 in optional…">
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    
+    <meta name="theme-color" content="#FFB74D" />
+
+    <!-- Google Adsense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-6013311002995151", enable_page_level_ads: true });
+    </script>
+
+    <!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>Raspberry Pi 3 Alpine Linux arm64 | My Personal Notes</title>
+<meta name="generator" content="Jekyll v3.6.2" />
+<meta property="og:title" content="Raspberry Pi 3 Alpine Linux arm64" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="*** 17-07-06: To fix brcmfmac loading error: directly place brcm folder inside our custom initramfs-rpi3 file. *** 17-07-06: b43 in optional…" />
+<meta property="og:description" content="*** 17-07-06: To fix brcmfmac loading error: directly place brcm folder inside our custom initramfs-rpi3 file. *** 17-07-06: b43 in optional…" />
+<link rel="canonical" href="http://a-delacruz.github.io/alpine/alpine-linux.html" />
+<meta property="og:url" content="http://a-delacruz.github.io/alpine/alpine-linux.html" />
+<meta property="og:site_name" content="My Personal Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-06-15T00:00:00+08:00" />
+<script type="application/ld+json">
+{"description":"*** 17-07-06: To fix brcmfmac loading error: directly place brcm folder inside our custom initramfs-rpi3 file. *** 17-07-06: b43 in optional…","@type":"BlogPosting","url":"http://a-delacruz.github.io/alpine/alpine-linux.html","headline":"Raspberry Pi 3 Alpine Linux arm64","dateModified":"2017-06-15T00:00:00+08:00","datePublished":"2017-06-15T00:00:00+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/alpine/alpine-linux.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+  
+  <body class="posts">
+
+    <div class="row">
+      <div class="col s2 m1 logo">
+    <div class="card">
+        <div class="card-image">
+            <a href="/"><img src="/assets/img/AJ.png"/></a>
+        </div>
+    </div>
+</div>
+      <!-- bannerA -->
+    </div>
+    <div class="row">
+      <section>
+        <!-- lower right menu -->
+<div class="fixed-action-btn toolbar">
+    <a class="btn-floating btn-large red">
+        <i class="large material-icons">more_vert</i>
+    </a>
+    <ul>
+        <li>
+            <a href="#commentlist" class="modal-trigger">
+                <i class="material-icons">mode_comment</i>
+            </a>
+        </li>
+        <li>
+            <a href="#droplist" class="modal-trigger">
+                <i class="material-icons">list</i>
+            </a>
+        </li>
+        <li>
+            <a href="/">
+                <i class="material-icons">home</i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<!-- Modal -->
+<div id="droplist" class="modal bottom-sheet center-align">
+    <div class="modal-content collection">
+        
+                          
+
+        <a class="collection-item" href="/alpine/alpine-wifi.html">Raspberry Pi 3 Wifi config</a>
+
+          
+
+        <a class="collection-item" href="/alpine/alpine-linux.html">Raspberry Pi 3 Alpine Linux arm64</a>
+
+           
+    </div>
+</div>
+
+<div class="container posts-title">
+    <h3 class="center-align">Raspberry Pi 3 Alpine Linux arm64</h3>
+
+    <div class="test">
+        <h5 id="-17-07-06-to-fix-brcmfmac-loading-error-directly-place-brcm-folder-inside-our-custom-initramfs-rpi3-file">*** 17-07-06: To fix brcmfmac loading error: directly place <code class="highlighter-rouge">brcm</code> folder inside our custom <code class="highlighter-rouge">initramfs-rpi3</code> file.</h5>
+<h5 id="-17-07-06-b43-in-optional">*** 17-07-06: <code class="highlighter-rouge">b43</code> in optional…</h5>
+
+<p>As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3.</p>
+
+<h4 id="prerequisites">Prerequisites:</h4>
+<ul>
+  <li>Alpine linux Generic Arm - <a href="https://nl.alpinelinux.org/alpine/v3.6/releases/aarch64/alpine-uboot-3.6.1-aarch64.tar.gz">aarch64</a></li>
+  <li>For the kernel and U-boot…just follow <a href="/ubuntu/rpi3-setup-64bit-kernel">Raspberry Pi 3 64-bit kernel</a>.</li>
+</ul>
+
+<h6 id="note-enable-squashfs-support--file-systems---miscellaneous-filesystems----squashfs-40">Note: Enable Squashfs support @ File systems -&gt; Miscellaneous filesystems -&gt; &lt;*&gt; SquashFS 4.0</h6>
+
+<p>The files that we need from alpine to modify is <code class="highlighter-rouge">initramfs-vanilla</code>, and a copy of <code class="highlighter-rouge">apk</code> folder (<code class="highlighter-rouge">alpine.apkovl.tar.gz</code> is optional). so go ahead and extract them.</p>
+
+<p><code class="highlighter-rouge">initramfs-vanilla</code> is a compressed cpio archive. To extract it we do this:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ mkdir temp
+$ cd temp
+$ sudo gunzip -c /boot/initramfs-vanilla | cpio -i
+</code></pre></div></div>
+
+<p>Then we need to install our latest modules into it…assuming you already compiled kernel 4.11. following this <a href="/ubuntu/rpi3-setup-64bit-kernel">Raspberry Pi 3 64-bit kernel</a>.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make modules_install INSTALL_MOD_PATH=../temp/
+        when it is done go back to /temp/ folder where we extract the initramfs and into the modules folder.
+$ cd temp/lib/modules/
+        and remove the kernel previous version and optional: the build, source folder symlink in temp/lib/modules/4.11~/ folder
+$ sudo rm -rf 4.9~
+</code></pre></div></div>
+
+<p>Now we have our custom initramfs and then recreate the compressed cpio archive again.
+Inside the folder run:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo find . | cpio -H newc -o | gzip -9 &gt; [file destination]/initramfs-rpi3-cpio
+$ cd ..
+$ sudo mkimage -A arm64 -O linux -T ramdisk -d initramfs-rpi3-cpio initramfs-rpi3 // For U-boot
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">modloop-vanilla</code> is a squashfs file. We can make from scratch or unsquash it using this command:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo unsquashfs -f -d [file destination] [file location]/file.squashfs
+</code></pre></div></div>
+
+<p>To create our own <code class="highlighter-rouge">modloop</code> file let start by making a folder</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo mkdir modules // Then inside this module, let's install again our rpi-4.11y modules from above
+</code></pre></div></div>
+
+<p>After you’ve installed <code class="highlighter-rouge">our modules from above</code> on the modules folder that we’ve just created.. you’ll have a folder structure like so:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/modules
+        |- /lib
+                |- /firmware    // firmware_install INSTALL_FW_PATH=[in this location or just use from the moodlop-vanilla] 
+                |- /modules     // again remove build and source symlink folder here
+</code></pre></div></div>
+
+<p>Rearrange above modules folder to:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/modules/modules/firmware
+/modules/modules/4.11~
+</code></pre></div></div>
+
+<p>Squash it using this command:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo mksquashfs [folder to be squash] [filename] -comp [compression method: I use 'xz' -Xdict-size 100%
+</code></pre></div></div>
+
+<p>And now we have our own <code class="highlighter-rouge">initramfs-rpi3</code> and <code class="highlighter-rouge">modloop-rpi3</code>. Our µsd card should now look like this:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/apk
+/boot/Image
+/boot/kernel8.img
+/boot/boot.scr
+/boot/initramfs-rpi3
+/boot/modloop-rpi3
+bcm2710-rpi-3-b.dtb
+bootcode.bin
+start.elf 
+fixup.dat 
+config.txt
+cmdline.txt
+alpine.apkovl.tar.gz // optional will be created once we setup our alpine linux
+</code></pre></div></div>
+
+<p>We’ll modify the <code class="highlighter-rouge">cmdline.txt</code> and <code class="highlighter-rouge">boot.scr</code> for alpine linux.</p>
+<h5 id="cmdlinetxt">cmdline.txt</h5>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>modules=loop,squashfs,sd-mod,usb-storage quiet net.ifnames=0 dwc_otg.lpm_enable=0 console=ttyS0,115200 fsck.repair=yes rootwait
+// the quiet command can be remove: it just hide the message buffer of kernel. `ttyS0` can be replace by `ttyAMA0`
+</code></pre></div></div>
+
+<h5 id="bootscr">boot.scr</h5>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fdt addr 0x100
+fdt get value bootargs /chosen bootargs
+setenv kernel_addr_r 0x01000000
+setenv ramdisk_addr_r 0x02100000
+fatload mmc 0:1 ${kernel_addr_r} boot/Image
+fatload mmc 0:1 ${ramdisk_addr_r} boot/initramfs-rpi3
+setenv initrdsize $filesize
+fatload mmc 0:1 ${fdt_addr_r} bcm2710-rpi-3-b.dtb
+booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r}
+</code></pre></div></div>
+
+<p>Go ahead noew and try to boot it up. You should have an output like this:</p>
+
+<p><img src="/assets/img/alpine/alpine-linux-arm64-rpi3.jpg" alt="" class="materialboxed responsive-img" /></p>
+
+<p>As you can see… there’s a hwclock error since our raspberry pi 3 don’t have any. So after you run <code class="highlighter-rouge">setup-alpine</code> and use <code class="highlighter-rouge">lbu commit </code> to save changes…run this:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># rc-update add swclock boot    # enable the software clock
+# rc-update del hwclock boot    # disable the hardware clock
+</code></pre></div></div>
+<p>In my case i use <code class="highlighter-rouge">Busybox NTP</code> as it might be the most lightweight solution. Save the changes and reboot.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># lbu commit
+# apk add wireless-tools wpa_supplicant  // will be installed even when not connected to the net
+# reboot
+</code></pre></div></div>
+<p><br /></p>
+
+<h4 id="wifi-optional">Wifi: (optional…)</h4>
+
+<p>I didn’t include the <code class="highlighter-rouge">brcm</code> above because i encouter a <code class="highlighter-rouge">brcmf_sdio_htclk</code> error but can be resolve by reloading the module: <code class="highlighter-rouge">brcmfmac</code>
+The good thing about alpine linux is if you make a <code class="highlighter-rouge">firmware folder</code> on the root directory of our µsd card, it’ll be recognized by alpine and load it once alpine boot up. Don’t worry if the rest of the folder inside the OS fimrware folder is gone(it’s  just hidden in plain site). So i place my brcm folder there for now.</p>
+
+<p>According to alpine linux… <a href="https://wiki.alpinelinux.org/wiki/Connecting_to_a_wireless_access_point">Connecting to a wireless access point</a> Broadcom Wi-Fi Chipset Users: we need <code class="highlighter-rouge">b43-firmware</code> so go ahead and follow that or we can compile it somewhere else like what i did.</p>
+
+<p>On ubuntu 16.04 i install <code class="highlighter-rouge">b43-fwcutter</code> then get <a href="http://mirror2.openwrt.org/sources/broadcom-wl-4.150.10.5.tar.bz2">b43-firmware</a> and follow the instruction <a href="http://linuxwireless.org/en/users/Drivers/b43/">here</a></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ tar -xjf broadcom-wl-4.150.10.5.tar.bz2       // make sure bzip is installed
+$ b43-fwcutter -w [$FIRMWARE_INSTALL_DIR/b43] broadcom-wl-4.150.10.5/driver/wl_apsta_mimo.o
+</code></pre></div></div>
+
+<p>Then copy that <code class="highlighter-rouge">b43</code> folder to firmware folder on the root of our µsd card.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/apk
+/boot/Image
+/boot/kernel8.img
+/boot/boot.scr
+/boot/initramfs-rpi3
+/boot/modloop-rpi3
+/firmware/b43
+/firmware/brcm
+bcm2710-rpi-3-b.dtb
+bootcode.bin
+start.elf 
+fixup.dat 
+config.txt
+cmdline.txt
+alpine.apkovl.tar.gz // optional will be created once we setup our alpine linux
+</code></pre></div></div>
+
+<p>Load the <code class="highlighter-rouge">b43</code> kernel and enable it at boot up:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ modprobe b43
+$ echo b43 &gt;&gt; /etc/modules
+$ lbu commit    //To save changes
+</code></pre></div></div>
+
+<p>If you run <code class="highlighter-rouge">dmesg</code> command and display a brcmfmac error just reload <code class="highlighter-rouge">brcmfmac module</code>:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ modprobe -r brcmfmac  // For now
+$ modprobe brcmfmac
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h5 id="reference-">Reference :</h5>
+
+<blockquote>
+  <p><a href="http://backreference.org/2010/07/04/modifying-initrdinitramfs-files/">http://backreference.org/2010/07/04/modifying-initrdinitramfs-files/</a>
+   <a href="https://askubuntu.com/questions/437880/extract-a-squashfs-to-an-existing-directory">https://askubuntu.com/questions/437880/extract-a-squashfs-to-an-existing-directory</a>
+   <a href="https://wiki.alpinelinux.org/wiki/DIY_Fully_working_Alpine_Linux_for_Allwinner_and_Other_ARM_SOCs">https://wiki.alpinelinux.org/wiki/DIY_Fully_working_Alpine_Linux_for_Allwinner_and_Other_ARM_SOCs</a>
+   <a href="https://wiki.alpinelinux.org/wiki/Raspberry_Pi">https://wiki.alpinelinux.org/wiki/Raspberry_Pi</a></p>
+</blockquote>
+
+<hr />
+
+
+        
+        <!-- Comments -->
+        
+            <div id="commentlist" class="modal bottom-sheet">
+    <div class="modal-content comment-list">
+        <h4>Comments</h4>
+        <ul class="collection">
+             
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/287de6c6c6b38b1f34963b4b126f4a63?s=100&d=mm" class="circle">
+                <span class="name">Jack</span>
+                <span class="date">12/11/17</span>
+                <p class="message">Thank you Eduardo,
+
+But, unfortunately, my raw html looks like wrapping in <code>, but thanks to @Danny, it fixed by wrapping all code <figure> into <div>.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/50c6f777e399404075076ba1268160ff?s=100&d=mm" class="circle">
+                <span class="name">quartoxuna</span>
+                <span class="date">11/28/17</span>
+                <p class="message">Great solution! Thank you very much! :-)</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/d0367ac471645d74db184bed8c65d78e?s=100&d=mm" class="circle">
+                <span class="name">Timesjobs</span>
+                <span class="date">10/26/17</span>
+                <p class="message">This is a very interesting webpage and I have enjoyed reading many of the articles and posts contained on the website, keep up the good work and hope to read some more interesting content in the future.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/1e0836ae0dce5ab8b470326c45b537f1?s=100&d=mm" class="circle">
+                <span class="name">Naomi M Hanson</span>
+                <span class="date">10/7/17</span>
+                <p class="message">I'm so sad that this is down. This seemed to be the answer to my frustrations over Linkedin.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/4808bb8e569d581000bcb3e4497b9921?s=100&d=mm" class="circle">
+                <span class="name">bruce</span>
+                <span class="date">10/6/17</span>
+                <p class="message">This is what I am looking for!!
+
+One issue is that
+* No image shown if the title of post is not the same as the filename of the post.
+
+I fixed this with tweaking the relative path as follow:
+{% capture imagePath %}{{ page.path | slugify | remove: "posts-" | remove: "-md"}}/{{ include.name }}{% endcapture %}</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/088c19ef1c68263f3c97947ad8033c37?s=100&d=mm" class="circle">
+                <span class="name">Emil</span>
+                <span class="date">9/28/17</span>
+                <p class="message">To bad the service is down, would also like to use it</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/47edf7e9d49532cc8f229e2152deb3f4?s=100&d=mm" class="circle">
+                <span class="name">jlo</span>
+                <span class="date">9/8/17</span>
+                <p class="message">Thanks for this share! Very useful.
+Just noticed that, for my setup (cloned from https://github.com/barryclark/jekyll-now),
+I needed to add ".html" after the file-name to be included:
+```
+{% include image.html name="linkedin-before.png" caption="Sharing my blog on LinkedIn" %}
+```
+Dunno why, but maybe this will save someone a bit of head-scratching</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/9009530176e7bcaede209a905f2becde?s=100&d=mm" class="circle">
+                <span class="name">Shreyash Agarwal</span>
+                <span class="date">7/21/17</span>
+                <p class="message">Thank you! This was very useful for me in customizing my Jekyll Blog!</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/41246865dae97c7a06440256059d9722?s=100&d=mm" class="circle">
+                <span class="name">Todd</span>
+                <span class="date">6/17/17</span>
+                <p class="message">Many thanks for this post (& website). Teaching myself webdesign for fun, and being able to see these explanations and the GitHub material itself is incredibly helpful. 
+
+I ran into errors the first time through this, but access to the source code solved everything. :)
+
+(My errors were related to imagePath, where I was trying to refer to the simplified names of the html/md files themselves, and not the complete *titles* I was assigning each post in the front matter. Derp.)</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/d0b2a4fdecbcbd5ebfbbef6359e548df?s=100&d=mm" class="circle">
+                <span class="name">Danny</span>
+                <span class="date">5/30/17</span>
+                <p class="message">Legend, thank you. One issue:
+
+The include displays as raw HTML: wrapped in `<code>` tags. I fixed it by wrapping the include `<figure>` with a `<div>`.
+
+Might have something to do with [this GitHub issue](https://github.com/jekyll/jekyll/issues/1868).</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/44f420551e24c72fbd2f780d89d07cb4?s=100&d=mm" class="circle">
+                <span class="name">Viktar</span>
+                <span class="date">4/5/17</span>
+                <p class="message">Great! Thanks!</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/982b23c9a30aa5501e809f8a22edd8eb?s=100&d=mm" class="circle">
+                <span class="name">Yura</span>
+                <span class="date">3/25/17</span>
+                <p class="message">Thank you very much!</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/9999a35a093355570204e460eba5d7ec?s=100&d=mm" class="circle">
+                <span class="name">Harry</span>
+                <span class="date">2/13/17</span>
+                <p class="message">It is obvious that the images and other binary resources must lie with the main document in one folder. 
+
+```
+_posts/
+  2000-01-01-article/
+    2000-01-01-article.md
+    image.png
+    document.pdf
+```
+
+But no! Jekyll all about simplicity https://github.com/jekyll/jekyll/issues/881. Why do we need a convenient and simple structure of the documents? Better we will tinker with a separate directory. But it's would more convenient for developers.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/c8f2f085bbf6e830b0f262ea839e3b86?s=100&d=mm" class="circle">
+                <span class="name">James</span>
+                <span class="date">1/25/17</span>
+                <p class="message">I am confused and couldn't get an image posted</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/fe73a64af70897f2e3486c50288159c2?s=100&d=mm" class="circle">
+                <span class="name">Carlos</span>
+                <span class="date">1/10/17</span>
+                <p class="message">I get the 'Server not found' message when trying to access the butler.
+
+I'm really frustrated since one of my websites only shows the generic URL and no image nor excerpt.  OG tags look good :(</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/e09fd50165f62ce3046120ad18f1097b?s=100&d=mm" class="circle">
+                <span class="name">Christian Solorzano</span>
+                <span class="date">12/26/16</span>
+                <p class="message">Great article. 
+
+Any idea why Jekyll sometimes doesn't display photos?</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/444ad5f7295003ac83ce72fe033fae3c?s=100&d=mm" class="circle">
+                <span class="name">Rafael "bsides" Pereira</span>
+                <span class="date">12/15/16</span>
+                <p class="message">Thanks for this post, helped me a lot! Obrigado :)</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/d4beb95cb3d3e28ff4c7b3ae195b5afc?s=100&d=mm" class="circle">
+                <span class="name">Axil Bits</span>
+                <span class="date">12/2/16</span>
+                <p class="message">Good article, gave me some great ideas. I'm not using PHP but could follow your line of reasoning well.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/4f8072e22fae3cd98b876df304886bed?s=100&d=mm" class="circle">
+                <span class="name">Eduardo Bouças</span>
+                <span class="date">11/4/16</span>
+                <p class="message">Daniel, my assets folder is in the root of the site. Check [the source for this site](https://github.com/eduardoboucas/eduardoboucas.github.io) to see the implementation.
+
+And yes, you could use it for pages just the same.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/609ed84954a3a2595d837105611d13ef?s=100&d=mm" class="circle">
+                <span class="name">Daniel</span>
+                <span class="date">11/4/16</span>
+                <p class="message">Great post. I'm just a little confused on how you got it all set up. Did you include the assets folder in the '_includes' folder or in the main site file? Also if I have pages on my site and need to include images could I do the same snippet but change posts to pages?</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/413d89148cb9d72d397438959e83b931?s=100&d=mm" class="circle">
+                <span class="name">Brad West</span>
+                <span class="date">10/17/16</span>
+                <p class="message">I'm having some problems recreating this on my site. I've tried using the code you've demoed above, and got the below errors. If I copy the code from your [eduardoboucas/eduardoboucas.github.io](https://github.com/eduardoboucas/eduardoboucas.github.io/) repo I get a Liquid warning. In both cases the blog pagination pages (`/blog/page/2`, `/blog/page/3`, etc.) aren't being generated.
+
+I [setup a gist](https://gist.github.com/bradonomics/ab42dd473c602ceb713d6a56eeada2c1) to better show the problem. You can see the contents of my `/blog.html` file, my `/js/pagination.js` file, and the console error I'm getting when running the demo code above.
+
+In my config file I've got:
+
+```yaml
+paginate: 3
+paginate_path: "/blog/page/:num"
+```
+
+Any ideas where I've gone wrong?</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/c4c662e93babe92ff32fdaf6f087f09a?s=100&d=mm" class="circle">
+                <span class="name">Renshuki</span>
+                <span class="date">10/8/16</span>
+                <p class="message">Thank you for the tip!
+
+It would be nice to take in consideration image responsiveness too.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/4a07f1bedaf8b3e78724c3e3b684f39e?s=100&d=mm" class="circle">
+                <span class="name">Joren</span>
+                <span class="date">9/29/16</span>
+                <p class="message">Thank you! Also, I like the jokes you put in this article :)</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/efbc00c785b086776c4e7aac474193c9?s=100&d=mm" class="circle">
+                <span class="name">Ian</span>
+                <span class="date">9/29/16</span>
+                <p class="message">Many thanks for a brilliantly simple solution. I am currently porting my site from WP for all the usual reason and rebuilding it in Jekyll. Since I am a newbie, this is a slow and painful process. This helped solve a major issue for me. I am still researching ways to generate thumbnails of post images at the build. Any clues would be helpful.
+
+Thanks again.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/e6f30238c63fb78843060050ec3a8dba?s=100&d=mm" class="circle">
+                <span class="name">Sam Danielson</span>
+                <span class="date">9/17/16</span>
+                <p class="message">Thanks for this. I'm just now setting of a jekyll site and these tips are very useful.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+        </ul>
+    </div>
+</div>
+        
+    </div>
+
+    <!-- ads-footer.html -->
+     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- Ad-1 -->
+    <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-6013311002995151"
+        data-ad-slot="2377202477"
+        data-ad-format="auto"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+<div id="amzn-assoc-ad-e6bd1453-bb6c-4475-a349-00c923de8818"></div>
+<script async src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US&adInstanceId=e6bd1453-bb6c-4475-a349-00c923de8818"></script>
+</div>
+      </section>
+    </div>
+
+    <script src="/assets/js/jquery-3.2.1.min.js"></script>
+    <script src="/assets/js/materialize.min.js"></script>
+    <script src="/assets/js/list-pagination.js"></script>
+    <script src="/assets/js/site.js"></script>
+
+    <!-- Google Analytics -->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-99256627-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+  </body>
+</html>

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="keywords" content="Raspberry Pi 3 64bit Kernel">
+
+    <title>Enabling I2C for Raspberry Pi 3</title>
+    
+    <meta name="description" content="A little modification in the kernel CONFIG to enable I2C permanently or leave as is then just load the module with an entry @ /etc/modules.">
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    
+    <meta name="theme-color" content="#FFB74D" />
+
+    <!-- Google Adsense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-6013311002995151", enable_page_level_ads: true });
+    </script>
+
+    <!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>Enabling I2C for Raspberry Pi 3 | My Personal Notes</title>
+<meta name="generator" content="Jekyll v3.6.2" />
+<meta property="og:title" content="Enabling I2C for Raspberry Pi 3" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A little modification in the kernel CONFIG to enable I2C permanently or leave as is then just load the module with an entry @ /etc/modules." />
+<meta property="og:description" content="A little modification in the kernel CONFIG to enable I2C permanently or leave as is then just load the module with an entry @ /etc/modules." />
+<link rel="canonical" href="http://a-delacruz.github.io/ubuntu/rpi3-setup-i2c.html" />
+<meta property="og:url" content="http://a-delacruz.github.io/ubuntu/rpi3-setup-i2c.html" />
+<meta property="og:site_name" content="My Personal Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-11-04T00:00:00+08:00" />
+<script type="application/ld+json">
+{"description":"A little modification in the kernel CONFIG to enable I2C permanently or leave as is then just load the module with an entry @ /etc/modules.","@type":"BlogPosting","url":"http://a-delacruz.github.io/ubuntu/rpi3-setup-i2c.html","headline":"Enabling I2C for Raspberry Pi 3","dateModified":"2017-11-04T00:00:00+08:00","datePublished":"2017-11-04T00:00:00+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/ubuntu/rpi3-setup-i2c.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+  
+  <body class="posts">
+
+    <div class="row">
+      <div class="col s2 m1 logo">
+    <div class="card">
+        <div class="card-image">
+            <a href="/"><img src="/assets/img/AJ.png"/></a>
+        </div>
+    </div>
+</div>
+      <!-- bannerA -->
+    </div>
+    <div class="row">
+      <section>
+        <!-- lower right menu -->
+<div class="fixed-action-btn toolbar">
+    <a class="btn-floating btn-large red">
+        <i class="large material-icons">more_vert</i>
+    </a>
+    <ul>
+        <li>
+            <a href="#commentlist" class="modal-trigger">
+                <i class="material-icons">mode_comment</i>
+            </a>
+        </li>
+        <li>
+            <a href="#droplist" class="modal-trigger">
+                <i class="material-icons">list</i>
+            </a>
+        </li>
+        <li>
+            <a href="/">
+                <i class="material-icons">home</i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<!-- Modal -->
+<div id="droplist" class="modal bottom-sheet center-align">
+    <div class="modal-content collection">
+        
+          
+
+        <a class="collection-item" href="/ubuntu/docker.html">.Net Core on Raspberry Pi 3</a>
+
+            
+
+        <a class="collection-item" href="/ubuntu/rpi3-setup-bluetooth.html">Raspberry Pi 3 Bluetooth Setup</a>
+
+          
+
+        <a class="collection-item" href="/ubuntu/rpi3-setup-i2c.html">Enabling I2C for Raspberry Pi 3</a>
+
+          
+
+        <a class="collection-item" href="/ubuntu/rpi3-setup-wifi.html">Raspberry Pi 3 Wifi Setup</a>
+
+          
+
+        <a class="collection-item" href="/ubuntu/rpi3-setup-filesystem.html">Using Ubuntu-base arm64 rootfs for Raspberry Pi 3</a>
+
+          
+
+        <a class="collection-item" href="/ubuntu/rpi3-setup-64bit-uboot.html">Raspberry Pi 3 with 64-bit U-Boot</a>
+
+          
+
+        <a class="collection-item" href="/ubuntu/rpi3-setup-64bit-kernel.html">Raspberry Pi 3 64-bit kernel</a>
+
+               
+    </div>
+</div>
+
+<div class="container posts-title">
+    <h3 class="center-align">Enabling I2C for Raspberry Pi 3</h3>
+
+    <div class="test">
+        <p>A little modification in the <code class="highlighter-rouge">kernel CONFIG</code> to enable <code class="highlighter-rouge">I2C</code> permanently or leave as is then just load the module with an entry @ /etc/modules.</p>
+
+<p>For <code class="highlighter-rouge">I2C</code> to work, Enable <code class="highlighter-rouge">I2C device interface</code>  instead of setting it up as a <code class="highlighter-rouge">module</code>.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    Device Drivers
+        |- I2C support
+            |- [*] I2C device interface
+</code></pre></div></div>
+
+<p><br />
+Afterwards, you can see <code class="highlighter-rouge">i2c-1</code> present under <code class="highlighter-rouge">/dev</code> folder. <code class="highlighter-rouge">i2c-bcm2835</code> are loaded as module instead of <code class="highlighter-rouge">i2c-bcm2708</code> while both being set as <code class="highlighter-rouge">modules</code> on <code class="highlighter-rouge">kernel CONFIG</code>.
+No need to add <code class="highlighter-rouge">i2c-dev</code> in <code class="highlighter-rouge">/etc/modules</code> as it is loaded by kernel itself.
+Then just install <code class="highlighter-rouge">i2c-tools</code> to verify that it works and we can now detect the device address connected to <code class="highlighter-rouge">I2c-1</code>.</p>
+
+<hr />
+
+
+        
+        <!-- Comments -->
+        
+            <div id="commentlist" class="modal bottom-sheet">
+    <div class="modal-content comment-list">
+        <h4>Comments</h4>
+        <ul class="collection">
+             
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/287de6c6c6b38b1f34963b4b126f4a63?s=100&d=mm" class="circle">
+                <span class="name">Jack</span>
+                <span class="date">12/11/17</span>
+                <p class="message">Thank you Eduardo,
+
+But, unfortunately, my raw html looks like wrapping in <code>, but thanks to @Danny, it fixed by wrapping all code <figure> into <div>.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/50c6f777e399404075076ba1268160ff?s=100&d=mm" class="circle">
+                <span class="name">quartoxuna</span>
+                <span class="date">11/28/17</span>
+                <p class="message">Great solution! Thank you very much! :-)</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/d0367ac471645d74db184bed8c65d78e?s=100&d=mm" class="circle">
+                <span class="name">Timesjobs</span>
+                <span class="date">10/26/17</span>
+                <p class="message">This is a very interesting webpage and I have enjoyed reading many of the articles and posts contained on the website, keep up the good work and hope to read some more interesting content in the future.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/1e0836ae0dce5ab8b470326c45b537f1?s=100&d=mm" class="circle">
+                <span class="name">Naomi M Hanson</span>
+                <span class="date">10/7/17</span>
+                <p class="message">I'm so sad that this is down. This seemed to be the answer to my frustrations over Linkedin.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/4808bb8e569d581000bcb3e4497b9921?s=100&d=mm" class="circle">
+                <span class="name">bruce</span>
+                <span class="date">10/6/17</span>
+                <p class="message">This is what I am looking for!!
+
+One issue is that
+* No image shown if the title of post is not the same as the filename of the post.
+
+I fixed this with tweaking the relative path as follow:
+{% capture imagePath %}{{ page.path | slugify | remove: "posts-" | remove: "-md"}}/{{ include.name }}{% endcapture %}</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/088c19ef1c68263f3c97947ad8033c37?s=100&d=mm" class="circle">
+                <span class="name">Emil</span>
+                <span class="date">9/28/17</span>
+                <p class="message">To bad the service is down, would also like to use it</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/47edf7e9d49532cc8f229e2152deb3f4?s=100&d=mm" class="circle">
+                <span class="name">jlo</span>
+                <span class="date">9/8/17</span>
+                <p class="message">Thanks for this share! Very useful.
+Just noticed that, for my setup (cloned from https://github.com/barryclark/jekyll-now),
+I needed to add ".html" after the file-name to be included:
+```
+{% include image.html name="linkedin-before.png" caption="Sharing my blog on LinkedIn" %}
+```
+Dunno why, but maybe this will save someone a bit of head-scratching</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/9009530176e7bcaede209a905f2becde?s=100&d=mm" class="circle">
+                <span class="name">Shreyash Agarwal</span>
+                <span class="date">7/21/17</span>
+                <p class="message">Thank you! This was very useful for me in customizing my Jekyll Blog!</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/41246865dae97c7a06440256059d9722?s=100&d=mm" class="circle">
+                <span class="name">Todd</span>
+                <span class="date">6/17/17</span>
+                <p class="message">Many thanks for this post (& website). Teaching myself webdesign for fun, and being able to see these explanations and the GitHub material itself is incredibly helpful. 
+
+I ran into errors the first time through this, but access to the source code solved everything. :)
+
+(My errors were related to imagePath, where I was trying to refer to the simplified names of the html/md files themselves, and not the complete *titles* I was assigning each post in the front matter. Derp.)</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/d0b2a4fdecbcbd5ebfbbef6359e548df?s=100&d=mm" class="circle">
+                <span class="name">Danny</span>
+                <span class="date">5/30/17</span>
+                <p class="message">Legend, thank you. One issue:
+
+The include displays as raw HTML: wrapped in `<code>` tags. I fixed it by wrapping the include `<figure>` with a `<div>`.
+
+Might have something to do with [this GitHub issue](https://github.com/jekyll/jekyll/issues/1868).</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/44f420551e24c72fbd2f780d89d07cb4?s=100&d=mm" class="circle">
+                <span class="name">Viktar</span>
+                <span class="date">4/5/17</span>
+                <p class="message">Great! Thanks!</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/982b23c9a30aa5501e809f8a22edd8eb?s=100&d=mm" class="circle">
+                <span class="name">Yura</span>
+                <span class="date">3/25/17</span>
+                <p class="message">Thank you very much!</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/9999a35a093355570204e460eba5d7ec?s=100&d=mm" class="circle">
+                <span class="name">Harry</span>
+                <span class="date">2/13/17</span>
+                <p class="message">It is obvious that the images and other binary resources must lie with the main document in one folder. 
+
+```
+_posts/
+  2000-01-01-article/
+    2000-01-01-article.md
+    image.png
+    document.pdf
+```
+
+But no! Jekyll all about simplicity https://github.com/jekyll/jekyll/issues/881. Why do we need a convenient and simple structure of the documents? Better we will tinker with a separate directory. But it's would more convenient for developers.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/c8f2f085bbf6e830b0f262ea839e3b86?s=100&d=mm" class="circle">
+                <span class="name">James</span>
+                <span class="date">1/25/17</span>
+                <p class="message">I am confused and couldn't get an image posted</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/fe73a64af70897f2e3486c50288159c2?s=100&d=mm" class="circle">
+                <span class="name">Carlos</span>
+                <span class="date">1/10/17</span>
+                <p class="message">I get the 'Server not found' message when trying to access the butler.
+
+I'm really frustrated since one of my websites only shows the generic URL and no image nor excerpt.  OG tags look good :(</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/e09fd50165f62ce3046120ad18f1097b?s=100&d=mm" class="circle">
+                <span class="name">Christian Solorzano</span>
+                <span class="date">12/26/16</span>
+                <p class="message">Great article. 
+
+Any idea why Jekyll sometimes doesn't display photos?</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/444ad5f7295003ac83ce72fe033fae3c?s=100&d=mm" class="circle">
+                <span class="name">Rafael "bsides" Pereira</span>
+                <span class="date">12/15/16</span>
+                <p class="message">Thanks for this post, helped me a lot! Obrigado :)</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/d4beb95cb3d3e28ff4c7b3ae195b5afc?s=100&d=mm" class="circle">
+                <span class="name">Axil Bits</span>
+                <span class="date">12/2/16</span>
+                <p class="message">Good article, gave me some great ideas. I'm not using PHP but could follow your line of reasoning well.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/4f8072e22fae3cd98b876df304886bed?s=100&d=mm" class="circle">
+                <span class="name">Eduardo Bouças</span>
+                <span class="date">11/4/16</span>
+                <p class="message">Daniel, my assets folder is in the root of the site. Check [the source for this site](https://github.com/eduardoboucas/eduardoboucas.github.io) to see the implementation.
+
+And yes, you could use it for pages just the same.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/609ed84954a3a2595d837105611d13ef?s=100&d=mm" class="circle">
+                <span class="name">Daniel</span>
+                <span class="date">11/4/16</span>
+                <p class="message">Great post. I'm just a little confused on how you got it all set up. Did you include the assets folder in the '_includes' folder or in the main site file? Also if I have pages on my site and need to include images could I do the same snippet but change posts to pages?</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/413d89148cb9d72d397438959e83b931?s=100&d=mm" class="circle">
+                <span class="name">Brad West</span>
+                <span class="date">10/17/16</span>
+                <p class="message">I'm having some problems recreating this on my site. I've tried using the code you've demoed above, and got the below errors. If I copy the code from your [eduardoboucas/eduardoboucas.github.io](https://github.com/eduardoboucas/eduardoboucas.github.io/) repo I get a Liquid warning. In both cases the blog pagination pages (`/blog/page/2`, `/blog/page/3`, etc.) aren't being generated.
+
+I [setup a gist](https://gist.github.com/bradonomics/ab42dd473c602ceb713d6a56eeada2c1) to better show the problem. You can see the contents of my `/blog.html` file, my `/js/pagination.js` file, and the console error I'm getting when running the demo code above.
+
+In my config file I've got:
+
+```yaml
+paginate: 3
+paginate_path: "/blog/page/:num"
+```
+
+Any ideas where I've gone wrong?</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/c4c662e93babe92ff32fdaf6f087f09a?s=100&d=mm" class="circle">
+                <span class="name">Renshuki</span>
+                <span class="date">10/8/16</span>
+                <p class="message">Thank you for the tip!
+
+It would be nice to take in consideration image responsiveness too.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/4a07f1bedaf8b3e78724c3e3b684f39e?s=100&d=mm" class="circle">
+                <span class="name">Joren</span>
+                <span class="date">9/29/16</span>
+                <p class="message">Thank you! Also, I like the jokes you put in this article :)</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/efbc00c785b086776c4e7aac474193c9?s=100&d=mm" class="circle">
+                <span class="name">Ian</span>
+                <span class="date">9/29/16</span>
+                <p class="message">Many thanks for a brilliantly simple solution. I am currently porting my site from WP for all the usual reason and rebuilding it in Jekyll. Since I am a newbie, this is a slow and painful process. This helped solve a major issue for me. I am still researching ways to generate thumbnails of post images at the build. Any clues would be helpful.
+
+Thanks again.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+             
+            <li class="collection-item avatar">
+                <img src="https://www.gravatar.com/avatar/e6f30238c63fb78843060050ec3a8dba?s=100&d=mm" class="circle">
+                <span class="name">Sam Danielson</span>
+                <span class="date">9/17/16</span>
+                <p class="message">Thanks for this. I'm just now setting of a jekyll site and these tips are very useful.</p>
+                <a href="#!" class="secondary-content">
+                    <i class="material-icons">send</i>
+                </a>
+            </li>
+             
+        </ul>
+    </div>
+</div>
+        
+    </div>
+
+    <!-- ads-footer.html -->
+     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- Ad-1 -->
+    <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-6013311002995151"
+        data-ad-slot="2377202477"
+        data-ad-format="auto"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+<div id="amzn-assoc-ad-e6bd1453-bb6c-4475-a349-00c923de8818"></div>
+<script async src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US&adInstanceId=e6bd1453-bb6c-4475-a349-00c923de8818"></script>
+</div>
+      </section>
+    </div>
+
+    <script src="/assets/js/jquery-3.2.1.min.js"></script>
+    <script src="/assets/js/materialize.min.js"></script>
+    <script src="/assets/js/list-pagination.js"></script>
+    <script src="/assets/js/site.js"></script>
+
+    <!-- Google Analytics -->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-99256627-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+  </body>
+</html>
