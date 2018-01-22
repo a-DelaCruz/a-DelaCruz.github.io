@@ -145,8 +145,22 @@ If the file above doesn’t make your wifi to work get it directly from the <a h
 <p>Next we’ll modify <code class="highlighter-rouge">/etc/network/interfaces</code>.</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   sudo nano /etc/network/interfaces
 </code></pre></div></div>
+<!-- ================================================ -->
+<div class="row">
+    <div class="col s12">
+        <ul class="tabs">
+            <li class="tab col s3">
+                <a href="#test1">AP Mode</a>
+            </li>
+            <li class="tab col s3">
+                <a href="#test2">Hotspot Mode</a>
+            </li>
+        </ul>
+    </div>
+    <div id="test1" class="col s12">
+        <br />
+Set with this following lines:
 
-<p>Copy paste this following lines:</p>
 <div class="alert-code">
     <b>/etc/network/interfaces:</b>
     <br />
@@ -157,27 +171,46 @@ wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
 </code>
 </div>
 
-<p>For this setup, my wifi interfaces id is  <code class="highlighter-rouge">wlan0</code>… yours might be named differently so replace it
-that matches yours.
-You can set your wifi to static…just browse the references at the bottom of this page..</p>
+<div class="alert-info">
+    <i class="material-icons left">info</i>
+    <b>Note:</b>
+    <span>
+For this setup, my wifi interfaces id is  <code class="highlighter-rouge">wlan0</code>… yours might be named differently so replace it
+with that matches yours.
 
-<p>Then we’ll configure <code class="highlighter-rouge">/etc/wpa_supplicant/wpa_supplicant.conf</code>…so create/edit the file <code class="highlighter-rouge">wpa_supplicant.conf</code> and place this lines:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>network={
+<br />
+<br />
+
+Then we’ll configure <code class="highlighter-rouge">/etc/wpa_supplicant/wpa_supplicant.conf</code>…so create/edit the file <code class="highlighter-rouge">wpa_supplicant.conf</code> and set this lines:
+</span>
+</div>
+
+
+
+
+<pre><b>/etc/wpa_supplicant/wpa_supplicant.conf:</b><code>
+network={
     ssid="NetworkEssid"
-    scan_ssid=1 # only needed if your access point uses a hidden ssid
-    proto=RSN
-    key_mgmt=WPA-PSK
     psk="NetworkPassword"
-    pairwise=CCMP
-    auth_alg=OPEN
+    scan_ssid=1 # only needed if your access point is hidden ssid
+    proto=RSN
+	key_mgmt=WPA-PSK
+	pairwise=CCMP
+	auth_alg=OPEN
+	mode=0
+	group=CCMP
 }
-</code></pre></div></div>
+</code></pre>
 
-<p>Reboot and verify that wifi is now working and connected to the network.
-or you could try this:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   sudo ifconfig wlan0 down
+Reboot and verify that wifi is now working and connected to the network...or you could try this:
+<pre><code>
+$   sudo ifconfig wlan0 down
 $   sudo ifconfig wlan0 up
-</code></pre></div></div>
+</code></pre>
+    </div>
+    
+    <div id="test2" class="col s12">test2</div>
+</div>
 
 <p><br /></p>
 <h5 id="reference-">Reference :</h5>

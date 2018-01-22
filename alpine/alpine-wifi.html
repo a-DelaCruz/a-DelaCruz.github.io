@@ -26,15 +26,15 @@
 <meta name="generator" content="Jekyll v3.6.2" />
 <meta property="og:title" content="Raspberry Pi 3 Wifi config" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Alpine linux network interface configuration are very different from what i used on ubuntu. But wpa_supplicant.conf are still the same. For the interface file: ``` auto lo iface lo inet loopback" />
-<meta property="og:description" content="Alpine linux network interface configuration are very different from what i used on ubuntu. But wpa_supplicant.conf are still the same. For the interface file: ``` auto lo iface lo inet loopback" />
+<meta name="description" content="Alpine linux network interface configuration are very different from what i used on ubuntu. But wpa_supplicant.conf are still the same. For the interface file: /etc/network/interface: auto lo iface lo inet loopback allow-hotplug eth0 iface eth0 inet dhcp hostname [your hostname] auto wlan0 iface wlan0 inet dhcp hostname [your hostname]" />
+<meta property="og:description" content="Alpine linux network interface configuration are very different from what i used on ubuntu. But wpa_supplicant.conf are still the same. For the interface file: /etc/network/interface: auto lo iface lo inet loopback allow-hotplug eth0 iface eth0 inet dhcp hostname [your hostname] auto wlan0 iface wlan0 inet dhcp hostname [your hostname]" />
 <link rel="canonical" href="http://a-delacruz.github.io/alpine/alpine-wifi.html" />
 <meta property="og:url" content="http://a-delacruz.github.io/alpine/alpine-wifi.html" />
 <meta property="og:site_name" content="My Personal Notes" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2017-07-11T00:00:00+08:00" />
 <script type="application/ld+json">
-{"description":"Alpine linux network interface configuration are very different from what i used on ubuntu. But wpa_supplicant.conf are still the same. For the interface file: ``` auto lo iface lo inet loopback","@type":"BlogPosting","url":"http://a-delacruz.github.io/alpine/alpine-wifi.html","headline":"Raspberry Pi 3 Wifi config","dateModified":"2017-07-11T00:00:00+08:00","datePublished":"2017-07-11T00:00:00+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/alpine/alpine-wifi.html"},"@context":"http://schema.org"}</script>
+{"description":"Alpine linux network interface configuration are very different from what i used on ubuntu. But wpa_supplicant.conf are still the same. For the interface file: /etc/network/interface: auto lo iface lo inet loopback allow-hotplug eth0 iface eth0 inet dhcp hostname [your hostname] auto wlan0 iface wlan0 inet dhcp hostname [your hostname]","@type":"BlogPosting","url":"http://a-delacruz.github.io/alpine/alpine-wifi.html","headline":"Raspberry Pi 3 Wifi config","dateModified":"2017-07-11T00:00:00+08:00","datePublished":"2017-07-11T00:00:00+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/alpine/alpine-wifi.html"},"@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -100,20 +100,28 @@
         <p>Alpine linux network interface configuration are very different from what i used on ubuntu. 
 But <code class="highlighter-rouge">wpa_supplicant.conf</code> are still the same.
 For the <code class="highlighter-rouge">interface</code> file:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>auto lo
+<div class="alert-code">
+    <b>/etc/network/interface:</b>
+    <br />
+<code class="highlighter-rouge">
+auto lo
 iface lo inet loopback
-
+ 
 allow-hotplug eth0
 iface eth0 inet dhcp
         hostname [your hostname]
-
+ 
 auto wlan0
 iface wlan0 inet dhcp
         hostname [your hostname]
-</code></pre></div></div>
+</code>
+</div>
 
 <p>And for the <code class="highlighter-rouge">wpa_supplicant.conf</code> : (WPA2)</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>network={
+
+<pre><b>wpa_supplicant.conf:</b>
+<code>
+network={
         ssid="your network name"
         psk="your password"
         proto=RSN
@@ -124,7 +132,7 @@ iface wlan0 inet dhcp
         mode=0
         group=CCMP
 }
-</code></pre></div></div>
+</code></pre>
 
 <hr />
 
