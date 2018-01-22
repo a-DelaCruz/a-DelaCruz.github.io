@@ -9,7 +9,7 @@
 
     <title>Raspberry Pi 3 Alpine Linux arm64</title>
     
-    <meta name="description" content="As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image because of it being small in size… unlike us...">
+    <meta name="description" content="*** 17-07-06: To fix brcmfmac loading error: directly place brcm folder inside our custom initramfs-rpi3 file.*** 17-07-06: b43 is optional…">
 
     <link rel="stylesheet" href="/assets/css/style.css?v=">
     
@@ -26,15 +26,15 @@
 <meta name="generator" content="Jekyll v3.6.2" />
 <meta property="og:title" content="Raspberry Pi 3 Alpine Linux arm64" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3." />
-<meta property="og:description" content="As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3." />
+<meta name="description" content="*** 17-07-06: To fix brcmfmac loading error: directly place brcm folder inside our custom initramfs-rpi3 file. *** 17-07-06: b43 is optional…" />
+<meta property="og:description" content="*** 17-07-06: To fix brcmfmac loading error: directly place brcm folder inside our custom initramfs-rpi3 file. *** 17-07-06: b43 is optional…" />
 <link rel="canonical" href="http://a-delacruz.github.io/alpine/alpine-linux.html" />
 <meta property="og:url" content="http://a-delacruz.github.io/alpine/alpine-linux.html" />
 <meta property="og:site_name" content="My Personal Notes" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2017-06-15T00:00:00+08:00" />
 <script type="application/ld+json">
-{"description":"As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3.","@type":"BlogPosting","url":"http://a-delacruz.github.io/alpine/alpine-linux.html","headline":"Raspberry Pi 3 Alpine Linux arm64","dateModified":"2017-06-15T00:00:00+08:00","datePublished":"2017-06-15T00:00:00+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/alpine/alpine-linux.html"},"@context":"http://schema.org"}</script>
+{"description":"*** 17-07-06: To fix brcmfmac loading error: directly place brcm folder inside our custom initramfs-rpi3 file. *** 17-07-06: b43 is optional…","@type":"BlogPosting","url":"http://a-delacruz.github.io/alpine/alpine-linux.html","headline":"Raspberry Pi 3 Alpine Linux arm64","dateModified":"2017-06-15T00:00:00+08:00","datePublished":"2017-06-15T00:00:00+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/alpine/alpine-linux.html"},"@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -97,7 +97,10 @@
     <h3 class="center-align">Raspberry Pi 3 Alpine Linux arm64</h3>
 
     <div class="test">
-        <p>As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3.</p>
+        <h6 id="-17-07-06-to-fix-brcmfmac-loading-error-directly-place-brcm-folder-inside-our-custom-initramfs-rpi3-file">*** 17-07-06: To fix brcmfmac loading error: directly place <code class="highlighter-rouge">brcm</code> folder inside our custom <code class="highlighter-rouge">initramfs-rpi3</code> file.</h6>
+<h6 id="-17-07-06-b43-is-optional">*** 17-07-06: <code class="highlighter-rouge">b43</code> is optional…</h6>
+
+<p>As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3.</p>
 
 <p><a href="http://dl-cdn.alpinelinux.org/alpine/v3.7/releases/aarch64/alpine-uboot-3.7.0-aarch64.tar.gz" class="card btn blue">Alpine 3.7 Generic arm64<i class="material-icons right">file_download</i></a></p>
 
@@ -267,17 +270,17 @@ start.elf
 fixup.dat 
 config.txt
 cmdline.txt
-alpine.apkovl.tar.gz // optional will be created once we setup our alpine linux
+alpine.apkovl.tar.gz # optional will be created once we setup our alpine linux
 </code></pre></div></div>
 
 <p>Load the <code class="highlighter-rouge">b43</code> kernel and enable it at boot up:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ modprobe b43
 $ echo b43 &gt;&gt; /etc/modules
-$ lbu commit    //To save changes
+$ lbu commit    # To save changes
 </code></pre></div></div>
 
 <p>If you run <code class="highlighter-rouge">dmesg</code> command and display a brcmfmac error just reload <code class="highlighter-rouge">brcmfmac module</code>:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ modprobe -r brcmfmac  // For now
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ modprobe -r brcmfmac  # For now
 $ modprobe brcmfmac
 </code></pre></div></div>
 
@@ -639,7 +642,7 @@ Thanks again.</p>
     </div>
 
     <!-- ads-footer.html -->
-     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <!-- Ad-1 -->
     <ins class="adsbygoogle"
         style="display:block"

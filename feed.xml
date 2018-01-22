@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2018-01-22T12:02:53+08:00</updated><id>http://a-delacruz.github.io/</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">.Net Core on Raspberry Pi 3</title><link href="http://a-delacruz.github.io/ubuntu/docker.html" rel="alternate" type="text/html" title=".Net Core on Raspberry Pi 3" /><published>2018-01-18T00:00:00+08:00</published><updated>2018-01-18T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/docker</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/docker.html">&lt;p&gt;I thought i could get away from using a debian-based Docker image for .Net Core… *sigh…&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2018-01-22T17:40:25+08:00</updated><id>http://a-delacruz.github.io/</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">.Net Core on Raspberry Pi 3</title><link href="http://a-delacruz.github.io/ubuntu/docker.html" rel="alternate" type="text/html" title=".Net Core on Raspberry Pi 3" /><published>2018-01-18T00:00:00+08:00</published><updated>2018-01-18T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/docker</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/docker.html">&lt;p&gt;I thought i could get away from using a debian-based Docker image for .Net Core… *sigh…&lt;/p&gt;
 
 &lt;p&gt;For now an &lt;code class=&quot;highlighter-rouge&quot;&gt;Alpine-based&lt;/code&gt; Docker image is available for &lt;code class=&quot;highlighter-rouge&quot;&gt;.NET Core&lt;/code&gt; on amd64. But the runtime-deps can also be installed to an &lt;code class=&quot;highlighter-rouge&quot;&gt;arm32v6 architecture&lt;/code&gt; which Alpine-Linux support so the possibility is almost there.&lt;/p&gt;
 
@@ -11,10 +11,12 @@
 &lt;/div&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$   wget https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/arm64/docker-ce_17.12.0~ce-0~ubuntu_arm64.deb
+
+$   sudo dpkg -i docker-ce_17.12.0~ce-0~ubuntu_arm64.deb
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Docker-ce deps:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;apt-get install libltdl7
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$   sudo apt-get install libltdl7
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;div class=&quot;alert-info&quot;&gt;
     &lt;i class=&quot;material-icons left&quot;&gt;info&lt;/i&gt;
@@ -22,7 +24,7 @@
     &lt;span&gt;Run below cmd if there’s still some missing dependencies&lt;/span&gt;
 &lt;/div&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;apt-get install -f install
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$   sudo apt-get install -f install
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Then just run &lt;code class=&quot;highlighter-rouge&quot;&gt;docker -v&lt;/code&gt; and add your user to docker group.&lt;/p&gt;
@@ -66,6 +68,7 @@ $   dotnet publish -c release -r linux-arm -o selfcontained-linux-arm
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
+&lt;p&gt;GPIO test using .Net Core on Console app and WebApp.&lt;/p&gt;
 &lt;div class=&quot;row&quot;&gt;
     &lt;div class=&quot;col s12&quot;&gt;
         &lt;ul class=&quot;tabs&quot;&gt;
@@ -77,7 +80,124 @@ $   dotnet publish -c release -r linux-arm -o selfcontained-linux-arm
             &lt;/li&gt;
         &lt;/ul&gt;
     &lt;/div&gt;
-    &lt;div id=&quot;test1&quot; class=&quot;col s12&quot;&gt;test&lt;/div&gt;
+    &lt;div id=&quot;test1&quot; class=&quot;col s12&quot;&gt;
+    &lt;br /&gt;
+    I wan't to try .Net Core on linux-arm64... but unfortunately, there's no available yet except Win-arm64 and linux-arm32. For this one we'll use a bcm2835 library but later a C# version of this library i had which is on-hold until today.
+    &lt;br /&gt;
+    &lt;h4&gt;Prerequisites&lt;/h4&gt;
+    &lt;a href=&quot;http://www.airspayce.com/mikem/bcm2835/bcm2835-1.55.tar.gz&quot; class=&quot;card btn blue&quot;&gt;bcm2835 library&lt;i class=&quot;material-icons right&quot;&gt;file_download&lt;/i&gt;&lt;/a&gt;
+    &lt;div class=&quot;alert-info&quot;&gt;
+    &lt;i class=&quot;material-icons left&quot;&gt;info&lt;/i&gt;
+    &lt;b&gt;Note:&lt;/b&gt;
+    &lt;span&gt;Be sure &lt;code class=&quot;highlighter-rouge&quot;&gt;gcc make&lt;/code&gt; are installed&lt;/span&gt;
+&lt;/div&gt;
+
+
+    &lt;br /&gt;
+    Extract &lt;code&gt;bcm2835-1.55.tar.gz&lt;/code&gt; anywhere you like, because where going to remove it once we have `libbcm2835.so`.
+    &lt;pre&gt;&lt;code&gt;
+    $   tar zxvf bcm2835-1.55.tar.gz
+    $   cd bcm2835-1.52/src
+    $   gcc -fPIC -c bcm2835.c
+    $   gcc -shared bcm2835.o -o libbcm2835.so
+    &lt;/code&gt;&lt;/pre&gt;
+    &lt;br /&gt;
+    You can now remove the &lt;code&gt;bcm2835-1.55 folder&lt;/code&gt; and be sure to put &lt;code&gt;libbcm2835.so&lt;/code&gt; inside &lt;code&gt;/lib/aarch-~&lt;/code&gt; folder.
+    &lt;br /&gt;
+    &lt;br /&gt;
+    We'll create a simple console app using these command &lt;code&gt;dotnet new console -o testapp&lt;/code&gt;.
+    &lt;br /&gt;
+    Then modify &lt;code&gt;Program.cs&lt;/code&gt; with these codes. What it does is we use &lt;code&gt;libbcm2835.so&lt;/code&gt; C internal commands into our C# app using PInvoke.
+    &lt;br /&gt;
+    Take note of the &lt;code&gt;PIN Numbering&lt;/code&gt;: bcm2835 library use physical numbering so &lt;code&gt;RPI_GPIO_P1_07&lt;/code&gt; is equal to GPIO4 of our RPi3.
+    &lt;img src=&quot;/assets/img/ubuntu/Raspberry-Pi-3-GPIO-Layout-Model-B.jpg&quot; class=&quot;materialboxed&quot; /&gt;
+&lt;pre&gt;&lt;code&gt;
+# Program.cs
+using System;
+using System.Runtime.InteropServices;
+
+namespace testapp
+{
+    class Program
+    {
+        private static uint HIGH = 0x1;
+        private static uint LOW  = 0x0;
+        private static byte RPI_GPIO_P1_07 = 4;
+        private static byte BCM2835_GPIO_FSEL_OUTP = 0x01;
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern int bcm2835_init();
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern void bcm2835_close();
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern void bcm2835_delay(uint millis);
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern void bcm2835_gpio_fsel(byte pin, byte mode);
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern void bcm2835_gpio_write(byte pin, uint on);
+
+        static void Main(string[] args)
+        {
+            Console.WriteLine(&quot;Hello World!&quot;);
+
+            if (bcm2835_init() == 1)
+            {
+                
+                    bcm2835_gpio_fsel(RPI_GPIO_P1_07, BCM2835_GPIO_FSEL_OUTP);
+                    
+                    // Blink
+                    while(true)
+                    {
+                        // Turn it on
+                        bcm2835_gpio_write(RPI_GPIO_P1_07, HIGH);
+                        // wait
+                        bcm2835_delay(500);
+                        // turn it off
+                        bcm2835_gpio_write(RPI_GPIO_P1_07, LOW);
+                        // wait 
+                        bcm2835_delay(500);
+                    }
+                
+            }
+            bcm2835_close();
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br /&gt;
+Then issue the command while inside the &lt;code&gt;testapp folder&lt;/code&gt;. And copy &lt;code&gt;testapp-linux-arm&lt;/code&gt; folder to your Raspberry Pi 3.
+&lt;pre&gt;&lt;code&gt;dotnet publish -c release -r linux-arm -o testapp-linux-arm&lt;/code&gt;&lt;/pre&gt;
+&lt;br /&gt;
+Assuming you know how to and already hook up our test circuit: a led attach to our GPIO4 or rather PIN7 on the RPi3 physical Pin header. &lt;code&gt;Please be careful and you should know how to properly hook up our test led to avoid breaking your RPi3&lt;/code&gt;.
+&lt;br /&gt;
+In RPi3, let us run the docker image then test our testapp on it.
+&lt;pre&gt;&lt;code&gt;
+$   docker run -it --privileged --rm -v /home/pi3:/home/share dotnet
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;alert-info&quot;&gt;
+    &lt;i class=&quot;material-icons left&quot;&gt;info&lt;/i&gt;
+    &lt;b&gt;Note:&lt;/b&gt;
+    &lt;span&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;--privileged&lt;/code&gt; - To give docker access rights to &lt;code class=&quot;highlighter-rouge&quot;&gt;/dev/gpiomem&lt;/code&gt;. &lt;code class=&quot;highlighter-rouge&quot;&gt;--rm&lt;/code&gt; - the container is removed when it exits or when the daemon exits&lt;/span&gt;
+&lt;/div&gt;
+
+
+&lt;br /&gt;
+Make sure that you have &lt;code&gt;libbcm2835.so&lt;/code&gt; inside the &lt;code&gt;/lib/aarch64-~&lt;/code&gt; folder or it will complain about running it in SDK.
+&lt;br /&gt;
+Then run our testapp like so...
+&lt;pre&gt;&lt;code&gt;
+#   dotnet /home/share/testapp-linux-arm/testapp.dll
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br /&gt;
+Your led should be blinking right now.... 
+&lt;br /&gt;
+&lt;br /&gt;
+    &lt;/div&gt;
+
     &lt;div id=&quot;test2&quot; class=&quot;col s12&quot;&gt;test2&lt;/div&gt;
 &lt;/div&gt;</content><author><name></name></author><category term="Ubuntu" /><summary type="html">I thought i could get away from using a debian-based Docker image for .Net Core… *sigh…</summary></entry><entry><title type="html">VirtualBox SSH to guest OS</title><link href="http://a-delacruz.github.io/other-stuff/virtualbox-ssh.html" rel="alternate" type="text/html" title="VirtualBox SSH to guest OS" /><published>2018-01-01T00:00:00+08:00</published><updated>2018-01-01T00:00:00+08:00</updated><id>http://a-delacruz.github.io/other-stuff/virtualbox-ssh</id><content type="html" xml:base="http://a-delacruz.github.io/other-stuff/virtualbox-ssh.html">&lt;p&gt;To be able to use ssh on a Virtualbox guest OS… make sure and &lt;code class=&quot;highlighter-rouge&quot;&gt;ssh server&lt;/code&gt; in installed onto the guest.&lt;/p&gt;
 
@@ -690,7 +810,7 @@ cmdline.txt
     &lt;i class=&quot;material-icons left&quot;&gt;info&lt;/i&gt;
     &lt;b&gt;Note:&lt;/b&gt;
     &lt;span&gt;verify that these are installed: &lt;br /&gt;
-bc gcc git make device-tree-compiler gcc-aarch64-linux-gnu u-boot-tools ncurses-dev qenu-user-static&lt;/span&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;bc gcc git make device-tree-compiler gcc-aarch64-linux-gnu u-boot-tools ncurses-dev qemu-user-static&lt;/code&gt;&lt;/span&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Files that we also need:&lt;br /&gt;
@@ -877,7 +997,10 @@ network={
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;hr /&gt;</content><author><name></name></author><category term="Alpine" /><summary type="html">Alpine linux network interface configuration are very different from what i used on ubuntu. But wpa_supplicant.conf are still the same. For the interface file: /etc/network/interface: auto lo iface lo inet loopback allow-hotplug eth0 iface eth0 inet dhcp hostname [your hostname] auto wlan0 iface wlan0 inet dhcp hostname [your hostname]</summary></entry><entry><title type="html">Raspberry Pi 3 Alpine Linux arm64</title><link href="http://a-delacruz.github.io/alpine/alpine-linux.html" rel="alternate" type="text/html" title="Raspberry Pi 3 Alpine Linux arm64" /><published>2017-06-15T00:00:00+08:00</published><updated>2017-06-15T00:00:00+08:00</updated><id>http://a-delacruz.github.io/alpine/alpine-linux</id><content type="html" xml:base="http://a-delacruz.github.io/alpine/alpine-linux.html">&lt;p&gt;As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3.&lt;/p&gt;
+&lt;hr /&gt;</content><author><name></name></author><category term="Alpine" /><summary type="html">Alpine linux network interface configuration are very different from what i used on ubuntu. But wpa_supplicant.conf are still the same. For the interface file: /etc/network/interface: auto lo iface lo inet loopback allow-hotplug eth0 iface eth0 inet dhcp hostname [your hostname] auto wlan0 iface wlan0 inet dhcp hostname [your hostname]</summary></entry><entry><title type="html">Raspberry Pi 3 Alpine Linux arm64</title><link href="http://a-delacruz.github.io/alpine/alpine-linux.html" rel="alternate" type="text/html" title="Raspberry Pi 3 Alpine Linux arm64" /><published>2017-06-15T00:00:00+08:00</published><updated>2017-06-15T00:00:00+08:00</updated><id>http://a-delacruz.github.io/alpine/alpine-linux</id><content type="html" xml:base="http://a-delacruz.github.io/alpine/alpine-linux.html">&lt;h6 id=&quot;-17-07-06-to-fix-brcmfmac-loading-error-directly-place-brcm-folder-inside-our-custom-initramfs-rpi3-file&quot;&gt;*** 17-07-06: To fix brcmfmac loading error: directly place &lt;code class=&quot;highlighter-rouge&quot;&gt;brcm&lt;/code&gt; folder inside our custom &lt;code class=&quot;highlighter-rouge&quot;&gt;initramfs-rpi3&lt;/code&gt; file.&lt;/h6&gt;
+&lt;h6 id=&quot;-17-07-06-b43-is-optional&quot;&gt;*** 17-07-06: &lt;code class=&quot;highlighter-rouge&quot;&gt;b43&lt;/code&gt; is optional…&lt;/h6&gt;
+
+&lt;p&gt;As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3.&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;http://dl-cdn.alpinelinux.org/alpine/v3.7/releases/aarch64/alpine-uboot-3.7.0-aarch64.tar.gz&quot; class=&quot;card btn blue&quot;&gt;Alpine 3.7 Generic arm64&lt;i class=&quot;material-icons right&quot;&gt;file_download&lt;/i&gt;&lt;/a&gt;&lt;/p&gt;
 
@@ -1047,17 +1170,17 @@ start.elf
 fixup.dat 
 config.txt
 cmdline.txt
-alpine.apkovl.tar.gz // optional will be created once we setup our alpine linux
+alpine.apkovl.tar.gz # optional will be created once we setup our alpine linux
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Load the &lt;code class=&quot;highlighter-rouge&quot;&gt;b43&lt;/code&gt; kernel and enable it at boot up:&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ modprobe b43
 $ echo b43 &amp;gt;&amp;gt; /etc/modules
-$ lbu commit    //To save changes
+$ lbu commit    # To save changes
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;If you run &lt;code class=&quot;highlighter-rouge&quot;&gt;dmesg&lt;/code&gt; command and display a brcmfmac error just reload &lt;code class=&quot;highlighter-rouge&quot;&gt;brcmfmac module&lt;/code&gt;:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ modprobe -r brcmfmac  // For now
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ modprobe -r brcmfmac  # For now
 $ modprobe brcmfmac
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -1072,4 +1195,4 @@ $ modprobe brcmfmac
    &lt;a href=&quot;https://wiki.alpinelinux.org/wiki/Raspberry_Pi&quot;&gt;https://wiki.alpinelinux.org/wiki/Raspberry_Pi&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;hr /&gt;</content><author><name></name></author><category term="Alpine" /><summary type="html">As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3.</summary></entry></feed>
+&lt;hr /&gt;</content><author><name></name></author><category term="Alpine" /><summary type="html">*** 17-07-06: To fix brcmfmac loading error: directly place brcm folder inside our custom initramfs-rpi3 file. *** 17-07-06: b43 is optional…</summary></entry></feed>
