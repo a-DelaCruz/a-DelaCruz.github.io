@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2018-01-21T23:46:27+08:00</updated><id>http://a-delacruz.github.io/</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">.Net Core on Raspberry Pi 3</title><link href="http://a-delacruz.github.io/ubuntu/docker.html" rel="alternate" type="text/html" title=".Net Core on Raspberry Pi 3" /><published>2018-01-18T00:00:00+08:00</published><updated>2018-01-18T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/docker</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/docker.html">&lt;p&gt;I thought i could get away from using a debian-based Docker image for .Net Core… *sigh…&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2018-01-22T12:02:53+08:00</updated><id>http://a-delacruz.github.io/</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">.Net Core on Raspberry Pi 3</title><link href="http://a-delacruz.github.io/ubuntu/docker.html" rel="alternate" type="text/html" title=".Net Core on Raspberry Pi 3" /><published>2018-01-18T00:00:00+08:00</published><updated>2018-01-18T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/docker</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/docker.html">&lt;p&gt;I thought i could get away from using a debian-based Docker image for .Net Core… *sigh…&lt;/p&gt;
 
 &lt;p&gt;For now an &lt;code class=&quot;highlighter-rouge&quot;&gt;Alpine-based&lt;/code&gt; Docker image is available for &lt;code class=&quot;highlighter-rouge&quot;&gt;.NET Core&lt;/code&gt; on amd64. But the runtime-deps can also be installed to an &lt;code class=&quot;highlighter-rouge&quot;&gt;arm32v6 architecture&lt;/code&gt; which Alpine-Linux support so the possibility is almost there.&lt;/p&gt;
 
@@ -266,8 +266,22 @@ If the file above doesn’t make your wifi to work get it directly from the &lt;
 &lt;p&gt;Next we’ll modify &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/network/interfaces&lt;/code&gt;.&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$   sudo nano /etc/network/interfaces
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;!-- ================================================ --&gt;
+&lt;div class=&quot;row&quot;&gt;
+    &lt;div class=&quot;col s12&quot;&gt;
+        &lt;ul class=&quot;tabs&quot;&gt;
+            &lt;li class=&quot;tab col s3&quot;&gt;
+                &lt;a href=&quot;#test1&quot;&gt;AP Mode&lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li class=&quot;tab col s3&quot;&gt;
+                &lt;a href=&quot;#test2&quot;&gt;Hotspot Mode&lt;/a&gt;
+            &lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+    &lt;div id=&quot;test1&quot; class=&quot;col s12&quot;&gt;
+        &lt;br /&gt;
+Set with this following lines:
 
-&lt;p&gt;Copy paste this following lines:&lt;/p&gt;
 &lt;div class=&quot;alert-code&quot;&gt;
     &lt;b&gt;/etc/network/interfaces:&lt;/b&gt;
     &lt;br /&gt;
@@ -278,27 +292,46 @@ wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
 &lt;/code&gt;
 &lt;/div&gt;
 
-&lt;p&gt;For this setup, my wifi interfaces id is  &lt;code class=&quot;highlighter-rouge&quot;&gt;wlan0&lt;/code&gt;… yours might be named differently so replace it
-that matches yours.
-You can set your wifi to static…just browse the references at the bottom of this page..&lt;/p&gt;
+&lt;div class=&quot;alert-info&quot;&gt;
+    &lt;i class=&quot;material-icons left&quot;&gt;info&lt;/i&gt;
+    &lt;b&gt;Note:&lt;/b&gt;
+    &lt;span&gt;
+For this setup, my wifi interfaces id is  &lt;code class=&quot;highlighter-rouge&quot;&gt;wlan0&lt;/code&gt;… yours might be named differently so replace it
+with that matches yours.
 
-&lt;p&gt;Then we’ll configure &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/wpa_supplicant/wpa_supplicant.conf&lt;/code&gt;…so create/edit the file &lt;code class=&quot;highlighter-rouge&quot;&gt;wpa_supplicant.conf&lt;/code&gt; and place this lines:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;network={
+&lt;br /&gt;
+&lt;br /&gt;
+
+Then we’ll configure &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/wpa_supplicant/wpa_supplicant.conf&lt;/code&gt;…so create/edit the file &lt;code class=&quot;highlighter-rouge&quot;&gt;wpa_supplicant.conf&lt;/code&gt; and set this lines:
+&lt;/span&gt;
+&lt;/div&gt;
+
+
+
+
+&lt;pre&gt;&lt;b&gt;/etc/wpa_supplicant/wpa_supplicant.conf:&lt;/b&gt;&lt;code&gt;
+network={
     ssid=&quot;NetworkEssid&quot;
-    scan_ssid=1 # only needed if your access point uses a hidden ssid
-    proto=RSN
-    key_mgmt=WPA-PSK
     psk=&quot;NetworkPassword&quot;
-    pairwise=CCMP
-    auth_alg=OPEN
+    scan_ssid=1 # only needed if your access point is hidden ssid
+    proto=RSN
+	key_mgmt=WPA-PSK
+	pairwise=CCMP
+	auth_alg=OPEN
+	mode=0
+	group=CCMP
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Reboot and verify that wifi is now working and connected to the network.
-or you could try this:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$   sudo ifconfig wlan0 down
+Reboot and verify that wifi is now working and connected to the network...or you could try this:
+&lt;pre&gt;&lt;code&gt;
+$   sudo ifconfig wlan0 down
 $   sudo ifconfig wlan0 up
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+    
+    &lt;div id=&quot;test2&quot; class=&quot;col s12&quot;&gt;test2&lt;/div&gt;
+&lt;/div&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h5 id=&quot;reference-&quot;&gt;Reference :&lt;/h5&gt;
@@ -479,7 +512,7 @@ We will create a 700M empty img file:&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Then we can use &lt;code class=&quot;highlighter-rouge&quot;&gt;fdisk&lt;/code&gt; to identify our image file partitions assinged loop&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$   sudo fdisk /dev/loop0
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$   sudo fdisk -l /dev/loop0
 
         Device:
             /dev/loop0p1
@@ -810,20 +843,28 @@ since we still do not have a filesystem.&lt;/p&gt;
 &lt;hr /&gt;</content><author><name></name></author><category term="Ubuntu" /><summary type="html">Cross-Build Prerequisites</summary></entry><entry><title type="html">Raspberry Pi 3 Wifi config</title><link href="http://a-delacruz.github.io/alpine/alpine-wifi.html" rel="alternate" type="text/html" title="Raspberry Pi 3 Wifi config" /><published>2017-07-11T00:00:00+08:00</published><updated>2017-07-11T00:00:00+08:00</updated><id>http://a-delacruz.github.io/alpine/alpine-wifi</id><content type="html" xml:base="http://a-delacruz.github.io/alpine/alpine-wifi.html">&lt;p&gt;Alpine linux network interface configuration are very different from what i used on ubuntu. 
 But &lt;code class=&quot;highlighter-rouge&quot;&gt;wpa_supplicant.conf&lt;/code&gt; are still the same.
 For the &lt;code class=&quot;highlighter-rouge&quot;&gt;interface&lt;/code&gt; file:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;auto lo
+&lt;div class=&quot;alert-code&quot;&gt;
+    &lt;b&gt;/etc/network/interface:&lt;/b&gt;
+    &lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;
+auto lo
 iface lo inet loopback
-
+ 
 allow-hotplug eth0
 iface eth0 inet dhcp
         hostname [your hostname]
-
+ 
 auto wlan0
 iface wlan0 inet dhcp
         hostname [your hostname]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;
+&lt;/div&gt;
 
 &lt;p&gt;And for the &lt;code class=&quot;highlighter-rouge&quot;&gt;wpa_supplicant.conf&lt;/code&gt; : (WPA2)&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;network={
+
+&lt;pre&gt;&lt;b&gt;wpa_supplicant.conf:&lt;/b&gt;
+&lt;code&gt;
+network={
         ssid=&quot;your network name&quot;
         psk=&quot;your password&quot;
         proto=RSN
@@ -834,72 +875,96 @@ iface wlan0 inet dhcp
         mode=0
         group=CCMP
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;hr /&gt;</content><author><name></name></author><category term="Alpine" /><summary type="html">Alpine linux network interface configuration are very different from what i used on ubuntu. But wpa_supplicant.conf are still the same. For the interface file: ``` auto lo iface lo inet loopback</summary></entry><entry><title type="html">Raspberry Pi 3 Alpine Linux arm64</title><link href="http://a-delacruz.github.io/alpine/alpine-linux.html" rel="alternate" type="text/html" title="Raspberry Pi 3 Alpine Linux arm64" /><published>2017-06-15T00:00:00+08:00</published><updated>2017-06-15T00:00:00+08:00</updated><id>http://a-delacruz.github.io/alpine/alpine-linux</id><content type="html" xml:base="http://a-delacruz.github.io/alpine/alpine-linux.html">&lt;h5 id=&quot;-17-07-06-to-fix-brcmfmac-loading-error-directly-place-brcm-folder-inside-our-custom-initramfs-rpi3-file&quot;&gt;*** 17-07-06: To fix brcmfmac loading error: directly place &lt;code class=&quot;highlighter-rouge&quot;&gt;brcm&lt;/code&gt; folder inside our custom &lt;code class=&quot;highlighter-rouge&quot;&gt;initramfs-rpi3&lt;/code&gt; file.&lt;/h5&gt;
-&lt;h5 id=&quot;-17-07-06-b43-in-optional&quot;&gt;*** 17-07-06: &lt;code class=&quot;highlighter-rouge&quot;&gt;b43&lt;/code&gt; in optional…&lt;/h5&gt;
+&lt;hr /&gt;</content><author><name></name></author><category term="Alpine" /><summary type="html">Alpine linux network interface configuration are very different from what i used on ubuntu. But wpa_supplicant.conf are still the same. For the interface file: /etc/network/interface: auto lo iface lo inet loopback allow-hotplug eth0 iface eth0 inet dhcp hostname [your hostname] auto wlan0 iface wlan0 inet dhcp hostname [your hostname]</summary></entry><entry><title type="html">Raspberry Pi 3 Alpine Linux arm64</title><link href="http://a-delacruz.github.io/alpine/alpine-linux.html" rel="alternate" type="text/html" title="Raspberry Pi 3 Alpine Linux arm64" /><published>2017-06-15T00:00:00+08:00</published><updated>2017-06-15T00:00:00+08:00</updated><id>http://a-delacruz.github.io/alpine/alpine-linux</id><content type="html" xml:base="http://a-delacruz.github.io/alpine/alpine-linux.html">&lt;p&gt;As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3.&lt;/p&gt;
 
-&lt;p&gt;As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://dl-cdn.alpinelinux.org/alpine/v3.7/releases/aarch64/alpine-uboot-3.7.0-aarch64.tar.gz&quot; class=&quot;card btn blue&quot;&gt;Alpine 3.7 Generic arm64&lt;i class=&quot;material-icons right&quot;&gt;file_download&lt;/i&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;prerequisites&quot;&gt;Prerequisites:&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;Alpine linux Generic Arm - &lt;a href=&quot;https://nl.alpinelinux.org/alpine/v3.6/releases/aarch64/alpine-uboot-3.6.1-aarch64.tar.gz&quot;&gt;aarch64&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;For the kernel and U-boot…just follow &lt;a href=&quot;/ubuntu/rpi3-setup-64bit-kernel&quot;&gt;Raspberry Pi 3 64-bit kernel&lt;/a&gt;.&lt;/li&gt;
-&lt;/ul&gt;
+&lt;div class=&quot;alert-info&quot;&gt;
+    &lt;i class=&quot;material-icons left&quot;&gt;info&lt;/i&gt;
+    &lt;b&gt;Note:&lt;/b&gt;
+    &lt;span&gt;Make sure &lt;code class=&quot;highlighter-rouge&quot;&gt;SquashFS is enabled&lt;/code&gt;&lt;/span&gt;
+&lt;/div&gt;
 
-&lt;h6 id=&quot;note-enable-squashfs-support--file-systems---miscellaneous-filesystems----squashfs-40&quot;&gt;Note: Enable Squashfs support @ File systems -&amp;gt; Miscellaneous filesystems -&amp;gt; &amp;lt;*&amp;gt; SquashFS 4.0&lt;/h6&gt;
+&lt;div class=&quot;alert-code&quot;&gt;
+    &lt;b&gt;Kernel config:&lt;/b&gt;
+    &lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;
+File systems
+    |-  Miscellaneous filesystems
+        |-  [*] SquashFS 4.0
+&lt;/code&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;For our custom &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel and U-boot&lt;/code&gt;… just follow &lt;a href=&quot;/ubuntu/rpi3-setup-64bit-kernel&quot;&gt;Raspberry Pi 3 64-bit kernel&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
 
 &lt;p&gt;The files that we need from alpine to modify is &lt;code class=&quot;highlighter-rouge&quot;&gt;initramfs-vanilla&lt;/code&gt;, and a copy of &lt;code class=&quot;highlighter-rouge&quot;&gt;apk&lt;/code&gt; folder (&lt;code class=&quot;highlighter-rouge&quot;&gt;alpine.apkovl.tar.gz&lt;/code&gt; is optional). so go ahead and extract them.&lt;/p&gt;
 
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;initramfs-vanilla&lt;/code&gt; is a compressed cpio archive. To extract it we do this:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkdir temp
-$ cd temp
-$ sudo gunzip -c /boot/initramfs-vanilla | cpio -i
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$       mkdir $HOME/temp
+$       cd $HOME/temp
+$       sudo gunzip -c /boot/initramfs-vanilla | cpio -i
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Then we need to install our latest modules into it…assuming you already compiled kernel 4.11. following this &lt;a href=&quot;/ubuntu/rpi3-setup-64bit-kernel&quot;&gt;Raspberry Pi 3 64-bit kernel&lt;/a&gt;.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make modules_install INSTALL_MOD_PATH=../temp/
-        when it is done go back to /temp/ folder where we extract the initramfs and into the modules folder.
-$ cd temp/lib/modules/
-        and remove the kernel previous version and optional: the build, source folder symlink in temp/lib/modules/4.11~/ folder
-$ sudo rm -rf 4.9~
+&lt;p&gt;Then we need to install our latest modules into it…assuming you already compiled a kernel following this &lt;a href=&quot;/ubuntu/rpi3-setup-64bit-kernel&quot;&gt;Raspberry Pi 3 64-bit kernel&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$       sudo ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make -C rpi-4.14/ modules_install INSTALL_MOD_PATH=$HOME/temp/
+        
+        # When it is done go back to /temp/ folder where we extract the initramfs and into the modules folder.
+
+$       cd $HOME/temp/lib/modules/
+        
+        # And remove the previous version and the build, source folder symlink in $HOME/temp/lib/modules/4.1x~/ folder
+
+$       sudo rm -rf 4.9~/
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Now we have our custom initramfs and then recreate the compressed cpio archive again.
 Inside the folder run:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo find . | cpio -H newc -o | gzip -9 &amp;gt; [file destination]/initramfs-rpi3-cpio
-$ cd ..
-$ sudo mkimage -A arm64 -O linux -T ramdisk -d initramfs-rpi3-cpio initramfs-rpi3 // For U-boot
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$       sudo find . | cpio -H newc -o | gzip -9 &amp;gt; [file destination]/initramfs-rpi3-cpio
+$       cd ..
+$       sudo mkimage -A arm64 -O linux -T ramdisk -d initramfs-rpi3-cpio initramfs-rpi3 // For U-boot
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;modloop-vanilla&lt;/code&gt; is a squashfs file. We can make from scratch or unsquash it using this command:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo unsquashfs -f -d [file destination] [file location]/file.squashfs
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$       sudo unsquashfs -f -d [file destination] [file location]/file.squashfs
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;To create our own &lt;code class=&quot;highlighter-rouge&quot;&gt;modloop&lt;/code&gt; file let start by making a folder&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo mkdir modules // Then inside this module, let's install again our rpi-4.11y modules from above
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$       sudo mkdir modules 
+        # Then inside this module, let's install again our rpi-4.11y modules from above
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;After you’ve installed &lt;code class=&quot;highlighter-rouge&quot;&gt;our modules from above&lt;/code&gt; on the modules folder that we’ve just created.. you’ll have a folder structure like so:&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/modules
         |- /lib
-                |- /firmware    // firmware_install INSTALL_FW_PATH=[in this location or just use from the moodlop-vanilla] 
-                |- /modules     // again remove build and source symlink folder here
+                |- /firmware
+                        # firmware_install INSTALL_FW_PATH=[in this location or just use from the moodlop-vanilla]
+                        # Use firmware_install if using kernel &amp;lt;- 4.13
+
+                |- /modules
+                        # again remove build and source symlink folder here
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Rearrange above modules folder to:&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/modules/modules/firmware
-/modules/modules/4.11~
+/modules/modules/4.1x~
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Squash it using this command:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo mksquashfs [folder to be squash] [filename] -comp [compression method: I use 'xz' -Xdict-size 100%
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$       sudo mksquashfs [folder to be squash] [filename] -comp [compression method: I use 'xz' -Xdict-size 100%
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;And now we have our own &lt;code class=&quot;highlighter-rouge&quot;&gt;initramfs-rpi3&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;modloop-rpi3&lt;/code&gt;. Our µsd card should now look like this:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/apk
+&lt;div class=&quot;alert-code&quot;&gt;
+    &lt;b&gt;MicroSD:&lt;/b&gt;
+    &lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;
+/apk
 /boot/Image
-/boot/kernel8.img
+/boot/u-boot.bin
 /boot/boot.scr
 /boot/initramfs-rpi3
 /boot/modloop-rpi3
@@ -910,16 +975,25 @@ fixup.dat
 config.txt
 cmdline.txt
 alpine.apkovl.tar.gz // optional will be created once we setup our alpine linux
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;
+&lt;/div&gt;
 
 &lt;p&gt;We’ll modify the &lt;code class=&quot;highlighter-rouge&quot;&gt;cmdline.txt&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;boot.scr&lt;/code&gt; for alpine linux.&lt;/p&gt;
-&lt;h5 id=&quot;cmdlinetxt&quot;&gt;cmdline.txt&lt;/h5&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;modules=loop,squashfs,sd-mod,usb-storage quiet net.ifnames=0 dwc_otg.lpm_enable=0 console=ttyS0,115200 fsck.repair=yes rootwait
-// the quiet command can be remove: it just hide the message buffer of kernel. `ttyS0` can be replace by `ttyAMA0`
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;alert-code&quot;&gt;
+    &lt;b&gt;cmdline.txt:&lt;/b&gt;
+    &lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;
+modules=loop,squashfs,sd-mod,usb-storage quiet net.ifnames=0 dwc_otg.lpm_enable=0 console=ttyS0,115200 fsck.repair=yes rootwait
 
-&lt;h5 id=&quot;bootscr&quot;&gt;boot.scr&lt;/h5&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fdt addr 0x100
+# the quiet command can be remove: it just hide the message buffer of kernel. `ttyS0` can be replace by `ttyAMA0`
+&lt;/code&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;alert-code&quot;&gt;
+    &lt;b&gt;boot.scr:&lt;/b&gt;
+    &lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;
+fdt addr 0x100
 fdt get value bootargs /chosen bootargs
 setenv kernel_addr_r 0x01000000
 setenv ramdisk_addr_r 0x02100000
@@ -928,7 +1002,8 @@ fatload mmc 0:1 ${ramdisk_addr_r} boot/initramfs-rpi3
 setenv initrdsize $filesize
 fatload mmc 0:1 ${fdt_addr_r} bcm2710-rpi-3-b.dtb
 booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;
+&lt;/div&gt;
 
 &lt;p&gt;Go ahead noew and try to boot it up. You should have an output like this:&lt;/p&gt;
 
@@ -997,4 +1072,4 @@ $ modprobe brcmfmac
    &lt;a href=&quot;https://wiki.alpinelinux.org/wiki/Raspberry_Pi&quot;&gt;https://wiki.alpinelinux.org/wiki/Raspberry_Pi&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;hr /&gt;</content><author><name></name></author><category term="Alpine" /><summary type="html">*** 17-07-06: To fix brcmfmac loading error: directly place brcm folder inside our custom initramfs-rpi3 file. *** 17-07-06: b43 in optional…</summary></entry></feed>
+&lt;hr /&gt;</content><author><name></name></author><category term="Alpine" /><summary type="html">As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3.</summary></entry></feed>

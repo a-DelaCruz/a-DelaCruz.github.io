@@ -288,7 +288,7 @@ We will create a 700M empty img file:</p>
 </code></pre></div></div>
 
 <p>Then we can use <code class="highlighter-rouge">fdisk</code> to identify our image file partitions assinged loop</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   sudo fdisk /dev/loop0
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$   sudo fdisk -l /dev/loop0
 
         Device:
             /dev/loop0p1
