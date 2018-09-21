@@ -1,0 +1,1177 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2018-09-21T07:55:19+08:00</updated><id>http://a-delacruz.github.io/feed.xml</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">Raspberry Pi 3 32-bit kernel</title><link href="http://a-delacruz.github.io/ubuntu/rpi3-setup-32bit-kernel.html" rel="alternate" type="text/html" title="Raspberry Pi 3 32-bit kernel" /><published>2018-09-18T00:00:00+08:00</published><updated>2018-09-18T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/rpi3-setup-32bit-kernel</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/rpi3-setup-32bit-kernel.html">&lt;h4 id=&quot;cross-build-prerequisites&quot;&gt;Cross-Build Prerequisites&lt;/h4&gt;
+&lt;p&gt;For building our own 32-bit kernel fom scratch using the Raspberry Pi Foundation repository, a couple of dependencies are needed. You may however use the mainline kernel though i haven’t tried to use it.
+&lt;br /&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;//make sure these are installed:
+
+bc git make device-tree-compiler gcc-arm-linux-gnueabihf build-essential u-boot-tools ncurses-dev qemu-user-static pkg-config&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;we also need:
+&lt;a href=&quot;https://github.com/raspberrypi/linux.git&quot; class=&quot;mdc-button mdc-button--compact&quot;&gt;
+  kernel RPi Repo
+  &lt;i class=&quot;material-icons mdc-button__icon&quot;&gt;file_download&lt;/i&gt;
+&lt;/a&gt;
+&lt;a href=&quot;https://github.com/raspberrypi/firmware/tree/master/boot&quot; class=&quot;mdc-button mdc-button--compact&quot;&gt;
+  RPi firmware
+  &lt;i class=&quot;material-icons mdc-button__icon&quot;&gt;file_download&lt;/i&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;bootcode.bin&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;start.elf&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;fixup.dat&lt;/code&gt; as this are the min. files to boot. The rest of &lt;code class=&quot;highlighter-rouge&quot;&gt;star.* and fixup.*&lt;/code&gt; files for graphical desktop
+&lt;/div&gt;
+
+&lt;h4 id=&quot;compile-the-kernel&quot;&gt;Compile the Kernel&lt;/h4&gt;
+&lt;p&gt;Use any Linux machine of your choice or Windows 10’s Bash to compile the kernel is all up to you. 
+To get the kernel we need, we can either download it as a compressed file using the links above or we could use &lt;code class=&quot;highlighter-rouge&quot;&gt;git&lt;/code&gt; to make it simpler.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;git clone --depth 1 --branch rpi-4.14.y https://github.com/raspberrypi/linux.git rpi-4.14.70&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;mkdir bo_4.14
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;sudo make -C rpi-4.14.70/ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- O=$&lt;/span&gt;HOME/bo_4.14 bcm2709_defconfig
+&lt;span class=&quot;gp&quot;&gt;sudo make -C rpi-4.14.70/ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- O=$&lt;/span&gt;HOME/bo_4.14 &lt;span class=&quot;nt&quot;&gt;-j4&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;bcmrpi3_defconfig&lt;/code&gt; - arm64 config. &lt;code class=&quot;highlighter-rouge&quot;&gt;-C source folder/&lt;/code&gt;. &lt;code class=&quot;highlighter-rouge&quot;&gt;O=$HOME/output-folder&lt;/code&gt; - Output directory. &lt;code class=&quot;highlighter-rouge&quot;&gt;-jX&lt;/code&gt; - build the kernel in a multithreaded way where: &lt;code class=&quot;highlighter-rouge&quot;&gt;X = [Num of core x 2]&lt;/code&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;zImage&lt;/code&gt; file @ &lt;code class=&quot;highlighter-rouge&quot;&gt;$HOME/bo_4.14/arch/arm/boot/&lt;/code&gt; &lt;br /&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;bcm2710-rpi-3-b.dtb&lt;/code&gt; @ &lt;code class=&quot;highlighter-rouge&quot;&gt;$HOME/bo_4.14/arch/arm/boot/dts/broadcom/&lt;/code&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;create-configtxt-and-cmdlinetxt&quot;&gt;Create config.txt and cmdline.txt&lt;/h4&gt;
+&lt;p&gt;For the &lt;code class=&quot;highlighter-rouge&quot;&gt;config.txt&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;cmdline.txt&lt;/code&gt;, we have to create those files and add these lines.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;//config.txt
+
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; Serial console output!
+&lt;span class=&quot;go&quot;&gt;enable_uart=1
+
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; 64bit-mode
+&lt;span class=&quot;go&quot;&gt;arm_control=0x200
+
+kernel=kernel7.img
+
+device_tree_address=0x100
+device_tree_end=0x8000
+
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; For i2c &amp;amp; spi
+&lt;span class=&quot;go&quot;&gt;dtparam=i2c_arm=on
+dtparam=spi=on&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;//cmd.txt
+
+dwc_otg.lpm_enable=0 console=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h4 id=&quot;transfer-the-necessary-files-to-the-microsd&quot;&gt;Transfer the necessary files to the MicroSD&lt;/h4&gt;
+&lt;p&gt;Rename the &lt;code class=&quot;highlighter-rouge&quot;&gt;zImage&lt;/code&gt; file we had earlier to &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel7.img&lt;/code&gt;. &lt;code class=&quot;highlighter-rouge&quot;&gt;start.elf&lt;/code&gt; file knows &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel7.img&lt;/code&gt; file is a kernel to load.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;//MicroSD card should now contain these files below
+
+bootcode.bin
+start.elf
+fixup.dat
+config.txt
+cmdline.txt
+kernel7.img
+initrd.img
+bcm2710-rpi-3-b.dtb&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h4 id=&quot;boot-to-test&quot;&gt;Boot to test&lt;/h4&gt;
+&lt;p&gt;Place the MicroSD on to the Raspberry Pi 3 and power it on.
+You can now then verify at this point that our kernel boot as well and &lt;code class=&quot;highlighter-rouge&quot;&gt;will stop at some point&lt;/code&gt; 
+since we still do not have a filesystem.&lt;/p&gt;
+
+&lt;p&gt;Next is &lt;a href=&quot;/ubuntu/rpi3-setup-32bit-kernel.html&quot;&gt;Creating the filesystem&lt;/a&gt; for our Raspberry Pi 3 using Ubuntu Base.&lt;/p&gt;
+
+&lt;h5 id=&quot;reference-&quot;&gt;Reference :&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&quot;https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3&quot;&gt;https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://wiki.ubuntu.com/Base&quot;&gt;https://wiki.ubuntu.com/Base&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://www.raspberrypi.org/documentation/linux/kernel/building.md&quot;&gt;https://www.raspberrypi.org/documentation/linux/kernel/building.md&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://kernelnomicon.org/?p=682&quot;&gt;https://kernelnomicon.org/?p=682&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr class=&quot;mdc-list-divider&quot; /&gt;
+
+&lt;!-- Comment here --&gt;</content><author><name></name></author><category term="Ubuntu" /><summary type="html">Cross-Build Prerequisites For building our own 32-bit kernel fom scratch using the Raspberry Pi Foundation repository, a couple of dependencies are needed. You may however use the mainline kernel though i haven’t tried to use it. 1 2 3 //make sure these are installed: bc git make device-tree-compiler gcc-arm-linux-gnueabihf build-essential u-boot-tools ncurses-dev qemu-user-static pkg-config we also need: kernel RPi Repo file_download RPi firmware file_download bootcode.bin, start.elf, fixup.dat as this are the min. files to boot. The rest of star.* and fixup.* files for graphical desktop Compile the Kernel Use any Linux machine of your choice or Windows 10’s Bash to compile the kernel is all up to you. To get the kernel we need, we can either download it as a compressed file using the links above or we could use git to make it simpler. 1 git clone --depth 1 --branch rpi-4.14.y https://github.com/raspberrypi/linux.git rpi-4.14.70 1 2 3 mkdir bo_4.14 sudo make -C rpi-4.14.70/ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- O=$HOME/bo_4.14 bcm2709_defconfig sudo make -C rpi-4.14.70/ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- O=$HOME/bo_4.14 -j4 bcmrpi3_defconfig - arm64 config. -C source folder/. O=$HOME/output-folder - Output directory. -jX - build the kernel in a multithreaded way where: X = [Num of core x 2] zImage file @ $HOME/bo_4.14/arch/arm/boot/ bcm2710-rpi-3-b.dtb @ $HOME/bo_4.14/arch/arm/boot/dts/broadcom/ Create config.txt and cmdline.txt For the config.txt and cmdline.txt, we have to create those files and add these lines. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 //config.txt # Serial console output! enable_uart=1 # 64bit-mode arm_control=0x200 kernel=kernel7.img device_tree_address=0x100 device_tree_end=0x8000 # For i2c &amp;amp; spi dtparam=i2c_arm=on dtparam=spi=on 1 2 3 //cmd.txt dwc_otg.lpm_enable=0 console=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait Transfer the necessary files to the MicroSD Rename the zImage file we had earlier to kernel7.img. start.elf file knows kernel7.img file is a kernel to load. 1 2 3 4 5 6 7 8 9 10 //MicroSD card should now contain these files below bootcode.bin start.elf fixup.dat config.txt cmdline.txt kernel7.img initrd.img bcm2710-rpi-3-b.dtb Boot to test Place the MicroSD on to the Raspberry Pi 3 and power it on. You can now then verify at this point that our kernel boot as well and will stop at some point since we still do not have a filesystem. Next is Creating the filesystem for our Raspberry Pi 3 using Ubuntu Base. Reference : https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3 https://wiki.ubuntu.com/Base https://www.raspberrypi.org/documentation/linux/kernel/building.md https://kernelnomicon.org/?p=682</summary></entry><entry><title type="html">.Net Core on Raspberry Pi 3</title><link href="http://a-delacruz.github.io/ubuntu/docker.html" rel="alternate" type="text/html" title=".Net Core on Raspberry Pi 3" /><published>2018-01-18T00:00:00+08:00</published><updated>2018-01-18T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/docker</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/docker.html">&lt;p&gt;I thought i could get away from using a debian-based Docker image for .Net Core… *sigh…&lt;/p&gt;
+
+&lt;p&gt;For now an &lt;code class=&quot;highlighter-rouge&quot;&gt;Alpine-based&lt;/code&gt; Docker image is available for &lt;code class=&quot;highlighter-rouge&quot;&gt;.NET Core&lt;/code&gt; on amd64. But the runtime-deps can also be installed to an &lt;code class=&quot;highlighter-rouge&quot;&gt;arm32v6 architecture&lt;/code&gt; which Alpine-Linux support so the possibility is almost there.&lt;/p&gt;
+
+&lt;p&gt;To use the latest build preview get it from here: &lt;a href=&quot;https://github.com/dotnet/cli&quot; class=&quot;mdc-button mdc-button--compact&quot;&gt;.Net Core SDK&lt;i class=&quot;material-icons mdc-button__icon&quot;&gt;file_download&lt;/i&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    I’m using &lt;code class=&quot;highlighter-rouge&quot;&gt;Ubuntu 17.10 on my RPi3&lt;/code&gt; and as of typing this… there’s no v17.12 available Docker so i use one from the xenial.
+&lt;/div&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;wget https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/arm64/docker-ce_17.12.0~ce-0~ubuntu_arm64.deb
+
+sudo dpkg -i docker-ce_17.12.0~ce-0~ubuntu_arm64.deb&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h4 id=&quot;docker-ce-deps&quot;&gt;Docker-ce deps:&lt;/h4&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;sudo apt-get install libltdl7&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    Run below cmd if there’s still some missing dependencies
+&lt;/div&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;sudo apt-get install -f install&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Then just run &lt;code class=&quot;highlighter-rouge&quot;&gt;docker -v&lt;/code&gt; and add your user to docker group.&lt;/p&gt;
+
+&lt;p&gt;Get the Dockerfile where we will create our image with the latest .Net Core.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;wget https://raw.githubusercontent.com/dotnet/dotnet-docker-nightly/master/2.1/runtime/stretch/arm32v7/Dockerfile&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Then let’s build it.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;docker build -t dotnet .&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;For a test app… let’s get one…&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;git clone https://github.com/dotnet/dotnet-docker-samples/&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;We’ll use &lt;code class=&quot;highlighter-rouge&quot;&gt;linux-arm&lt;/code&gt; as the target runtime for arm32.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;cd dotnetapp-selfcontained
+dotnet publish -c release -r linux-arm -o selfcontained-linux-arm&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet run&lt;/code&gt; while your inside &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnetapp-selfcontained&lt;/code&gt; to see the App in action.
+&lt;/div&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    I use Windows to Build this test app then use &lt;code class=&quot;highlighter-rouge&quot;&gt;winSCP&lt;/code&gt; to transfer the &lt;code class=&quot;highlighter-rouge&quot;&gt;selfcontained-linux-arm&lt;/code&gt; folder on to the Raspberry Pi 3
+&lt;/div&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;docker run -it --rm -v /home/pi3:/home/share dotnet&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;And to execute the test app… run this command inside the docker environment.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;dotnet /home/share/selfcontained-linux-arm/dotnetapp.dll&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/ubuntu/robot.png&quot; class=&quot;responsive-img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;button class=&quot;mdc-button mdc-ripple-surface .my-surface&quot;&gt;
+  &lt;i class=&quot;material-icons mdc-button__icon&quot; aria-hidden=&quot;true&quot;&gt;favorite&lt;/i&gt;
+  Button
+&lt;/button&gt;&lt;/p&gt;
+
+&lt;section class=&quot;hero demo&quot;&gt;
+        &lt;button class=&quot;mdc-tab mdc-tab--stacked mdc-tab--active demo-tab&quot; role=&quot;tab&quot;&gt;
+          &lt;span class=&quot;mdc-tab__content&quot;&gt;
+            &lt;span class=&quot;material-icons mdc-tab__icon&quot;&gt;favorite&lt;/span&gt;
+            &lt;span class=&quot;mdc-tab__text-label&quot;&gt;Favorites&lt;/span&gt;
+            &lt;span class=&quot;mdc-tab-indicator mdc-tab-indicator--active&quot;&gt;
+              &lt;span class=&quot;mdc-tab-indicator__content mdc-tab-indicator__content--underline&quot;&gt;&lt;/span&gt;
+            &lt;/span&gt;
+          &lt;/span&gt;
+          &lt;span class=&quot;mdc-tab__ripple&quot;&gt;&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;button class=&quot;mdc-tab mdc-tab--stacked demo-tab&quot; role=&quot;tab&quot;&gt;
+          &lt;span class=&quot;mdc-tab__content&quot;&gt;
+            &lt;span class=&quot;material-icons mdc-tab__icon&quot;&gt;phone&lt;/span&gt;
+            &lt;span class=&quot;mdc-tab__text-label&quot;&gt;Recents&lt;/span&gt;
+            &lt;span class=&quot;mdc-tab-indicator&quot;&gt;
+              &lt;span class=&quot;mdc-tab-indicator__content mdc-tab-indicator__content--underline&quot;&gt;&lt;/span&gt;
+            &lt;/span&gt;
+          &lt;/span&gt;
+          &lt;span class=&quot;mdc-tab__ripple&quot;&gt;&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;button class=&quot;mdc-tab mdc-tab--stacked demo-tab&quot; role=&quot;tab&quot;&gt;
+          &lt;span class=&quot;mdc-tab__content&quot;&gt;
+            &lt;span class=&quot;material-icons mdc-tab__icon&quot;&gt;near_me&lt;/span&gt;
+            &lt;span class=&quot;mdc-tab__text-label&quot;&gt;Nearby&lt;/span&gt;
+            &lt;span class=&quot;mdc-tab-indicator&quot;&gt;
+              &lt;span class=&quot;mdc-tab-indicator__content mdc-tab-indicator__content--underline&quot;&gt;&lt;/span&gt;
+            &lt;/span&gt;
+          &lt;/span&gt;
+          &lt;span class=&quot;mdc-tab__ripple&quot;&gt;&lt;/span&gt;
+        &lt;/button&gt;
+      &lt;/section&gt;
+
+&lt;p&gt;GPIO test using .Net Core on Console app and WebApp. &lt;code class=&quot;highlighter-rouge&quot;&gt;To-Do&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;row&quot;&gt;
+    &lt;div class=&quot;col s12&quot;&gt;
+        &lt;ul class=&quot;tabs&quot;&gt;
+            &lt;li class=&quot;tab col s3&quot;&gt;
+                &lt;a href=&quot;#test1&quot;&gt;Console GPIO&lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li class=&quot;tab col s3&quot;&gt;
+                &lt;a href=&quot;#test2&quot;&gt;WebApp GPIO&lt;/a&gt;
+            &lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+    &lt;div id=&quot;test1&quot; class=&quot;col s12&quot;&gt;
+    &lt;br /&gt;
+    I wan't to try .Net Core on linux-arm64... but unfortunately, there's no available yet except Win-arm64 and linux-arm32. For this one we'll use a bcm2835 library but later a C# version of this library i had which is on-hold until today.
+    &lt;br /&gt;
+    &lt;h4&gt;Prerequisites&lt;/h4&gt;
+    &lt;a href=&quot;http://www.airspayce.com/mikem/bcm2835/bcm2835-1.55.tar.gz&quot; class=&quot;mdc-button mdc-button--compact&quot;&gt;bcm2835 library&lt;i class=&quot;material-icons mdc-button__icon&quot;&gt;file_download&lt;/i&gt;&lt;/a&gt;
+    &lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    Be sure &lt;code class=&quot;highlighter-rouge&quot;&gt;gcc make&lt;/code&gt; are installed
+&lt;/div&gt;
+    &lt;br /&gt;
+    Extract &lt;code&gt;bcm2835-1.55.tar.gz&lt;/code&gt; anywhere you like, because where going to remove it once we have `libbcm2835.so`.
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;tar zxvf bcm2835-1.55.tar.gz
+cd bcm2835-1.52/src
+gcc -fPIC -c bcm2835.c
+gcc -shared bcm2835.o -o libbcm2835.so&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;br /&gt;
+    You can now remove the &lt;code&gt;bcm2835-1.55 folder&lt;/code&gt; and be sure to put &lt;code&gt;libbcm2835.so&lt;/code&gt; inside &lt;code&gt;/lib/aarch-~&lt;/code&gt; folder.
+    &lt;br /&gt;
+    &lt;br /&gt;
+    We'll create a simple console app using these command &lt;code&gt;dotnet new console -o testapp&lt;/code&gt;.
+    &lt;br /&gt;
+    Then modify &lt;code&gt;Program.cs&lt;/code&gt; with these codes. What it does is we use &lt;code&gt;libbcm2835.so&lt;/code&gt; C internal commands into our C# app using PInvoke.
+    &lt;br /&gt;
+    Take note of the &lt;code&gt;PIN Numbering&lt;/code&gt;: bcm2835 library use physical numbering so &lt;code&gt;RPI_GPIO_P1_07&lt;/code&gt; is equal to GPIO4 of our RPi3.
+    &lt;img src=&quot;/assets/images/ubuntu/Raspberry-Pi-3-GPIO-Layout-Model-B.jpg&quot; class=&quot;responsive-img&quot; /&gt;
+&lt;pre&gt;&lt;code&gt;
+# Program.cs
+using System;
+using System.Runtime.InteropServices;
+
+namespace testapp
+{
+    class Program
+    {
+        private static uint HIGH = 0x1;
+        private static uint LOW  = 0x0;
+        private static byte RPI_GPIO_P1_07 = 4;
+        private static byte BCM2835_GPIO_FSEL_OUTP = 0x01;
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern int bcm2835_init();
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern void bcm2835_close();
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern void bcm2835_delay(uint millis);
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern void bcm2835_gpio_fsel(byte pin, byte mode);
+
+        [DllImport(&quot;libbcm2835.so&quot;)]
+        public static extern void bcm2835_gpio_write(byte pin, uint on);
+
+        static void Main(string[] args)
+        {
+            Console.WriteLine(&quot;Hello World!&quot;);
+
+            if (bcm2835_init() == 1)
+            {
+                
+                    bcm2835_gpio_fsel(RPI_GPIO_P1_07, BCM2835_GPIO_FSEL_OUTP);
+                    
+                    // Blink
+                    while(true)
+                    {
+                        // Turn it on
+                        bcm2835_gpio_write(RPI_GPIO_P1_07, HIGH);
+                        // wait
+                        bcm2835_delay(500);
+                        // turn it off
+                        bcm2835_gpio_write(RPI_GPIO_P1_07, LOW);
+                        // wait 
+                        bcm2835_delay(500);
+                    }
+                
+            }
+            bcm2835_close();
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br /&gt;
+Then issue the command while inside the &lt;code&gt;testapp folder&lt;/code&gt;. And copy &lt;code&gt;testapp-linux-arm&lt;/code&gt; folder to your Raspberry Pi 3.
+&lt;pre&gt;&lt;code&gt;dotnet publish -c release -r linux-arm -o testapp-linux-arm&lt;/code&gt;&lt;/pre&gt;
+&lt;br /&gt;
+Assuming you know how to and already hook up our test circuit: a led attach to our GPIO4 or rather PIN7 on the RPi3 physical Pin header. &lt;code&gt;Please be careful and you should know how to properly hook up our test led to avoid breaking your RPi3&lt;/code&gt;.
+&lt;br /&gt;
+In RPi3, let us run the docker image then test our testapp on it.
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;docker run -it --privileged --rm -v /home/pi3:/home/share dotnet&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;--privileged&lt;/code&gt; - To give docker access rights to &lt;code class=&quot;highlighter-rouge&quot;&gt;/dev/gpiomem&lt;/code&gt;. &lt;code class=&quot;highlighter-rouge&quot;&gt;--rm&lt;/code&gt; - the container is removed when it exits or when the daemon exits
+&lt;/div&gt;
+&lt;br /&gt;
+Make sure that you have &lt;code&gt;libbcm2835.so&lt;/code&gt; inside the &lt;code&gt;/lib/aarch64-~&lt;/code&gt; folder or it will complain about running it in SDK.
+&lt;br /&gt;
+Then run our testapp like so...
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;dotnet /home/share/testapp-linux-arm/testapp.dll&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;br /&gt;
+Your led should be blinking right now.... 
+&lt;br /&gt;
+&lt;br /&gt;
+    &lt;/div&gt;
+
+    &lt;div id=&quot;test2&quot; class=&quot;col s12&quot;&gt;test2&lt;/div&gt;
+&lt;/div&gt;</content><author><name></name></author><category term="Ubuntu" /><summary type="html">I thought i could get away from using a debian-based Docker image for .Net Core… *sigh… For now an Alpine-based Docker image is available for .NET Core on amd64. But the runtime-deps can also be installed to an arm32v6 architecture which Alpine-Linux support so the possibility is almost there. To use the latest build preview get it from here: .Net Core SDKfile_download I’m using Ubuntu 17.10 on my RPi3 and as of typing this… there’s no v17.12 available Docker so i use one from the xenial. 1 2 3 wget https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/arm64/docker-ce_17.12.0~ce-0~ubuntu_arm64.deb sudo dpkg -i docker-ce_17.12.0~ce-0~ubuntu_arm64.deb Docker-ce deps: 1 sudo apt-get install libltdl7 Run below cmd if there’s still some missing dependencies 1 sudo apt-get install -f install Then just run docker -v and add your user to docker group. Get the Dockerfile where we will create our image with the latest .Net Core. 1 wget https://raw.githubusercontent.com/dotnet/dotnet-docker-nightly/master/2.1/runtime/stretch/arm32v7/Dockerfile Then let’s build it. 1 docker build -t dotnet . For a test app… let’s get one… 1 git clone https://github.com/dotnet/dotnet-docker-samples/ We’ll use linux-arm as the target runtime for arm32. 1 2 cd dotnetapp-selfcontained dotnet publish -c release -r linux-arm -o selfcontained-linux-arm dotnet run while your inside dotnetapp-selfcontained to see the App in action. I use Windows to Build this test app then use winSCP to transfer the selfcontained-linux-arm folder on to the Raspberry Pi 3 1 docker run -it --rm -v /home/pi3:/home/share dotnet And to execute the test app… run this command inside the docker environment. 1 dotnet /home/share/selfcontained-linux-arm/dotnetapp.dll favorite Button favorite Favorites phone Recents near_me Nearby GPIO test using .Net Core on Console app and WebApp. To-Do Console GPIO WebApp GPIO I wan't to try .Net Core on linux-arm64... but unfortunately, there's no available yet except Win-arm64 and linux-arm32. For this one we'll use a bcm2835 library but later a C# version of this library i had which is on-hold until today. Prerequisites bcm2835 libraryfile_download Be sure gcc make are installed Extract bcm2835-1.55.tar.gz anywhere you like, because where going to remove it once we have `libbcm2835.so`. 1 2 3 4 tar zxvf bcm2835-1.55.tar.gz cd bcm2835-1.52/src gcc -fPIC -c bcm2835.c gcc -shared bcm2835.o -o libbcm2835.so You can now remove the bcm2835-1.55 folder and be sure to put libbcm2835.so inside /lib/aarch-~ folder. We'll create a simple console app using these command dotnet new console -o testapp. Then modify Program.cs with these codes. What it does is we use libbcm2835.so C internal commands into our C# app using PInvoke. Take note of the PIN Numbering: bcm2835 library use physical numbering so RPI_GPIO_P1_07 is equal to GPIO4 of our RPi3. # Program.cs using System; using System.Runtime.InteropServices; namespace testapp { class Program { private static uint HIGH = 0x1; private static uint LOW = 0x0; private static byte RPI_GPIO_P1_07 = 4; private static byte BCM2835_GPIO_FSEL_OUTP = 0x01; [DllImport(&quot;libbcm2835.so&quot;)] public static extern int bcm2835_init(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_close(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_delay(uint millis); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_fsel(byte pin, byte mode); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_write(byte pin, uint on); static void Main(string[] args) { Console.WriteLine(&quot;Hello World!&quot;); if (bcm2835_init() == 1) { bcm2835_gpio_fsel(RPI_GPIO_P1_07, BCM2835_GPIO_FSEL_OUTP); // Blink while(true) { // Turn it on bcm2835_gpio_write(RPI_GPIO_P1_07, HIGH); // wait bcm2835_delay(500); // turn it off bcm2835_gpio_write(RPI_GPIO_P1_07, LOW); // wait bcm2835_delay(500); } } bcm2835_close(); } } } Then issue the command while inside the testapp folder. And copy testapp-linux-arm folder to your Raspberry Pi 3. dotnet publish -c release -r linux-arm -o testapp-linux-arm Assuming you know how to and already hook up our test circuit: a led attach to our GPIO4 or rather PIN7 on the RPi3 physical Pin header. Please be careful and you should know how to properly hook up our test led to avoid breaking your RPi3. In RPi3, let us run the docker image then test our testapp on it. 1 docker run -it --privileged --rm -v /home/pi3:/home/share dotnet --privileged - To give docker access rights to /dev/gpiomem. --rm - the container is removed when it exits or when the daemon exits Make sure that you have libbcm2835.so inside the /lib/aarch64-~ folder or it will complain about running it in SDK. Then run our testapp like so... 1 dotnet /home/share/testapp-linux-arm/testapp.dll Your led should be blinking right now.... test2</summary></entry><entry><title type="html">Raspberry Pi 3 64-bit kernel</title><link href="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-kernel.html" rel="alternate" type="text/html" title="Raspberry Pi 3 64-bit kernel" /><published>2017-11-03T00:00:00+08:00</published><updated>2017-11-03T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-kernel</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-kernel.html">&lt;h4 id=&quot;cross-build-prerequisites&quot;&gt;Cross-Build Prerequisites&lt;/h4&gt;
+&lt;p&gt;For building our own 64-bit kernel fom scratch using the Raspberry Pi Foundation repository, a couple of dependencies are needed. You may however use the mainline kernel though i haven’t tried to use it.
+&lt;br /&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;//make sure these are installed:
+
+bc git make device-tree-compiler gcc-aarch64-linux-gnu build-essential u-boot-tools ncurses-dev qemu-user-static pkg-config&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;we also need:
+&lt;a href=&quot;https://github.com/raspberrypi/linux.git&quot; class=&quot;mdc-button mdc-button--compact&quot;&gt;
+  kernel RPi Repo
+  &lt;i class=&quot;material-icons mdc-button__icon&quot;&gt;file_download&lt;/i&gt;
+&lt;/a&gt;
+&lt;a href=&quot;https://github.com/raspberrypi/firmware/tree/master/boot&quot; class=&quot;mdc-button mdc-button--compact&quot;&gt;
+  RPi firmware
+  &lt;i class=&quot;material-icons mdc-button__icon&quot;&gt;file_download&lt;/i&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;bootcode.bin&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;start.elf&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;fixup.dat&lt;/code&gt; as this are the min. files to boot. The rest of &lt;code class=&quot;highlighter-rouge&quot;&gt;star.* and fixup.*&lt;/code&gt; files for graphical desktop
+&lt;/div&gt;
+
+&lt;h4 id=&quot;compile-the-kernel&quot;&gt;Compile the Kernel&lt;/h4&gt;
+&lt;p&gt;Use any Linux machine of your choice or Windows 10’s Bash to compile the kernel is all up to you. 
+To get the kernel we need, we can either download it as a compressed file using the links above or we could use &lt;code class=&quot;highlighter-rouge&quot;&gt;git&lt;/code&gt; to make it simpler.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;git clone --depth 1 --branch rpi-4.14.y https://github.com/raspberrypi/linux.git rpi-4.14.70&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;mkdir bo_4.14
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$&lt;/span&gt;HOME/bo_4.14 bcmrpi3_defconfig
+&lt;span class=&quot;gp&quot;&gt;sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$&lt;/span&gt;HOME/bo_4.14 &lt;span class=&quot;nt&quot;&gt;-j4&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;bcmrpi3_defconfig&lt;/code&gt; - arm64 config. &lt;code class=&quot;highlighter-rouge&quot;&gt;-C source folder/&lt;/code&gt;. &lt;code class=&quot;highlighter-rouge&quot;&gt;O=$HOME/output-folder&lt;/code&gt; - Output directory. &lt;code class=&quot;highlighter-rouge&quot;&gt;-jX&lt;/code&gt; - build the kernel in a multithreaded way where: &lt;code class=&quot;highlighter-rouge&quot;&gt;X = [Num of core x 2]&lt;/code&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;Image&lt;/code&gt; file @ &lt;code class=&quot;highlighter-rouge&quot;&gt;$HOME/bo_4.14/arch/arm64/boot/&lt;/code&gt; &lt;br /&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;bcm2710-rpi-3-b.dtb&lt;/code&gt; @ &lt;code class=&quot;highlighter-rouge&quot;&gt;$HOME/bo_4.14/arch/arm64/boot/dts/broadcom/&lt;/code&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;create-configtxt-and-cmdlinetxt&quot;&gt;Create config.txt and cmdline.txt&lt;/h4&gt;
+&lt;p&gt;For the &lt;code class=&quot;highlighter-rouge&quot;&gt;config.txt&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;cmdline.txt&lt;/code&gt;, we have to create those files and add these lines.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;//config.txt
+
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; Serial console output!
+&lt;span class=&quot;go&quot;&gt;enable_uart=1
+
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; 64bit-mode
+&lt;span class=&quot;go&quot;&gt;arm_control=0x200
+
+kernel=kernel8.img
+
+device_tree_address=0x100
+device_tree_end=0x8000
+
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; For i2c &amp;amp; spi
+&lt;span class=&quot;go&quot;&gt;dtparam=i2c_arm=on
+dtparam=spi=on&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;//cmd.txt
+
+dwc_otg.lpm_enable=0 console=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h4 id=&quot;transfer-the-necessary-files-to-the-microsd&quot;&gt;Transfer the necessary files to the MicroSD&lt;/h4&gt;
+&lt;p&gt;Since we dont have a Ramdisk yet, we are using this &lt;a href=&quot;https://www.finnie.org/software/raspberrypi/ubuntu-rpi3/&quot;&gt;20160517-raspi3-arm64-firmware-kernel.tar.xz&lt;/a&gt; for now and we’ll create a new one on our own.&lt;/p&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    To Do - i have to verify if this still works
+&lt;/div&gt;
+
+&lt;p&gt;Rename the &lt;code class=&quot;highlighter-rouge&quot;&gt;Image&lt;/code&gt; file we had earlier to &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel8.img&lt;/code&gt;. &lt;code class=&quot;highlighter-rouge&quot;&gt;start.elf&lt;/code&gt; file knows &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel8.img&lt;/code&gt; file is a kernel to load.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;//MicroSD card should now contain these files below
+
+bootcode.bin
+start.elf
+fixup.dat
+config.txt
+cmdline.txt
+kernel8.img
+initrd.img
+bcm2710-rpi-3-b.dtb&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h4 id=&quot;boot-to-test&quot;&gt;Boot to test&lt;/h4&gt;
+&lt;p&gt;Place the MicroSD on to the Raspberry Pi 3 and power it on.
+You can now then verify at this point that our kernel boot as well and &lt;code class=&quot;highlighter-rouge&quot;&gt;will stop at some point&lt;/code&gt; 
+since we still do not have a filesystem.&lt;/p&gt;
+
+&lt;p&gt;If it did not boot or no display at all, we will use &lt;code class=&quot;highlighter-rouge&quot;&gt;U-Boot&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Next is &lt;a href=&quot;/ubuntu/rpi3-setup-filesystem.html&quot;&gt;Creating the filesystem&lt;/a&gt; for our Raspberry Pi 3 using Ubuntu Base.&lt;/p&gt;
+
+&lt;h5 id=&quot;reference-&quot;&gt;Reference :&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&quot;https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3&quot;&gt;https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://wiki.ubuntu.com/Base&quot;&gt;https://wiki.ubuntu.com/Base&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://www.raspberrypi.org/documentation/linux/kernel/building.md&quot;&gt;https://www.raspberrypi.org/documentation/linux/kernel/building.md&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://kernelnomicon.org/?p=682&quot;&gt;https://kernelnomicon.org/?p=682&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="Ubuntu" /><summary type="html">Cross-Build Prerequisites For building our own 64-bit kernel fom scratch using the Raspberry Pi Foundation repository, a couple of dependencies are needed. You may however use the mainline kernel though i haven’t tried to use it. 1 2 3 //make sure these are installed: bc git make device-tree-compiler gcc-aarch64-linux-gnu build-essential u-boot-tools ncurses-dev qemu-user-static pkg-config we also need: kernel RPi Repo file_download RPi firmware file_download bootcode.bin, start.elf, fixup.dat as this are the min. files to boot. The rest of star.* and fixup.* files for graphical desktop Compile the Kernel Use any Linux machine of your choice or Windows 10’s Bash to compile the kernel is all up to you. To get the kernel we need, we can either download it as a compressed file using the links above or we could use git to make it simpler. 1 git clone --depth 1 --branch rpi-4.14.y https://github.com/raspberrypi/linux.git rpi-4.14.70 1 2 3 mkdir bo_4.14 sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$HOME/bo_4.14 bcmrpi3_defconfig sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$HOME/bo_4.14 -j4 bcmrpi3_defconfig - arm64 config. -C source folder/. O=$HOME/output-folder - Output directory. -jX - build the kernel in a multithreaded way where: X = [Num of core x 2] Image file @ $HOME/bo_4.14/arch/arm64/boot/ bcm2710-rpi-3-b.dtb @ $HOME/bo_4.14/arch/arm64/boot/dts/broadcom/ Create config.txt and cmdline.txt For the config.txt and cmdline.txt, we have to create those files and add these lines. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 //config.txt # Serial console output! enable_uart=1 # 64bit-mode arm_control=0x200 kernel=kernel8.img device_tree_address=0x100 device_tree_end=0x8000 # For i2c &amp;amp; spi dtparam=i2c_arm=on dtparam=spi=on 1 2 3 //cmd.txt dwc_otg.lpm_enable=0 console=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait Transfer the necessary files to the MicroSD Since we dont have a Ramdisk yet, we are using this 20160517-raspi3-arm64-firmware-kernel.tar.xz for now and we’ll create a new one on our own. To Do - i have to verify if this still works Rename the Image file we had earlier to kernel8.img. start.elf file knows kernel8.img file is a kernel to load. 1 2 3 4 5 6 7 8 9 10 //MicroSD card should now contain these files below bootcode.bin start.elf fixup.dat config.txt cmdline.txt kernel8.img initrd.img bcm2710-rpi-3-b.dtb Boot to test Place the MicroSD on to the Raspberry Pi 3 and power it on. You can now then verify at this point that our kernel boot as well and will stop at some point since we still do not have a filesystem. If it did not boot or no display at all, we will use U-Boot. Next is Creating the filesystem for our Raspberry Pi 3 using Ubuntu Base. Reference : https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3 https://wiki.ubuntu.com/Base https://www.raspberrypi.org/documentation/linux/kernel/building.md https://kernelnomicon.org/?p=682</summary></entry><entry><title type="html">Raspberry Pi 3 with 64-bit U-Boot</title><link href="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-uboot.html" rel="alternate" type="text/html" title="Raspberry Pi 3 with 64-bit U-Boot" /><published>2017-11-03T00:00:00+08:00</published><updated>2017-11-03T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-uboot</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-uboot.html">&lt;p&gt;This time let’s try to use &lt;code class=&quot;highlighter-rouge&quot;&gt;U-Boot&lt;/code&gt; to load the Linux kernel and boot our Raspberry Pi 3.
+&lt;br /&gt;We need :
+&lt;a href=&quot;ftp://ftp.denx.de/pub/u-boot/u-boot-2017.11.tar.bz2&quot; class=&quot;mdc-button mdc-button--compact&quot;&gt;
+    U-Boot v.2017.11
+    &lt;i class=&quot;material-icons mdc-button__icon&quot;&gt;file_download&lt;/i&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;get-the-sourcecode&quot;&gt;Get The SourceCode&lt;/h4&gt;
+&lt;p&gt;Get the source code by cloning the U-Boot git repository :&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;git clone --depth 1 --branch v2017.11 git://git.denx.de/u-boot.git v2017.11&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;or download the tar file :&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;wget ftp://ftp.denx.de/pub/u-boot/u-boot-2017.11.tar.bz2&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h4 id=&quot;compile-u-boot&quot;&gt;Compile U-Boot&lt;/h4&gt;
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;rpi_3_defconfig&lt;/code&gt; - arm64 config RPi 3. &lt;code class=&quot;highlighter-rouge&quot;&gt;-C&lt;/code&gt; source folder &lt;code class=&quot;highlighter-rouge&quot;&gt;v2017.11&lt;/code&gt;
+&lt;/div&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;sudo make -C v2017.11/ CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig
+sudo make -C v2017.11/ CROSS_COMPILE=aarch64-linux-gnu-
+
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;    #&lt;/span&gt; For v2017.05 use below
+&lt;span class=&quot;go&quot;&gt;sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig
+sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;After it has been built. Locate &lt;code class=&quot;highlighter-rouge&quot;&gt;u-boot.bin&lt;/code&gt; in your output_path as this is the file we need.&lt;/p&gt;
+
+&lt;h4 id=&quot;create-the-bootscript&quot;&gt;Create the Bootscript&lt;/h4&gt;
+&lt;p&gt;Create a &lt;code class=&quot;highlighter-rouge&quot;&gt;rpi3-bootscript.txt&lt;/code&gt; file and copy paste the code below :&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;// rpi3-bootscript.txt
+
+setenv kernel_addr_r 0x01000000
+setenv ramdisk_addr_r 0x02100000
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;fatload mmc 0:1 $&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;kernel_addr_r&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; boot/Image
+&lt;span class=&quot;gp&quot;&gt;fatload mmc 0:1 $&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;ramdisk_addr_r&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; boot/initrd.img
+&lt;span class=&quot;gp&quot;&gt;setenv initrdsize $&lt;/span&gt;filesize
+&lt;span class=&quot;gp&quot;&gt;booti $&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;kernel_addr_r&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ramdisk_addr_r&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;:&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;initrdsize&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;fdt_addr_r&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;boot/Image&lt;/code&gt; - The Linux kernel we compile from &lt;a href=&quot;rpi3-setup-64bit-kernel&quot;&gt;Raspberry Pi 3 64-bit kernel&lt;/a&gt; and place under a folder &lt;code class=&quot;highlighter-rouge&quot;&gt;boot&lt;/code&gt;. &lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;boot/initrd.img&lt;/code&gt; - Ramdisk image we created from &lt;a href=&quot;rpi3-setup-filesystem&quot;&gt;Using Ubuntu-base arm64 rootfs for Raspberry Pi 3&lt;/a&gt;. &lt;br /&gt;
+If you dont have a Ramdisk yet, replace &lt;code class=&quot;highlighter-rouge&quot;&gt;${ramdisk_addr_r}:${initrdsize}&lt;/code&gt; with &lt;code class=&quot;highlighter-rouge&quot;&gt;-&lt;/code&gt;. &lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;mkimage -T script -n 'Bootscript' -C none -d ~/&amp;lt;input_file&amp;gt; ~/&amp;lt;output_file&amp;gt;.scr&lt;/code&gt; - Syntax for creating the bootscript
+&lt;/div&gt;
+
+&lt;p&gt;Now to create a bootscript from the text file above :&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;$&lt;/span&gt;   &lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;mkimage &lt;span class=&quot;nt&quot;&gt;-A&lt;/span&gt; arm64 &lt;span class=&quot;nt&quot;&gt;-O&lt;/span&gt; linux &lt;span class=&quot;nt&quot;&gt;-T&lt;/span&gt; script &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; ~/rpi3-bootscript.txt ~/boot.scr&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Copy &lt;code class=&quot;highlighter-rouge&quot;&gt;boot.scr&lt;/code&gt; to your MicroSD card inside &lt;code class=&quot;highlighter-rouge&quot;&gt;/boot&lt;/code&gt; folder.&lt;/p&gt;
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;u-boot.bin&lt;/code&gt; - Can be renamed to &lt;code class=&quot;highlighter-rouge&quot;&gt;any-name&lt;/code&gt; and modify it’s entry in config.txt &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel=boot/u-boot.bin-to-any-name&lt;/code&gt;.
+&lt;/div&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;// config.txt
+
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; Serial console output!
+&lt;span class=&quot;go&quot;&gt;enable_uart=1
+
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; 64bit-mode
+&lt;span class=&quot;go&quot;&gt;arm_control=0x200
+
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; Use U-Boot
+&lt;span class=&quot;go&quot;&gt;kernel=boot/u-boot.bin
+
+device_tree_address=0x100
+device_tree_end=0x8000
+
+dtparam=i2c_arm=on
+dtparam=spi=on&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Then verify your MicroSD directory structure like below :&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;/boot/Image
+/boot/boot.scr
+/boot/u-boot.bin
+/boot/initrd.img
+bcm2710-rpi-3-b.dtb
+bootcode.bin
+start.elf 
+fixup.dat 
+config.txt
+cmdline.txt&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Boot it up to confirm that its working.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h5 id=&quot;reference-&quot;&gt;Reference :&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.denx.de/wiki/U-Boot/WebHome&quot;&gt;http://www.denx.de/wiki/U-Boot/WebHome&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="Ubuntu" /><summary type="html">This time let’s try to use U-Boot to load the Linux kernel and boot our Raspberry Pi 3. We need : U-Boot v.2017.11 file_download Get The SourceCode Get the source code by cloning the U-Boot git repository : 1 git clone --depth 1 --branch v2017.11 git://git.denx.de/u-boot.git v2017.11 or download the tar file : 1 wget ftp://ftp.denx.de/pub/u-boot/u-boot-2017.11.tar.bz2 Compile U-Boot rpi_3_defconfig - arm64 config RPi 3. -C source folder v2017.11 1 2 3 4 5 6 sudo make -C v2017.11/ CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig sudo make -C v2017.11/ CROSS_COMPILE=aarch64-linux-gnu- # For v2017.05 use below sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- After it has been built. Locate u-boot.bin in your output_path as this is the file we need. Create the Bootscript Create a rpi3-bootscript.txt file and copy paste the code below : 1 2 3 4 5 6 7 8 // rpi3-bootscript.txt setenv kernel_addr_r 0x01000000 setenv ramdisk_addr_r 0x02100000 fatload mmc 0:1 ${kernel_addr_r} boot/Image fatload mmc 0:1 ${ramdisk_addr_r} boot/initrd.img setenv initrdsize $filesize booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r} boot/Image - The Linux kernel we compile from Raspberry Pi 3 64-bit kernel and place under a folder boot. boot/initrd.img - Ramdisk image we created from Using Ubuntu-base arm64 rootfs for Raspberry Pi 3. If you dont have a Ramdisk yet, replace ${ramdisk_addr_r}:${initrdsize} with -. mkimage -T script -n 'Bootscript' -C none -d ~/&amp;lt;input_file&amp;gt; ~/&amp;lt;output_file&amp;gt;.scr - Syntax for creating the bootscript Now to create a bootscript from the text file above : 1 $ sudo mkimage -A arm64 -O linux -T script -d ~/rpi3-bootscript.txt ~/boot.scr Copy boot.scr to your MicroSD card inside /boot folder. u-boot.bin - Can be renamed to any-name and modify it’s entry in config.txt kernel=boot/u-boot.bin-to-any-name. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 // config.txt # Serial console output! enable_uart=1 # 64bit-mode arm_control=0x200 # Use U-Boot kernel=boot/u-boot.bin device_tree_address=0x100 device_tree_end=0x8000 dtparam=i2c_arm=on dtparam=spi=on Then verify your MicroSD directory structure like below : 1 2 3 4 5 6 7 8 9 10 /boot/Image /boot/boot.scr /boot/u-boot.bin /boot/initrd.img bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt Boot it up to confirm that its working. Reference : http://www.denx.de/wiki/U-Boot/WebHome</summary></entry><entry><title type="html">Using Ubuntu-base arm64 rootfs for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/ubuntu/rpi3-setup-filesystem.html" rel="alternate" type="text/html" title="Using Ubuntu-base arm64 rootfs for Raspberry Pi 3" /><published>2017-11-03T00:00:00+08:00</published><updated>2017-11-03T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/rpi3-setup-filesystem</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/rpi3-setup-filesystem.html">&lt;h4 id=&quot;extract-the-rootfs&quot;&gt;Extract the Rootfs&lt;/h4&gt;
+&lt;p&gt;To create our bare filesystem, we need:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://cdimage.ubuntu.com/ubuntu-base/releases/18.04.1/release/ubuntu-base-18.04.1-base-arm64.tar.gz&quot; class=&quot;mdc-button mdc-button--compact&quot;&gt;
+        Ubuntu Base 18.04.1
+        &lt;i class=&quot;material-icons mdc-button__icon&quot;&gt;file_download&lt;/i&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;-C&lt;/code&gt; - To extract the files in a different directory
+&lt;/div&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;wget http://cdimage.ubuntu.com/ubuntu-base/releases/18.04.1/release/ubuntu-base-18.04.1-base-arm64.tar.gz
+mkdir rootfs
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;sudo tar xzvf ubuntu-base-18.04.1-base-arm64.tar.gz -C $&lt;/span&gt;HOME/rootfs&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h4 id=&quot;modifying-the-rootfs&quot;&gt;Modifying the Rootfs&lt;/h4&gt;
+&lt;p&gt;Going back from when we compile the Raspberry Pi 3 kernel, We are goig to install the kernel module and firmware into the rootfs folder that we just created above.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$&lt;/span&gt;HOME/bo_4.14/ modules_install &lt;span class=&quot;nv&quot;&gt;INSTALL_MOD_PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$HOME&lt;/span&gt;/rootfs/
+&lt;span class=&quot;go&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; Starting kernel &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; 4.14 use your debian based &lt;span class=&quot;s2&quot;&gt;&quot;linux-firmware&quot;&lt;/span&gt; package:
+&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; For kernel &amp;lt; 4.13 include below commands &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;firmware:
+&lt;span class=&quot;gp&quot;&gt;sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$&lt;/span&gt;HOME/bo_4.14/ firmware_install &lt;span class=&quot;nv&quot;&gt;INSTALL_FW_PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$HOME&lt;/span&gt;/rootfs/lib/firmware/&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Verify that it was installed correctly. And remove &lt;code class=&quot;highlighter-rouge&quot;&gt;build&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;source&lt;/code&gt; links.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;ls $&lt;/span&gt;HOME/rootfs/lib/modules/4.11~
+&lt;span class=&quot;go&quot;&gt;
+modules.builtin     modules.devname        modules.symbols.bin  build
+kernel              modules.builtin.bin    modules.order        source
+modules.alias       modules.dep            modules.softdep
+modules.alias.bin   modules.dep.bin        modules.symbols
+
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;sudo find $&lt;/span&gt;HOME/rootfs/ &lt;span class=&quot;nt&quot;&gt;-name&lt;/span&gt; build | xargs &lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-rf&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;sudo find $&lt;/span&gt;HOME/rootfs/ &lt;span class=&quot;nt&quot;&gt;-name&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; | xargs &lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-rf&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Well use &lt;code class=&quot;highlighter-rouge&quot;&gt;chroot&lt;/code&gt; to further setup our filesystem.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;sudo cp -av /usr/bin/qemu-aarch64-static $&lt;/span&gt;HOME/rootfs/usr/bin&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Then we need to copy &lt;code class=&quot;highlighter-rouge&quot;&gt;resolv.conf&lt;/code&gt; from our host machine for internet connection to &lt;code class=&quot;highlighter-rouge&quot;&gt;$HOME/rootfs/etc/&lt;/code&gt;:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; If your host is Ubuntu 17.10
+&lt;span class=&quot;gp&quot;&gt;sudo cp -av /run/systemd/resolve/stub-resolv.conf $&lt;/span&gt;HOME/rootfs/etc/resolv.conf
+&lt;span class=&quot;go&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; For Ubuntu 16.04.3 below
+&lt;span class=&quot;gp&quot;&gt;sudo cp -av /run/resolvconf/resolv.conf $&lt;/span&gt;HOME/rootfs/etc/resolv.conf&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Enter chroot environment:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;sudo chroot $&lt;/span&gt;HOME/rootfs/&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Now that you’re in the chroot environment, we can now add an admin user with sudo permission.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;useradd -G sudo -m -s /bin/bash pi3
+echo pi3:pi3 | chpasswd&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The format input line of chpasswd is: user_name:password.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;br /&gt;
+Change root password with these command:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;passwd root&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;You can setup your &lt;code class=&quot;highlighter-rouge&quot;&gt;hostname&lt;/code&gt; here for your target device or in the kernel configuration making sure that the hostname is empty.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;echo U-Base_min &amp;gt;&lt;/span&gt; /etc/hostname
+&lt;span class=&quot;gp&quot;&gt;echo 127.0.0.1	localhost &amp;gt;&lt;/span&gt; /etc/hosts
+&lt;span class=&quot;gp&quot;&gt;echo 127.0.1.1	U-Base_min &amp;gt;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /etc/hosts&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Fetch the latest package lists from server then upgrade.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;apt-get update
+apt-get upgrade&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Then install these first:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;apt-get install dialog perl&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;We need those installed first to correct some error messages about locale: If &lt;code class=&quot;highlighter-rouge&quot;&gt;locale-gen&lt;/code&gt; command is missing, &lt;code class=&quot;highlighter-rouge&quot;&gt;apt-get install locales&lt;/code&gt; first.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;locale-gen &quot;en_US.UTF-8&quot;
+        Generating locales...
+            en_US.UTF-8... done
+        Generation complete.&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Install minimal packages:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;apt-get install sudo ifupdown net-tools ethtool udev wireless-tools iputils-ping resolvconf wget apt-utils wpasupplicant initramfs-tools&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Create our Ramdisk.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;mkinitramfs -o /boot/initrd.img /lib/modules/4.11~&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;When everything you want are done, exit chroot:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;exit&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;We need to add &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/fstab&lt;/code&gt; file entry below coz’ if not…it will run on read-only mode. Below are &lt;code class=&quot;highlighter-rouge&quot;&gt;Tab&lt;/code&gt; not &lt;code class=&quot;highlighter-rouge&quot;&gt;spacebar&lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;echo &quot;/dev/mmcblk0p2	/	ext4	defaults,noatime	0	1&quot; &amp;gt;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$HOME&lt;/span&gt;/rootfs/etc/fstab&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h4 id=&quot;removing-unwanted-files&quot;&gt;Removing unwanted files&lt;/h4&gt;
+&lt;p&gt;To reduce the rootfs/ size we can remove some unwanted files.
+Create a file &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/dpkg/dpkg.cfg.d/01_nodoc&lt;/code&gt; which specifies the desired filters. Example:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;path-exclude /usr/share/doc/*
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; we need to keep copyright files &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;legal reasons
+&lt;span class=&quot;go&quot;&gt;path-include /usr/share/doc/*/copyright
+path-exclude /usr/share/man/*
+path-exclude /usr/share/groff/*
+path-exclude /usr/share/info/*
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; lintian stuff is small, but really unnecessary
+&lt;span class=&quot;go&quot;&gt;path-exclude /usr/share/lintian/*
+path-exclude /usr/share/linda/*&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Then you can manually remove any documentation already installed:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;sudo find rootfs/usr/share/doc -depth -type f ! -name copyright|xargs rm || true
+sudo find rootfs/usr/share/doc -empty|xargs rmdir || true
+sudo rm -rf rootfs/usr/share/man/* rootfs/usr/share/groff/* rootfs/usr/share/info/*
+sudo rm -rf rootfs/usr/share/lintian/* rootfs/usr/share/linda/* rootfs/var/cache/man/*&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Then copy the &lt;code class=&quot;highlighter-rouge&quot;&gt;$HOME/rootfs/*&lt;/code&gt; content to the 2nd partition of your MicroSD card.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h4 id=&quot;creating-the-image-file-optional&quot;&gt;Creating the Image file (*Optional)&lt;/h4&gt;
+&lt;p&gt;We could make an image file with several partition on it. 
+We will create a 700M empty img file:&lt;/p&gt;
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    Modify the desired image size according to your needs. I use &lt;code class=&quot;highlighter-rouge&quot;&gt;resize2fs&lt;/code&gt; after i boot this up
+&lt;/div&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;span class=&quot;go&quot;&gt;sudo dd if=/dev/zero of=myimage.img bs=700K count=1024&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Then partition it using &lt;code class=&quot;highlighter-rouge&quot;&gt;fdisk&lt;/code&gt; in my case:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;sudo fdisk -l myimage.img
+        Result:
+        | Device     w| Boot | Start 	| End	  | Sectors |
+        |:-----------|:-----|:----------|:--------|:--------|
+        | myimage1   |      | 2048  	| 264191  | 1024000 | Fat32
+        | myimage2   |      | 264192 	| 1433599 | 3168256 | Linux&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    For 32Bit don’t use &lt;code class=&quot;highlighter-rouge&quot;&gt;Fat32(LTB)&lt;/code&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Display the name of the assigned loop device:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;sudo losetup --find --show myimage.img
+	
+	    /dev/loop0&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Then we can use &lt;code class=&quot;highlighter-rouge&quot;&gt;fdisk&lt;/code&gt; to identify our image file partitions assinged loop&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;sudo fdisk -l /dev/loop0
+
+        Device:
+            /dev/loop0p1
+            /dev/loop0p2&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Then, to assign a loopback device: and format it.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;sudo losetup -o $&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;512&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;2048&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--sizelimit&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;$((&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;512&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;264191&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;))&lt;/span&gt; /dev/loop1 myimage.img 
+&lt;span class=&quot;gp&quot;&gt;sudo losetup -o $&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;512&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;264192&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--sizelimit&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;$((&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;512&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1433599&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;))&lt;/span&gt; /dev/loop2 myimage.img
+&lt;span class=&quot;go&quot;&gt;sudo mkfs.vfat -F 32 -n 'SYS-BOOT' /dev/loop1
+sudo mkfs.ext4 /dev/loop2&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    mkfs.vfat -n &lt;code class=&quot;highlighter-rouge&quot;&gt;partition name&lt;/code&gt; /dev/loop1.
+&lt;/div&gt;
+
+&lt;p&gt;Mount and Copy those necessary files that we need to their respected partition.
+Install &lt;code class=&quot;highlighter-rouge&quot;&gt;dosfstools&lt;/code&gt; if cannot mount vfat&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;sudo mount /dev/loop1 /mnt/boot
+sudo mount /dev/loop2 /mnt/rootfs
+
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;    #&lt;/span&gt; Then umount and detach:
+&lt;span class=&quot;go&quot;&gt;sudo umount /dev/loop1
+sudo umount /dev/loop2
+sudo losetup --detach /dev/loop1
+sudo losetup --detach /dev/loop2&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;You can now burn that myimage.img to yor MicoSD card.
+Now boot it up and you should now be able to login.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h5 id=&quot;reference-&quot;&gt;Reference :&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&quot;http://docs.khadas.com/social/BuildUbuntuRootfsViaUbuntuBase/&quot;&gt;http://docs.khadas.com/social/BuildUbuntuRootfsViaUbuntuBase/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://gnu-linux.org/building-ubuntu-rootfs-for-arm.html&quot;&gt;https://gnu-linux.org/building-ubuntu-rootfs-for-arm.html&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html&quot;&gt;http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="Ubuntu" /><summary type="html">Extract the Rootfs To create our bare filesystem, we need: Ubuntu Base 18.04.1 file_download -C - To extract the files in a different directory 1 2 3 wget http://cdimage.ubuntu.com/ubuntu-base/releases/18.04.1/release/ubuntu-base-18.04.1-base-arm64.tar.gz mkdir rootfs sudo tar xzvf ubuntu-base-18.04.1-base-arm64.tar.gz -C $HOME/rootfs Modifying the Rootfs Going back from when we compile the Raspberry Pi 3 kernel, We are goig to install the kernel module and firmware into the rootfs folder that we just created above. 1 2 3 4 5 sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$HOME/bo_4.14/ modules_install INSTALL_MOD_PATH=$HOME/rootfs/ # Starting kernel &amp;gt; 4.14 use your debian based &quot;linux-firmware&quot; package: # For kernel &amp;lt; 4.13 include below commands for firmware: sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$HOME/bo_4.14/ firmware_install INSTALL_FW_PATH=$HOME/rootfs/lib/firmware/ Verify that it was installed correctly. And remove build and source links. 1 2 3 4 5 6 7 8 9 ls $HOME/rootfs/lib/modules/4.11~ modules.builtin modules.devname modules.symbols.bin build kernel modules.builtin.bin modules.order source modules.alias modules.dep modules.softdep modules.alias.bin modules.dep.bin modules.symbols sudo find $HOME/rootfs/ -name build | xargs rm -rf sudo find $HOME/rootfs/ -name source | xargs rm -rf Well use chroot to further setup our filesystem. 1 sudo cp -av /usr/bin/qemu-aarch64-static $HOME/rootfs/usr/bin Then we need to copy resolv.conf from our host machine for internet connection to $HOME/rootfs/etc/: 1 2 3 4 5 # If your host is Ubuntu 17.10 sudo cp -av /run/systemd/resolve/stub-resolv.conf $HOME/rootfs/etc/resolv.conf # For Ubuntu 16.04.3 below sudo cp -av /run/resolvconf/resolv.conf $HOME/rootfs/etc/resolv.conf Enter chroot environment: 1 sudo chroot $HOME/rootfs/ Now that you’re in the chroot environment, we can now add an admin user with sudo permission. 1 2 useradd -G sudo -m -s /bin/bash pi3 echo pi3:pi3 | chpasswd The format input line of chpasswd is: user_name:password. Change root password with these command: 1 passwd root You can setup your hostname here for your target device or in the kernel configuration making sure that the hostname is empty. 1 2 3 echo U-Base_min &amp;gt; /etc/hostname echo 127.0.0.1 localhost &amp;gt; /etc/hosts echo 127.0.1.1 U-Base_min &amp;gt;&amp;gt; /etc/hosts Fetch the latest package lists from server then upgrade. 1 2 apt-get update apt-get upgrade Then install these first: 1 apt-get install dialog perl We need those installed first to correct some error messages about locale: If locale-gen command is missing, apt-get install locales first. 1 2 3 4 locale-gen &quot;en_US.UTF-8&quot; Generating locales... en_US.UTF-8... done Generation complete. Install minimal packages: 1 apt-get install sudo ifupdown net-tools ethtool udev wireless-tools iputils-ping resolvconf wget apt-utils wpasupplicant initramfs-tools Create our Ramdisk. 1 mkinitramfs -o /boot/initrd.img /lib/modules/4.11~ When everything you want are done, exit chroot: 1 exit We need to add /etc/fstab file entry below coz’ if not…it will run on read-only mode. Below are Tab not spacebar 1 echo &quot;/dev/mmcblk0p2 / ext4 defaults,noatime 0 1&quot; &amp;gt;&amp;gt; $HOME/rootfs/etc/fstab Removing unwanted files To reduce the rootfs/ size we can remove some unwanted files. Create a file /etc/dpkg/dpkg.cfg.d/01_nodoc which specifies the desired filters. Example: 1 2 3 4 5 6 7 8 9 path-exclude /usr/share/doc/* # we need to keep copyright files for legal reasons path-include /usr/share/doc/*/copyright path-exclude /usr/share/man/* path-exclude /usr/share/groff/* path-exclude /usr/share/info/* # lintian stuff is small, but really unnecessary path-exclude /usr/share/lintian/* path-exclude /usr/share/linda/* Then you can manually remove any documentation already installed: 1 2 3 4 sudo find rootfs/usr/share/doc -depth -type f ! -name copyright|xargs rm || true sudo find rootfs/usr/share/doc -empty|xargs rmdir || true sudo rm -rf rootfs/usr/share/man/* rootfs/usr/share/groff/* rootfs/usr/share/info/* sudo rm -rf rootfs/usr/share/lintian/* rootfs/usr/share/linda/* rootfs/var/cache/man/* Then copy the $HOME/rootfs/* content to the 2nd partition of your MicroSD card. Creating the Image file (*Optional) We could make an image file with several partition on it. We will create a 700M empty img file: Modify the desired image size according to your needs. I use resize2fs after i boot this up sudo dd if=/dev/zero of=myimage.img bs=700K count=1024 Then partition it using fdisk in my case: 1 2 3 4 5 6 sudo fdisk -l myimage.img Result: | Device w| Boot | Start | End | Sectors | |:-----------|:-----|:----------|:--------|:--------| | myimage1 | | 2048 | 264191 | 1024000 | Fat32 | myimage2 | | 264192 | 1433599 | 3168256 | Linux For 32Bit don’t use Fat32(LTB) Display the name of the assigned loop device: 1 2 3 sudo losetup --find --show myimage.img /dev/loop0 Then we can use fdisk to identify our image file partitions assinged loop 1 2 3 4 5 sudo fdisk -l /dev/loop0 Device: /dev/loop0p1 /dev/loop0p2 Then, to assign a loopback device: and format it. 1 2 3 4 sudo losetup -o $((512*2048)) --sizelimit $((512*264191)) /dev/loop1 myimage.img sudo losetup -o $((512*264192)) --sizelimit $((512*1433599)) /dev/loop2 myimage.img sudo mkfs.vfat -F 32 -n 'SYS-BOOT' /dev/loop1 sudo mkfs.ext4 /dev/loop2 mkfs.vfat -n partition name /dev/loop1. Mount and Copy those necessary files that we need to their respected partition. Install dosfstools if cannot mount vfat 1 2 3 4 5 6 7 8 sudo mount /dev/loop1 /mnt/boot sudo mount /dev/loop2 /mnt/rootfs # Then umount and detach: sudo umount /dev/loop1 sudo umount /dev/loop2 sudo losetup --detach /dev/loop1 sudo losetup --detach /dev/loop2 You can now burn that myimage.img to yor MicoSD card. Now boot it up and you should now be able to login. Reference : http://docs.khadas.com/social/BuildUbuntuRootfsViaUbuntuBase/ https://gnu-linux.org/building-ubuntu-rootfs-for-arm.html http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html</summary></entry><entry><title type="html">Raspberry Pi 3 Alpine Linux arm64</title><link href="http://a-delacruz.github.io/alpine/alpine-linux.html" rel="alternate" type="text/html" title="Raspberry Pi 3 Alpine Linux arm64" /><published>2017-06-15T00:00:00+08:00</published><updated>2017-06-15T00:00:00+08:00</updated><id>http://a-delacruz.github.io/alpine/alpine-linux</id><content type="html" xml:base="http://a-delacruz.github.io/alpine/alpine-linux.html">&lt;h6 id=&quot;-18-09-20-will-update-soon&quot;&gt;*** 18-09-20: &lt;code class=&quot;highlighter-rouge&quot;&gt;Will update soon...&lt;/code&gt;&lt;/h6&gt;
+&lt;h6 id=&quot;-17-07-06-to-fix-brcmfmac-loading-error-directly-place-brcm-folder-inside-our-custom-initramfs-rpi3-file&quot;&gt;*** 17-07-06: To fix brcmfmac loading error: directly place &lt;code class=&quot;highlighter-rouge&quot;&gt;brcm&lt;/code&gt; folder inside our custom &lt;code class=&quot;highlighter-rouge&quot;&gt;initramfs-rpi3&lt;/code&gt; file.&lt;/h6&gt;
+&lt;h6 id=&quot;-17-07-06-b43-is-optional&quot;&gt;*** 17-07-06: &lt;code class=&quot;highlighter-rouge&quot;&gt;b43&lt;/code&gt; is optional…&lt;/h6&gt;
+
+&lt;p&gt;As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image for .NetCore because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://dl-cdn.alpinelinux.org/alpine/v3.7/releases/aarch64/alpine-uboot-3.7.0-aarch64.tar.gz&quot; class=&quot;card btn blue&quot;&gt;Alpine 3.7 Generic arm64&lt;i class=&quot;material-icons right&quot;&gt;file_download&lt;/i&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    Make sure &lt;code class=&quot;highlighter-rouge&quot;&gt;SquashFS is enabled&lt;/code&gt;
+&lt;/div&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;// Kernel config
+
+File systems
+    |-  Miscellaneous filesystems
+        |-  [*] SquashFS 4.0&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    For our custom &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel and U-boot&lt;/code&gt;… just follow &lt;a href=&quot;/ubuntu/rpi3-setup-64bit-kernel&quot;&gt;Raspberry Pi 3 64-bit kernel&lt;/a&gt;.
+&lt;/div&gt;
+
+&lt;p&gt;The files that we need from alpine to modify is &lt;code class=&quot;highlighter-rouge&quot;&gt;initramfs-vanilla&lt;/code&gt;, and a copy of &lt;code class=&quot;highlighter-rouge&quot;&gt;apk&lt;/code&gt; folder (&lt;code class=&quot;highlighter-rouge&quot;&gt;alpine.apkovl.tar.gz&lt;/code&gt; is optional). so go ahead and extract them.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;initramfs-vanilla&lt;/code&gt; is a compressed cpio archive. To extract it we do this:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;mkdir $&lt;/span&gt;HOME/temp
+&lt;span class=&quot;gp&quot;&gt;cd $&lt;/span&gt;HOME/temp
+&lt;span class=&quot;go&quot;&gt;sudo gunzip -c /boot/initramfs-vanilla | cpio -i&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Then we need to install our latest modules into it…assuming you already compiled a kernel following this &lt;a href=&quot;/ubuntu/rpi3-setup-64bit-kernel&quot;&gt;Raspberry Pi 3 64-bit kernel&lt;/a&gt;.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;sudo ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make -C rpi-4.14/ modules_install INSTALL_MOD_PATH=$&lt;/span&gt;HOME/temp/
+&lt;span class=&quot;go&quot;&gt;        
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;        #&lt;/span&gt; When it is &lt;span class=&quot;k&quot;&gt;done &lt;/span&gt;go back to /temp/ folder where we extract the initramfs and into the modules folder.
+&lt;span class=&quot;go&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;cd $&lt;/span&gt;HOME/temp/lib/modules/
+&lt;span class=&quot;go&quot;&gt;        
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;        #&lt;/span&gt; And remove the previous version and the build, &lt;span class=&quot;nb&quot;&gt;source &lt;/span&gt;folder symlink &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$HOME&lt;/span&gt;/temp/lib/modules/4.1x~/ folder
+&lt;span class=&quot;go&quot;&gt;
+sudo rm -rf 4.9~/&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Now we have our custom initramfs and then recreate the compressed cpio archive again.
+Inside the folder run:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;sudo find . | cpio -H newc -o | gzip -9 &amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;file destination]/initramfs-rpi3-cpio
+&lt;span class=&quot;go&quot;&gt;cd ..
+sudo mkimage -A arm64 -O linux -T ramdisk -d initramfs-rpi3-cpio initramfs-rpi3 // For U-boot&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;modloop-vanilla&lt;/code&gt; is a squashfs file. We can make from scratch or unsquash it using this command:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;sudo unsquashfs -f -d [file destination] [file location]/file.squashfs&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;To create our own &lt;code class=&quot;highlighter-rouge&quot;&gt;modloop&lt;/code&gt; file let start by making a folder&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;sudo mkdir modules 
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;        #&lt;/span&gt; Then inside this module, &lt;span class=&quot;nb&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'s install again our rpi-4.11y modules from above&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;After you’ve installed &lt;code class=&quot;highlighter-rouge&quot;&gt;our modules from above&lt;/code&gt; on the modules folder that we’ve just created.. you’ll have a folder structure like so:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;/modules
+        |- /lib
+                |- /firmware
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;                        #&lt;/span&gt; firmware_install &lt;span class=&quot;nv&quot;&gt;INSTALL_FW_PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;this location or just use from the moodlop-vanilla]
+&lt;span class=&quot;gp&quot;&gt;                        #&lt;/span&gt; Use firmware_install &lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;using kernel &amp;lt;- 4.13
+&lt;span class=&quot;go&quot;&gt;
+                |- /modules
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;                        #&lt;/span&gt; again remove build and &lt;span class=&quot;nb&quot;&gt;source &lt;/span&gt;symlink folder here&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Rearrange above modules folder to:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;/modules/modules/firmware
+/modules/modules/4.1x~&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Squash it using this command:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;sudo mksquashfs [folder to be squash] [filename] -comp [compression method: I use 'xz' -Xdict-size 100%&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;And now we have our own &lt;code class=&quot;highlighter-rouge&quot;&gt;initramfs-rpi3&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;modloop-rpi3&lt;/code&gt;. Our µsd card should now look like this:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;/apk
+/boot/Image
+/boot/u-boot.bin
+/boot/boot.scr
+/boot/initramfs-rpi3
+/boot/modloop-rpi3
+bcm2710-rpi-3-b.dtb
+bootcode.bin
+start.elf 
+fixup.dat 
+config.txt
+cmdline.txt
+alpine.apkovl.tar.gz // optional will be created once we setup our alpine linux&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;We’ll modify the &lt;code class=&quot;highlighter-rouge&quot;&gt;cmdline.txt&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;boot.scr&lt;/code&gt; for alpine linux.
+ alerts/code.html type=”cmdline.txt:” code=”&lt;br /&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;modules=loop,squashfs,sd-mod,usb-storage quiet net.ifnames=0 dwc_otg.lpm_enable=0 console=ttyS0,115200 fsck.repair=yes rootwait
+
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; the quiet &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;can be remove: it just hide the message buffer of kernel. &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;ttyS0&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; can be replace by &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;ttyAMA0&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;fdt addr 0x100
+fdt get value bootargs /chosen bootargs
+setenv kernel_addr_r 0x01000000
+setenv ramdisk_addr_r 0x02100000
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;fatload mmc 0:1 $&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;kernel_addr_r&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; boot/Image
+&lt;span class=&quot;gp&quot;&gt;fatload mmc 0:1 $&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;ramdisk_addr_r&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; boot/initramfs-rpi3
+&lt;span class=&quot;gp&quot;&gt;setenv initrdsize $&lt;/span&gt;filesize
+&lt;span class=&quot;gp&quot;&gt;fatload mmc 0:1 $&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;fdt_addr_r&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; bcm2710-rpi-3-b.dtb
+&lt;span class=&quot;gp&quot;&gt;booti $&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;kernel_addr_r&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ramdisk_addr_r&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;:&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;initrdsize&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;fdt_addr_r&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Go ahead noew and try to boot it up. You should have an output like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/alpine/alpine-linux-arm64-rpi3.jpg&quot; alt=&quot;&quot; class=&quot;responsive-img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see… there’s a hwclock error since our raspberry pi 3 don’t have any. So after you run &lt;code class=&quot;highlighter-rouge&quot;&gt;setup-alpine&lt;/code&gt; and use &lt;code class=&quot;highlighter-rouge&quot;&gt;lbu commit &lt;/code&gt; to save changes…run this:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;rc-update add swclock boot    // enable the software clock
+rc-update del hwclock boot    // disable the hardware clock&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;In my case i use &lt;code class=&quot;highlighter-rouge&quot;&gt;Busybox NTP&lt;/code&gt; as it might be the most lightweight solution. Save the changes and reboot.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;lbu commit
+apk add wireless-tools wpa_supplicant  // will be installed even when not connected to the net
+reboot&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;wifi-optional&quot;&gt;Wifi: (*Optional)&lt;/h4&gt;
+
+&lt;p&gt;I didn’t include the &lt;code class=&quot;highlighter-rouge&quot;&gt;brcm&lt;/code&gt; above because i encouter a &lt;code class=&quot;highlighter-rouge&quot;&gt;brcmf_sdio_htclk&lt;/code&gt; error but can be resolve by reloading the module: &lt;code class=&quot;highlighter-rouge&quot;&gt;brcmfmac&lt;/code&gt;
+The good thing about alpine linux is if you make a &lt;code class=&quot;highlighter-rouge&quot;&gt;firmware folder&lt;/code&gt; on the root directory of our µsd card, it’ll be recognized by alpine and load it once alpine boot up. Don’t worry if the rest of the folder inside the OS fimrware folder is gone(it’s  just hidden in plain site). So i place my brcm folder there for now.&lt;/p&gt;
+
+&lt;p&gt;According to alpine linux… &lt;a href=&quot;https://wiki.alpinelinux.org/wiki/Connecting_to_a_wireless_access_point&quot;&gt;Connecting to a wireless access point&lt;/a&gt; Broadcom Wi-Fi Chipset Users: we need &lt;code class=&quot;highlighter-rouge&quot;&gt;b43-firmware&lt;/code&gt; so go ahead and follow that or we can compile it somewhere else like what i did.&lt;/p&gt;
+
+&lt;p&gt;On ubuntu 16.04 i install &lt;code class=&quot;highlighter-rouge&quot;&gt;b43-fwcutter&lt;/code&gt; then get &lt;a href=&quot;http://mirror2.openwrt.org/sources/broadcom-wl-4.150.10.5.tar.bz2&quot;&gt;b43-firmware&lt;/a&gt; and follow the instruction &lt;a href=&quot;http://linuxwireless.org/en/users/Drivers/b43/&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;tar -xjf broadcom-wl-4.150.10.5.tar.bz2       // make sure bzip is installed
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;b43-fwcutter -w [$&lt;/span&gt;FIRMWARE_INSTALL_DIR/b43] broadcom-wl-4.150.10.5/driver/wl_apsta_mimo.o&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Then copy that &lt;code class=&quot;highlighter-rouge&quot;&gt;b43&lt;/code&gt; folder to firmware folder on the root of our µsd card.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;/apk
+/boot/Image
+/boot/kernel8.img
+/boot/boot.scr
+/boot/initramfs-rpi3
+/boot/modloop-rpi3
+/firmware/b43
+/firmware/brcm
+bcm2710-rpi-3-b.dtb
+bootcode.bin
+start.elf 
+fixup.dat 
+config.txt
+cmdline.txt
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;alpine.apkovl.tar.gz #&lt;/span&gt; optional will be created once we setup our alpine linux&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Load the &lt;code class=&quot;highlighter-rouge&quot;&gt;b43&lt;/code&gt; kernel and enable it at boot up:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;modprobe b43
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;echo b43 &amp;gt;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /etc/modules
+&lt;span class=&quot;go&quot;&gt;lbu commit    // To save changes&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;If you run &lt;code class=&quot;highlighter-rouge&quot;&gt;dmesg&lt;/code&gt; command and display a brcmfmac error just reload &lt;code class=&quot;highlighter-rouge&quot;&gt;brcmfmac module&lt;/code&gt;:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;modprobe -r brcmfmac  // For now
+modprobe brcmfmac&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h5 id=&quot;reference-&quot;&gt;Reference :&lt;/h5&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://backreference.org/2010/07/04/modifying-initrdinitramfs-files/&quot;&gt;http://backreference.org/2010/07/04/modifying-initrdinitramfs-files/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://askubuntu.com/questions/437880/extract-a-squashfs-to-an-existing-directory&quot;&gt;https://askubuntu.com/questions/437880/extract-a-squashfs-to-an-existing-directory&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://wiki.alpinelinux.org/wiki/DIY_Fully_working_Alpine_Linux_for_Allwinner_and_Other_ARM_SOCs&quot;&gt;https://wiki.alpinelinux.org/wiki/DIY_Fully_working_Alpine_Linux_for_Allwinner_and_Other_ARM_SOCs&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://wiki.alpinelinux.org/wiki/Raspberry_Pi&quot;&gt;https://wiki.alpinelinux.org/wiki/Raspberry_Pi&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="Alpine" /><summary type="html">*** 18-09-20: Will update soon... *** 17-07-06: To fix brcmfmac loading error: directly place brcm folder inside our custom initramfs-rpi3 file. *** 17-07-06: b43 is optional… As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image for .NetCore because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3. Alpine 3.7 Generic arm64file_download Make sure SquashFS is enabled 1 2 3 4 5 // Kernel config File systems |- Miscellaneous filesystems |- [*] SquashFS 4.0 For our custom kernel and U-boot… just follow Raspberry Pi 3 64-bit kernel. The files that we need from alpine to modify is initramfs-vanilla, and a copy of apk folder (alpine.apkovl.tar.gz is optional). so go ahead and extract them. initramfs-vanilla is a compressed cpio archive. To extract it we do this: 1 2 3 mkdir $HOME/temp cd $HOME/temp sudo gunzip -c /boot/initramfs-vanilla | cpio -i Then we need to install our latest modules into it…assuming you already compiled a kernel following this Raspberry Pi 3 64-bit kernel. 1 2 3 4 5 6 7 8 9 sudo ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make -C rpi-4.14/ modules_install INSTALL_MOD_PATH=$HOME/temp/ # When it is done go back to /temp/ folder where we extract the initramfs and into the modules folder. cd $HOME/temp/lib/modules/ # And remove the previous version and the build, source folder symlink in $HOME/temp/lib/modules/4.1x~/ folder sudo rm -rf 4.9~/ Now we have our custom initramfs and then recreate the compressed cpio archive again. Inside the folder run: 1 2 3 sudo find . | cpio -H newc -o | gzip -9 &amp;gt; [file destination]/initramfs-rpi3-cpio cd .. sudo mkimage -A arm64 -O linux -T ramdisk -d initramfs-rpi3-cpio initramfs-rpi3 // For U-boot modloop-vanilla is a squashfs file. We can make from scratch or unsquash it using this command: 1 sudo unsquashfs -f -d [file destination] [file location]/file.squashfs To create our own modloop file let start by making a folder 1 2 sudo mkdir modules # Then inside this module, let's install again our rpi-4.11y modules from above After you’ve installed our modules from above on the modules folder that we’ve just created.. you’ll have a folder structure like so: 1 2 3 4 5 6 7 8 /modules |- /lib |- /firmware # firmware_install INSTALL_FW_PATH=[in this location or just use from the moodlop-vanilla] # Use firmware_install if using kernel &amp;lt;- 4.13 |- /modules # again remove build and source symlink folder here Rearrange above modules folder to: 1 2 /modules/modules/firmware /modules/modules/4.1x~ Squash it using this command: 1 sudo mksquashfs [folder to be squash] [filename] -comp [compression method: I use 'xz' -Xdict-size 100% And now we have our own initramfs-rpi3 and modloop-rpi3. Our µsd card should now look like this: 1 2 3 4 5 6 7 8 9 10 11 12 13 /apk /boot/Image /boot/u-boot.bin /boot/boot.scr /boot/initramfs-rpi3 /boot/modloop-rpi3 bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt alpine.apkovl.tar.gz // optional will be created once we setup our alpine linux We’ll modify the cmdline.txt and boot.scr for alpine linux. alerts/code.html type=”cmdline.txt:” code=” 1 2 3 modules=loop,squashfs,sd-mod,usb-storage quiet net.ifnames=0 dwc_otg.lpm_enable=0 console=ttyS0,115200 fsck.repair=yes rootwait # the quiet command can be remove: it just hide the message buffer of kernel. `ttyS0` can be replace by `ttyAMA0` 1 2 3 4 5 6 7 8 9 fdt addr 0x100 fdt get value bootargs /chosen bootargs setenv kernel_addr_r 0x01000000 setenv ramdisk_addr_r 0x02100000 fatload mmc 0:1 ${kernel_addr_r} boot/Image fatload mmc 0:1 ${ramdisk_addr_r} boot/initramfs-rpi3 setenv initrdsize $filesize fatload mmc 0:1 ${fdt_addr_r} bcm2710-rpi-3-b.dtb booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r} Go ahead noew and try to boot it up. You should have an output like this: As you can see… there’s a hwclock error since our raspberry pi 3 don’t have any. So after you run setup-alpine and use lbu commit to save changes…run this: 1 2 rc-update add swclock boot // enable the software clock rc-update del hwclock boot // disable the hardware clock In my case i use Busybox NTP as it might be the most lightweight solution. Save the changes and reboot. 1 2 3 lbu commit apk add wireless-tools wpa_supplicant // will be installed even when not connected to the net reboot Wifi: (*Optional) I didn’t include the brcm above because i encouter a brcmf_sdio_htclk error but can be resolve by reloading the module: brcmfmac The good thing about alpine linux is if you make a firmware folder on the root directory of our µsd card, it’ll be recognized by alpine and load it once alpine boot up. Don’t worry if the rest of the folder inside the OS fimrware folder is gone(it’s just hidden in plain site). So i place my brcm folder there for now. According to alpine linux… Connecting to a wireless access point Broadcom Wi-Fi Chipset Users: we need b43-firmware so go ahead and follow that or we can compile it somewhere else like what i did. On ubuntu 16.04 i install b43-fwcutter then get b43-firmware and follow the instruction here 1 2 tar -xjf broadcom-wl-4.150.10.5.tar.bz2 // make sure bzip is installed b43-fwcutter -w [$FIRMWARE_INSTALL_DIR/b43] broadcom-wl-4.150.10.5/driver/wl_apsta_mimo.o Then copy that b43 folder to firmware folder on the root of our µsd card. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 /apk /boot/Image /boot/kernel8.img /boot/boot.scr /boot/initramfs-rpi3 /boot/modloop-rpi3 /firmware/b43 /firmware/brcm bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt alpine.apkovl.tar.gz # optional will be created once we setup our alpine linux Load the b43 kernel and enable it at boot up: 1 2 3 modprobe b43 echo b43 &amp;gt;&amp;gt; /etc/modules lbu commit // To save changes If you run dmesg command and display a brcmfmac error just reload brcmfmac module: 1 2 modprobe -r brcmfmac // For now modprobe brcmfmac Reference : http://backreference.org/2010/07/04/modifying-initrdinitramfs-files/ https://askubuntu.com/questions/437880/extract-a-squashfs-to-an-existing-directory https://wiki.alpinelinux.org/wiki/DIY_Fully_working_Alpine_Linux_for_Allwinner_and_Other_ARM_SOCs https://wiki.alpinelinux.org/wiki/Raspberry_Pi</summary></entry></feed>

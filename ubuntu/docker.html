@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang=" en-US ">
+    <head>
+    <meta charset="utf-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="theme-color" content="#FFB74D" />
+    <meta name="keywords" content="Raspberry Pi 3 64bit Kernel">
+
+    <title>
+            .Net Core on Raspberry Pi 3
+        
+    </title>
+
+    <meta name="description" content="
+            I thought i could get away from using a debian-based Docker image for .Net Core… *sigh…For now an Alpine-based Docker image is available for .NET Core on amd...
+        ">
+
+    <link href="https://fonts.googleapis.com/css?family=Patrick+Hand+SC&effect=shadow-multiple" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+
+    <!-- Favicon head tag -->
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+
+    <!-- Syntax Highligther -->
+    <link href="/assets/css/syntax.css" rel="stylesheet" >
+
+    <!-- Google fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Orbitron:400,500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Mogra" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Spectral+SC:700" rel="stylesheet">
+
+    <!-- To DO-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+    
+    <!-- Google Adsense -->
+    
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-6013311002995151", enable_page_level_ads: true });
+        </script>
+        <script async custom-element="amp-auto-ads"
+            src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+        </script>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>.Net Core on Raspberry Pi 3 | My Personal Notes</title>
+<meta name="generator" content="Jekyll v3.8.4" />
+<meta property="og:title" content=".Net Core on Raspberry Pi 3" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="I thought i could get away from using a debian-based Docker image for .Net Core… *sigh… For now an Alpine-based Docker image is available for .NET Core on amd64. But the runtime-deps can also be installed to an arm32v6 architecture which Alpine-Linux support so the possibility is almost there. To use the latest build preview get it from here: .Net Core SDKfile_download I’m using Ubuntu 17.10 on my RPi3 and as of typing this… there’s no v17.12 available Docker so i use one from the xenial. 1 2 3 wget https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/arm64/docker-ce_17.12.0~ce-0~ubuntu_arm64.deb sudo dpkg -i docker-ce_17.12.0~ce-0~ubuntu_arm64.deb Docker-ce deps: 1 sudo apt-get install libltdl7 Run below cmd if there’s still some missing dependencies 1 sudo apt-get install -f install Then just run docker -v and add your user to docker group. Get the Dockerfile where we will create our image with the latest .Net Core. 1 wget https://raw.githubusercontent.com/dotnet/dotnet-docker-nightly/master/2.1/runtime/stretch/arm32v7/Dockerfile Then let’s build it. 1 docker build -t dotnet . For a test app… let’s get one… 1 git clone https://github.com/dotnet/dotnet-docker-samples/ We’ll use linux-arm as the target runtime for arm32. 1 2 cd dotnetapp-selfcontained dotnet publish -c release -r linux-arm -o selfcontained-linux-arm dotnet run while your inside dotnetapp-selfcontained to see the App in action. I use Windows to Build this test app then use winSCP to transfer the selfcontained-linux-arm folder on to the Raspberry Pi 3 1 docker run -it --rm -v /home/pi3:/home/share dotnet And to execute the test app… run this command inside the docker environment. 1 dotnet /home/share/selfcontained-linux-arm/dotnetapp.dll favorite Button favorite Favorites phone Recents near_me Nearby GPIO test using .Net Core on Console app and WebApp. To-Do Console GPIO WebApp GPIO I wan&#39;t to try .Net Core on linux-arm64... but unfortunately, there&#39;s no available yet except Win-arm64 and linux-arm32. For this one we&#39;ll use a bcm2835 library but later a C# version of this library i had which is on-hold until today. Prerequisites bcm2835 libraryfile_download Be sure gcc make are installed Extract bcm2835-1.55.tar.gz anywhere you like, because where going to remove it once we have `libbcm2835.so`. 1 2 3 4 tar zxvf bcm2835-1.55.tar.gz cd bcm2835-1.52/src gcc -fPIC -c bcm2835.c gcc -shared bcm2835.o -o libbcm2835.so You can now remove the bcm2835-1.55 folder and be sure to put libbcm2835.so inside /lib/aarch-~ folder. We&#39;ll create a simple console app using these command dotnet new console -o testapp. Then modify Program.cs with these codes. What it does is we use libbcm2835.so C internal commands into our C# app using PInvoke. Take note of the PIN Numbering: bcm2835 library use physical numbering so RPI_GPIO_P1_07 is equal to GPIO4 of our RPi3. # Program.cs using System; using System.Runtime.InteropServices; namespace testapp { class Program { private static uint HIGH = 0x1; private static uint LOW = 0x0; private static byte RPI_GPIO_P1_07 = 4; private static byte BCM2835_GPIO_FSEL_OUTP = 0x01; [DllImport(&quot;libbcm2835.so&quot;)] public static extern int bcm2835_init(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_close(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_delay(uint millis); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_fsel(byte pin, byte mode); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_write(byte pin, uint on); static void Main(string[] args) { Console.WriteLine(&quot;Hello World!&quot;); if (bcm2835_init() == 1) { bcm2835_gpio_fsel(RPI_GPIO_P1_07, BCM2835_GPIO_FSEL_OUTP); // Blink while(true) { // Turn it on bcm2835_gpio_write(RPI_GPIO_P1_07, HIGH); // wait bcm2835_delay(500); // turn it off bcm2835_gpio_write(RPI_GPIO_P1_07, LOW); // wait bcm2835_delay(500); } } bcm2835_close(); } } } Then issue the command while inside the testapp folder. And copy testapp-linux-arm folder to your Raspberry Pi 3. dotnet publish -c release -r linux-arm -o testapp-linux-arm Assuming you know how to and already hook up our test circuit: a led attach to our GPIO4 or rather PIN7 on the RPi3 physical Pin header. Please be careful and you should know how to properly hook up our test led to avoid breaking your RPi3. In RPi3, let us run the docker image then test our testapp on it. 1 docker run -it --privileged --rm -v /home/pi3:/home/share dotnet --privileged - To give docker access rights to /dev/gpiomem. --rm - the container is removed when it exits or when the daemon exits Make sure that you have libbcm2835.so inside the /lib/aarch64-~ folder or it will complain about running it in SDK. Then run our testapp like so... 1 dotnet /home/share/testapp-linux-arm/testapp.dll Your led should be blinking right now.... test2" />
+<meta property="og:description" content="I thought i could get away from using a debian-based Docker image for .Net Core… *sigh… For now an Alpine-based Docker image is available for .NET Core on amd64. But the runtime-deps can also be installed to an arm32v6 architecture which Alpine-Linux support so the possibility is almost there. To use the latest build preview get it from here: .Net Core SDKfile_download I’m using Ubuntu 17.10 on my RPi3 and as of typing this… there’s no v17.12 available Docker so i use one from the xenial. 1 2 3 wget https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/arm64/docker-ce_17.12.0~ce-0~ubuntu_arm64.deb sudo dpkg -i docker-ce_17.12.0~ce-0~ubuntu_arm64.deb Docker-ce deps: 1 sudo apt-get install libltdl7 Run below cmd if there’s still some missing dependencies 1 sudo apt-get install -f install Then just run docker -v and add your user to docker group. Get the Dockerfile where we will create our image with the latest .Net Core. 1 wget https://raw.githubusercontent.com/dotnet/dotnet-docker-nightly/master/2.1/runtime/stretch/arm32v7/Dockerfile Then let’s build it. 1 docker build -t dotnet . For a test app… let’s get one… 1 git clone https://github.com/dotnet/dotnet-docker-samples/ We’ll use linux-arm as the target runtime for arm32. 1 2 cd dotnetapp-selfcontained dotnet publish -c release -r linux-arm -o selfcontained-linux-arm dotnet run while your inside dotnetapp-selfcontained to see the App in action. I use Windows to Build this test app then use winSCP to transfer the selfcontained-linux-arm folder on to the Raspberry Pi 3 1 docker run -it --rm -v /home/pi3:/home/share dotnet And to execute the test app… run this command inside the docker environment. 1 dotnet /home/share/selfcontained-linux-arm/dotnetapp.dll favorite Button favorite Favorites phone Recents near_me Nearby GPIO test using .Net Core on Console app and WebApp. To-Do Console GPIO WebApp GPIO I wan&#39;t to try .Net Core on linux-arm64... but unfortunately, there&#39;s no available yet except Win-arm64 and linux-arm32. For this one we&#39;ll use a bcm2835 library but later a C# version of this library i had which is on-hold until today. Prerequisites bcm2835 libraryfile_download Be sure gcc make are installed Extract bcm2835-1.55.tar.gz anywhere you like, because where going to remove it once we have `libbcm2835.so`. 1 2 3 4 tar zxvf bcm2835-1.55.tar.gz cd bcm2835-1.52/src gcc -fPIC -c bcm2835.c gcc -shared bcm2835.o -o libbcm2835.so You can now remove the bcm2835-1.55 folder and be sure to put libbcm2835.so inside /lib/aarch-~ folder. We&#39;ll create a simple console app using these command dotnet new console -o testapp. Then modify Program.cs with these codes. What it does is we use libbcm2835.so C internal commands into our C# app using PInvoke. Take note of the PIN Numbering: bcm2835 library use physical numbering so RPI_GPIO_P1_07 is equal to GPIO4 of our RPi3. # Program.cs using System; using System.Runtime.InteropServices; namespace testapp { class Program { private static uint HIGH = 0x1; private static uint LOW = 0x0; private static byte RPI_GPIO_P1_07 = 4; private static byte BCM2835_GPIO_FSEL_OUTP = 0x01; [DllImport(&quot;libbcm2835.so&quot;)] public static extern int bcm2835_init(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_close(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_delay(uint millis); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_fsel(byte pin, byte mode); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_write(byte pin, uint on); static void Main(string[] args) { Console.WriteLine(&quot;Hello World!&quot;); if (bcm2835_init() == 1) { bcm2835_gpio_fsel(RPI_GPIO_P1_07, BCM2835_GPIO_FSEL_OUTP); // Blink while(true) { // Turn it on bcm2835_gpio_write(RPI_GPIO_P1_07, HIGH); // wait bcm2835_delay(500); // turn it off bcm2835_gpio_write(RPI_GPIO_P1_07, LOW); // wait bcm2835_delay(500); } } bcm2835_close(); } } } Then issue the command while inside the testapp folder. And copy testapp-linux-arm folder to your Raspberry Pi 3. dotnet publish -c release -r linux-arm -o testapp-linux-arm Assuming you know how to and already hook up our test circuit: a led attach to our GPIO4 or rather PIN7 on the RPi3 physical Pin header. Please be careful and you should know how to properly hook up our test led to avoid breaking your RPi3. In RPi3, let us run the docker image then test our testapp on it. 1 docker run -it --privileged --rm -v /home/pi3:/home/share dotnet --privileged - To give docker access rights to /dev/gpiomem. --rm - the container is removed when it exits or when the daemon exits Make sure that you have libbcm2835.so inside the /lib/aarch64-~ folder or it will complain about running it in SDK. Then run our testapp like so... 1 dotnet /home/share/testapp-linux-arm/testapp.dll Your led should be blinking right now.... test2" />
+<link rel="canonical" href="http://a-delacruz.github.io/ubuntu/docker.html" />
+<meta property="og:url" content="http://a-delacruz.github.io/ubuntu/docker.html" />
+<meta property="og:site_name" content="My Personal Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-01-18T00:00:00+08:00" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","url":"http://a-delacruz.github.io/ubuntu/docker.html","headline":".Net Core on Raspberry Pi 3","dateModified":"2018-01-18T00:00:00+08:00","datePublished":"2018-01-18T00:00:00+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/ubuntu/docker.html"},"description":"I thought i could get away from using a debian-based Docker image for .Net Core… *sigh… For now an Alpine-based Docker image is available for .NET Core on amd64. But the runtime-deps can also be installed to an arm32v6 architecture which Alpine-Linux support so the possibility is almost there. To use the latest build preview get it from here: .Net Core SDKfile_download I’m using Ubuntu 17.10 on my RPi3 and as of typing this… there’s no v17.12 available Docker so i use one from the xenial. 1 2 3 wget https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/arm64/docker-ce_17.12.0~ce-0~ubuntu_arm64.deb sudo dpkg -i docker-ce_17.12.0~ce-0~ubuntu_arm64.deb Docker-ce deps: 1 sudo apt-get install libltdl7 Run below cmd if there’s still some missing dependencies 1 sudo apt-get install -f install Then just run docker -v and add your user to docker group. Get the Dockerfile where we will create our image with the latest .Net Core. 1 wget https://raw.githubusercontent.com/dotnet/dotnet-docker-nightly/master/2.1/runtime/stretch/arm32v7/Dockerfile Then let’s build it. 1 docker build -t dotnet . For a test app… let’s get one… 1 git clone https://github.com/dotnet/dotnet-docker-samples/ We’ll use linux-arm as the target runtime for arm32. 1 2 cd dotnetapp-selfcontained dotnet publish -c release -r linux-arm -o selfcontained-linux-arm dotnet run while your inside dotnetapp-selfcontained to see the App in action. I use Windows to Build this test app then use winSCP to transfer the selfcontained-linux-arm folder on to the Raspberry Pi 3 1 docker run -it --rm -v /home/pi3:/home/share dotnet And to execute the test app… run this command inside the docker environment. 1 dotnet /home/share/selfcontained-linux-arm/dotnetapp.dll favorite Button favorite Favorites phone Recents near_me Nearby GPIO test using .Net Core on Console app and WebApp. To-Do Console GPIO WebApp GPIO I wan&#39;t to try .Net Core on linux-arm64... but unfortunately, there&#39;s no available yet except Win-arm64 and linux-arm32. For this one we&#39;ll use a bcm2835 library but later a C# version of this library i had which is on-hold until today. Prerequisites bcm2835 libraryfile_download Be sure gcc make are installed Extract bcm2835-1.55.tar.gz anywhere you like, because where going to remove it once we have `libbcm2835.so`. 1 2 3 4 tar zxvf bcm2835-1.55.tar.gz cd bcm2835-1.52/src gcc -fPIC -c bcm2835.c gcc -shared bcm2835.o -o libbcm2835.so You can now remove the bcm2835-1.55 folder and be sure to put libbcm2835.so inside /lib/aarch-~ folder. We&#39;ll create a simple console app using these command dotnet new console -o testapp. Then modify Program.cs with these codes. What it does is we use libbcm2835.so C internal commands into our C# app using PInvoke. Take note of the PIN Numbering: bcm2835 library use physical numbering so RPI_GPIO_P1_07 is equal to GPIO4 of our RPi3. # Program.cs using System; using System.Runtime.InteropServices; namespace testapp { class Program { private static uint HIGH = 0x1; private static uint LOW = 0x0; private static byte RPI_GPIO_P1_07 = 4; private static byte BCM2835_GPIO_FSEL_OUTP = 0x01; [DllImport(&quot;libbcm2835.so&quot;)] public static extern int bcm2835_init(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_close(); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_delay(uint millis); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_fsel(byte pin, byte mode); [DllImport(&quot;libbcm2835.so&quot;)] public static extern void bcm2835_gpio_write(byte pin, uint on); static void Main(string[] args) { Console.WriteLine(&quot;Hello World!&quot;); if (bcm2835_init() == 1) { bcm2835_gpio_fsel(RPI_GPIO_P1_07, BCM2835_GPIO_FSEL_OUTP); // Blink while(true) { // Turn it on bcm2835_gpio_write(RPI_GPIO_P1_07, HIGH); // wait bcm2835_delay(500); // turn it off bcm2835_gpio_write(RPI_GPIO_P1_07, LOW); // wait bcm2835_delay(500); } } bcm2835_close(); } } } Then issue the command while inside the testapp folder. And copy testapp-linux-arm folder to your Raspberry Pi 3. dotnet publish -c release -r linux-arm -o testapp-linux-arm Assuming you know how to and already hook up our test circuit: a led attach to our GPIO4 or rather PIN7 on the RPi3 physical Pin header. Please be careful and you should know how to properly hook up our test led to avoid breaking your RPi3. In RPi3, let us run the docker image then test our testapp on it. 1 docker run -it --privileged --rm -v /home/pi3:/home/share dotnet --privileged - To give docker access rights to /dev/gpiomem. --rm - the container is removed when it exits or when the daemon exits Make sure that you have libbcm2835.so inside the /lib/aarch64-~ folder or it will complain about running it in SDK. Then run our testapp like so... 1 dotnet /home/share/testapp-linux-arm/testapp.dll Your led should be blinking right now.... test2","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+<body>
+
+    <!-- To Do -->
+        <header class="mdc-top-app-bar mdc-top-app-bar--short mdc-top-app-bar--dense">
+                <div class="mdc-top-app-bar__row">
+                    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                    <a href="/" class="mdc-top-app-bar__navigation-icon my-logo"><img src="/assets/images/logo-bl.png"></a>
+                    </section>
+                    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end my-top-app-bar-btn">
+                        <a href="/about" class="mdc-button">about</a>
+                    </section>
+                </div>
+            </header>
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- Ad-1 -->
+    <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-6013311002995151"
+        data-ad-slot="2377202477"
+        data-ad-format="auto"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+<div class="posts">
+    <h5 class="mdc-typography--headline5 posts-title">.Net Core on Raspberry Pi 3</h5>
+
+    <p>I thought i could get away from using a debian-based Docker image for .Net Core… *sigh…</p>
+
+<p>For now an <code class="highlighter-rouge">Alpine-based</code> Docker image is available for <code class="highlighter-rouge">.NET Core</code> on amd64. But the runtime-deps can also be installed to an <code class="highlighter-rouge">arm32v6 architecture</code> which Alpine-Linux support so the possibility is almost there.</p>
+
+<p>To use the latest build preview get it from here: <a href="https://github.com/dotnet/cli" class="mdc-button mdc-button--compact">.Net Core SDK<i class="material-icons mdc-button__icon">file_download</i></a></p>
+
+<div class="my-callout my-callout-note">
+    I’m using <code class="highlighter-rouge">Ubuntu 17.10 on my RPi3</code> and as of typing this… there’s no v17.12 available Docker so i use one from the xenial.
+</div>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="go">wget https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/arm64/docker-ce_17.12.0~ce-0~ubuntu_arm64.deb
+
+sudo dpkg -i docker-ce_17.12.0~ce-0~ubuntu_arm64.deb</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h4 id="docker-ce-deps">Docker-ce deps:</h4>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">sudo apt-get install libltdl7</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="my-callout my-callout-note">
+    Run below cmd if there’s still some missing dependencies
+</div>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">sudo apt-get install -f install</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Then just run <code class="highlighter-rouge">docker -v</code> and add your user to docker group.</p>
+
+<p>Get the Dockerfile where we will create our image with the latest .Net Core.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">wget https://raw.githubusercontent.com/dotnet/dotnet-docker-nightly/master/2.1/runtime/stretch/arm32v7/Dockerfile</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Then let’s build it.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">docker build -t dotnet .</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>For a test app… let’s get one…</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">git clone https://github.com/dotnet/dotnet-docker-samples/</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>We’ll use <code class="highlighter-rouge">linux-arm</code> as the target runtime for arm32.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="go">cd dotnetapp-selfcontained
+dotnet publish -c release -r linux-arm -o selfcontained-linux-arm</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="my-callout my-callout-note">
+    <code class="highlighter-rouge">dotnet run</code> while your inside <code class="highlighter-rouge">dotnetapp-selfcontained</code> to see the App in action.
+</div>
+
+<div class="my-callout my-callout-note">
+    I use Windows to Build this test app then use <code class="highlighter-rouge">winSCP</code> to transfer the <code class="highlighter-rouge">selfcontained-linux-arm</code> folder on to the Raspberry Pi 3
+</div>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">docker run -it --rm -v /home/pi3:/home/share dotnet</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>And to execute the test app… run this command inside the docker environment.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">dotnet /home/share/selfcontained-linux-arm/dotnetapp.dll</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p><img src="/assets/images/ubuntu/robot.png" class="responsive-img" /></p>
+
+<p><br /></p>
+
+<p><button class="mdc-button mdc-ripple-surface .my-surface">
+  <i class="material-icons mdc-button__icon" aria-hidden="true">favorite</i>
+  Button
+</button></p>
+
+<section class="hero demo">
+        <button class="mdc-tab mdc-tab--stacked mdc-tab--active demo-tab" role="tab">
+          <span class="mdc-tab__content">
+            <span class="material-icons mdc-tab__icon">favorite</span>
+            <span class="mdc-tab__text-label">Favorites</span>
+            <span class="mdc-tab-indicator mdc-tab-indicator--active">
+              <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+            </span>
+          </span>
+          <span class="mdc-tab__ripple"></span>
+        </button>
+        <button class="mdc-tab mdc-tab--stacked demo-tab" role="tab">
+          <span class="mdc-tab__content">
+            <span class="material-icons mdc-tab__icon">phone</span>
+            <span class="mdc-tab__text-label">Recents</span>
+            <span class="mdc-tab-indicator">
+              <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+            </span>
+          </span>
+          <span class="mdc-tab__ripple"></span>
+        </button>
+        <button class="mdc-tab mdc-tab--stacked demo-tab" role="tab">
+          <span class="mdc-tab__content">
+            <span class="material-icons mdc-tab__icon">near_me</span>
+            <span class="mdc-tab__text-label">Nearby</span>
+            <span class="mdc-tab-indicator">
+              <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+            </span>
+          </span>
+          <span class="mdc-tab__ripple"></span>
+        </button>
+      </section>
+
+<p>GPIO test using .Net Core on Console app and WebApp. <code class="highlighter-rouge">To-Do</code></p>
+<div class="row">
+    <div class="col s12">
+        <ul class="tabs">
+            <li class="tab col s3">
+                <a href="#test1">Console GPIO</a>
+            </li>
+            <li class="tab col s3">
+                <a href="#test2">WebApp GPIO</a>
+            </li>
+        </ul>
+    </div>
+    <div id="test1" class="col s12">
+    <br />
+    I wan't to try .Net Core on linux-arm64... but unfortunately, there's no available yet except Win-arm64 and linux-arm32. For this one we'll use a bcm2835 library but later a C# version of this library i had which is on-hold until today.
+    <br />
+    <h4>Prerequisites</h4>
+    <a href="http://www.airspayce.com/mikem/bcm2835/bcm2835-1.55.tar.gz" class="mdc-button mdc-button--compact">bcm2835 library<i class="material-icons mdc-button__icon">file_download</i></a>
+    <div class="my-callout my-callout-note">
+    Be sure <code class="highlighter-rouge">gcc make</code> are installed
+</div>
+    <br />
+    Extract <code>bcm2835-1.55.tar.gz</code> anywhere you like, because where going to remove it once we have `libbcm2835.so`.
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="go">tar zxvf bcm2835-1.55.tar.gz
+cd bcm2835-1.52/src
+gcc -fPIC -c bcm2835.c
+gcc -shared bcm2835.o -o libbcm2835.so</span></pre></td></tr></tbody></table></code></pre></figure>
+
+    <br />
+    You can now remove the <code>bcm2835-1.55 folder</code> and be sure to put <code>libbcm2835.so</code> inside <code>/lib/aarch-~</code> folder.
+    <br />
+    <br />
+    We'll create a simple console app using these command <code>dotnet new console -o testapp</code>.
+    <br />
+    Then modify <code>Program.cs</code> with these codes. What it does is we use <code>libbcm2835.so</code> C internal commands into our C# app using PInvoke.
+    <br />
+    Take note of the <code>PIN Numbering</code>: bcm2835 library use physical numbering so <code>RPI_GPIO_P1_07</code> is equal to GPIO4 of our RPi3.
+    <img src="/assets/images/ubuntu/Raspberry-Pi-3-GPIO-Layout-Model-B.jpg" class="responsive-img" />
+<pre><code>
+# Program.cs
+using System;
+using System.Runtime.InteropServices;
+
+namespace testapp
+{
+    class Program
+    {
+        private static uint HIGH = 0x1;
+        private static uint LOW  = 0x0;
+        private static byte RPI_GPIO_P1_07 = 4;
+        private static byte BCM2835_GPIO_FSEL_OUTP = 0x01;
+
+        [DllImport("libbcm2835.so")]
+        public static extern int bcm2835_init();
+
+        [DllImport("libbcm2835.so")]
+        public static extern void bcm2835_close();
+
+        [DllImport("libbcm2835.so")]
+        public static extern void bcm2835_delay(uint millis);
+
+        [DllImport("libbcm2835.so")]
+        public static extern void bcm2835_gpio_fsel(byte pin, byte mode);
+
+        [DllImport("libbcm2835.so")]
+        public static extern void bcm2835_gpio_write(byte pin, uint on);
+
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello World!");
+
+            if (bcm2835_init() == 1)
+            {
+                
+                    bcm2835_gpio_fsel(RPI_GPIO_P1_07, BCM2835_GPIO_FSEL_OUTP);
+                    
+                    // Blink
+                    while(true)
+                    {
+                        // Turn it on
+                        bcm2835_gpio_write(RPI_GPIO_P1_07, HIGH);
+                        // wait
+                        bcm2835_delay(500);
+                        // turn it off
+                        bcm2835_gpio_write(RPI_GPIO_P1_07, LOW);
+                        // wait 
+                        bcm2835_delay(500);
+                    }
+                
+            }
+            bcm2835_close();
+        }
+    }
+}
+</code></pre>
+<br />
+Then issue the command while inside the <code>testapp folder</code>. And copy <code>testapp-linux-arm</code> folder to your Raspberry Pi 3.
+<pre><code>dotnet publish -c release -r linux-arm -o testapp-linux-arm</code></pre>
+<br />
+Assuming you know how to and already hook up our test circuit: a led attach to our GPIO4 or rather PIN7 on the RPi3 physical Pin header. <code>Please be careful and you should know how to properly hook up our test led to avoid breaking your RPi3</code>.
+<br />
+In RPi3, let us run the docker image then test our testapp on it.
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">docker run -it --privileged --rm -v /home/pi3:/home/share dotnet</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="my-callout my-callout-note">
+    <code class="highlighter-rouge">--privileged</code> - To give docker access rights to <code class="highlighter-rouge">/dev/gpiomem</code>. <code class="highlighter-rouge">--rm</code> - the container is removed when it exits or when the daemon exits
+</div>
+<br />
+Make sure that you have <code>libbcm2835.so</code> inside the <code>/lib/aarch64-~</code> folder or it will complain about running it in SDK.
+<br />
+Then run our testapp like so...
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">dotnet /home/share/testapp-linux-arm/testapp.dll</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<br />
+Your led should be blinking right now.... 
+<br />
+<br />
+    </div>
+
+    <div id="test2" class="col s12">test2</div>
+</div>
+
+
+    <hr >
+
+    <!-- Comment here -->
+</div>
+
+    <!-- Material Design -->
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js" async></script>
+    <script src="/assets/js/site.js" async></script>
+
+    
+<!-- Google Analytics -->
+<script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-99256627-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <amp-auto-ads type="adsense"
+              data-ad-client="ca-pub-6013311002995151">
+    </amp-auto-ads>
+</body>
+
+</html>
