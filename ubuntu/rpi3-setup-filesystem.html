@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang=" en-US ">
+    <head>
+    <meta charset="utf-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="theme-color" content="#FFB74D" />
+    <meta name="keywords" content="Raspberry Pi 3 64bit Kernel">
+
+    <title>
+            Using Ubuntu-base arm64 rootfs for Raspberry Pi 3
+        
+    </title>
+
+    <meta name="description" content="
+            Extract the RootfsTo create our bare filesystem, we need:        Ubuntu Base 18.04.1        file_download    -C - To extract the files in a different directo...
+        ">
+
+    <link href="https://fonts.googleapis.com/css?family=Patrick+Hand+SC&effect=shadow-multiple" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+
+    <!-- Favicon head tag -->
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+
+    <!-- Syntax Highligther -->
+    <link href="/assets/css/syntax.css" rel="stylesheet" >
+
+    <!-- Google fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Orbitron:400,500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Mogra" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Spectral+SC:700" rel="stylesheet">
+
+    <!-- To DO-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+    
+    <!-- Google Adsense -->
+    
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-6013311002995151", enable_page_level_ads: true });
+        </script>
+        <script async custom-element="amp-auto-ads"
+            src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+        </script>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Using Ubuntu-base arm64 rootfs for Raspberry Pi 3 | My Personal Notes</title>
+<meta name="generator" content="Jekyll v3.8.4" />
+<meta property="og:title" content="Using Ubuntu-base arm64 rootfs for Raspberry Pi 3" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Extract the Rootfs To create our bare filesystem, we need: Ubuntu Base 18.04.1 file_download -C - To extract the files in a different directory 1 2 3 wget http://cdimage.ubuntu.com/ubuntu-base/releases/18.04.1/release/ubuntu-base-18.04.1-base-arm64.tar.gz mkdir rootfs sudo tar xzvf ubuntu-base-18.04.1-base-arm64.tar.gz -C $HOME/rootfs Modifying the Rootfs Going back from when we compile the Raspberry Pi 3 kernel, We are goig to install the kernel module and firmware into the rootfs folder that we just created above. 1 2 3 4 5 sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$HOME/bo_4.14/ modules_install INSTALL_MOD_PATH=$HOME/rootfs/ # Starting kernel &gt; 4.14 use your debian based &quot;linux-firmware&quot; package: # For kernel &lt; 4.13 include below commands for firmware: sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$HOME/bo_4.14/ firmware_install INSTALL_FW_PATH=$HOME/rootfs/lib/firmware/ Verify that it was installed correctly. And remove build and source links. 1 2 3 4 5 6 7 8 9 ls $HOME/rootfs/lib/modules/4.11~ modules.builtin modules.devname modules.symbols.bin build kernel modules.builtin.bin modules.order source modules.alias modules.dep modules.softdep modules.alias.bin modules.dep.bin modules.symbols sudo find $HOME/rootfs/ -name build | xargs rm -rf sudo find $HOME/rootfs/ -name source | xargs rm -rf Well use chroot to further setup our filesystem. 1 sudo cp -av /usr/bin/qemu-aarch64-static $HOME/rootfs/usr/bin Then we need to copy resolv.conf from our host machine for internet connection to $HOME/rootfs/etc/: 1 2 3 4 5 # If your host is Ubuntu 17.10 sudo cp -av /run/systemd/resolve/stub-resolv.conf $HOME/rootfs/etc/resolv.conf # For Ubuntu 16.04.3 below sudo cp -av /run/resolvconf/resolv.conf $HOME/rootfs/etc/resolv.conf Enter chroot environment: 1 sudo chroot $HOME/rootfs/ Now that you’re in the chroot environment, we can now add an admin user with sudo permission. 1 2 useradd -G sudo -m -s /bin/bash pi3 echo pi3:pi3 | chpasswd The format input line of chpasswd is: user_name:password. Change root password with these command: 1 passwd root You can setup your hostname here for your target device or in the kernel configuration making sure that the hostname is empty. 1 2 3 echo U-Base_min &gt; /etc/hostname echo 127.0.0.1 localhost &gt; /etc/hosts echo 127.0.1.1 U-Base_min &gt;&gt; /etc/hosts Fetch the latest package lists from server then upgrade. 1 2 apt-get update apt-get upgrade Then install these first: 1 apt-get install dialog perl We need those installed first to correct some error messages about locale: If locale-gen command is missing, apt-get install locales first. 1 2 3 4 locale-gen &quot;en_US.UTF-8&quot; Generating locales... en_US.UTF-8... done Generation complete. Install minimal packages: 1 apt-get install sudo ifupdown net-tools ethtool udev wireless-tools iputils-ping resolvconf wget apt-utils wpasupplicant initramfs-tools Create our Ramdisk. 1 mkinitramfs -o /boot/initrd.img /lib/modules/4.11~ When everything you want are done, exit chroot: 1 exit We need to add /etc/fstab file entry below coz’ if not…it will run on read-only mode. Below are Tab not spacebar 1 echo &quot;/dev/mmcblk0p2 / ext4 defaults,noatime 0 1&quot; &gt;&gt; $HOME/rootfs/etc/fstab Removing unwanted files To reduce the rootfs/ size we can remove some unwanted files. Create a file /etc/dpkg/dpkg.cfg.d/01_nodoc which specifies the desired filters. Example: 1 2 3 4 5 6 7 8 9 path-exclude /usr/share/doc/* # we need to keep copyright files for legal reasons path-include /usr/share/doc/*/copyright path-exclude /usr/share/man/* path-exclude /usr/share/groff/* path-exclude /usr/share/info/* # lintian stuff is small, but really unnecessary path-exclude /usr/share/lintian/* path-exclude /usr/share/linda/* Then you can manually remove any documentation already installed: 1 2 3 4 sudo find rootfs/usr/share/doc -depth -type f ! -name copyright|xargs rm || true sudo find rootfs/usr/share/doc -empty|xargs rmdir || true sudo rm -rf rootfs/usr/share/man/* rootfs/usr/share/groff/* rootfs/usr/share/info/* sudo rm -rf rootfs/usr/share/lintian/* rootfs/usr/share/linda/* rootfs/var/cache/man/* Then copy the $HOME/rootfs/* content to the 2nd partition of your MicroSD card. Creating the Image file (*Optional) We could make an image file with several partition on it. We will create a 700M empty img file: Modify the desired image size according to your needs. I use resize2fs after i boot this up sudo dd if=/dev/zero of=myimage.img bs=700K count=1024 Then partition it using fdisk in my case: 1 2 3 4 5 6 sudo fdisk -l myimage.img Result: | Device w| Boot | Start | End | Sectors | |:-----------|:-----|:----------|:--------|:--------| | myimage1 | | 2048 | 264191 | 1024000 | Fat32 | myimage2 | | 264192 | 1433599 | 3168256 | Linux For 32Bit don’t use Fat32(LTB) Display the name of the assigned loop device: 1 2 3 sudo losetup --find --show myimage.img /dev/loop0 Then we can use fdisk to identify our image file partitions assinged loop 1 2 3 4 5 sudo fdisk -l /dev/loop0 Device: /dev/loop0p1 /dev/loop0p2 Then, to assign a loopback device: and format it. 1 2 3 4 sudo losetup -o $((512*2048)) --sizelimit $((512*264191)) /dev/loop1 myimage.img sudo losetup -o $((512*264192)) --sizelimit $((512*1433599)) /dev/loop2 myimage.img sudo mkfs.vfat -F 32 -n &#39;SYS-BOOT&#39; /dev/loop1 sudo mkfs.ext4 /dev/loop2 mkfs.vfat -n partition name /dev/loop1. Mount and Copy those necessary files that we need to their respected partition. Install dosfstools if cannot mount vfat 1 2 3 4 5 6 7 8 sudo mount /dev/loop1 /mnt/boot sudo mount /dev/loop2 /mnt/rootfs # Then umount and detach: sudo umount /dev/loop1 sudo umount /dev/loop2 sudo losetup --detach /dev/loop1 sudo losetup --detach /dev/loop2 You can now burn that myimage.img to yor MicoSD card. Now boot it up and you should now be able to login. Reference : http://docs.khadas.com/social/BuildUbuntuRootfsViaUbuntuBase/ https://gnu-linux.org/building-ubuntu-rootfs-for-arm.html http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html" />
+<meta property="og:description" content="Extract the Rootfs To create our bare filesystem, we need: Ubuntu Base 18.04.1 file_download -C - To extract the files in a different directory 1 2 3 wget http://cdimage.ubuntu.com/ubuntu-base/releases/18.04.1/release/ubuntu-base-18.04.1-base-arm64.tar.gz mkdir rootfs sudo tar xzvf ubuntu-base-18.04.1-base-arm64.tar.gz -C $HOME/rootfs Modifying the Rootfs Going back from when we compile the Raspberry Pi 3 kernel, We are goig to install the kernel module and firmware into the rootfs folder that we just created above. 1 2 3 4 5 sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$HOME/bo_4.14/ modules_install INSTALL_MOD_PATH=$HOME/rootfs/ # Starting kernel &gt; 4.14 use your debian based &quot;linux-firmware&quot; package: # For kernel &lt; 4.13 include below commands for firmware: sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$HOME/bo_4.14/ firmware_install INSTALL_FW_PATH=$HOME/rootfs/lib/firmware/ Verify that it was installed correctly. And remove build and source links. 1 2 3 4 5 6 7 8 9 ls $HOME/rootfs/lib/modules/4.11~ modules.builtin modules.devname modules.symbols.bin build kernel modules.builtin.bin modules.order source modules.alias modules.dep modules.softdep modules.alias.bin modules.dep.bin modules.symbols sudo find $HOME/rootfs/ -name build | xargs rm -rf sudo find $HOME/rootfs/ -name source | xargs rm -rf Well use chroot to further setup our filesystem. 1 sudo cp -av /usr/bin/qemu-aarch64-static $HOME/rootfs/usr/bin Then we need to copy resolv.conf from our host machine for internet connection to $HOME/rootfs/etc/: 1 2 3 4 5 # If your host is Ubuntu 17.10 sudo cp -av /run/systemd/resolve/stub-resolv.conf $HOME/rootfs/etc/resolv.conf # For Ubuntu 16.04.3 below sudo cp -av /run/resolvconf/resolv.conf $HOME/rootfs/etc/resolv.conf Enter chroot environment: 1 sudo chroot $HOME/rootfs/ Now that you’re in the chroot environment, we can now add an admin user with sudo permission. 1 2 useradd -G sudo -m -s /bin/bash pi3 echo pi3:pi3 | chpasswd The format input line of chpasswd is: user_name:password. Change root password with these command: 1 passwd root You can setup your hostname here for your target device or in the kernel configuration making sure that the hostname is empty. 1 2 3 echo U-Base_min &gt; /etc/hostname echo 127.0.0.1 localhost &gt; /etc/hosts echo 127.0.1.1 U-Base_min &gt;&gt; /etc/hosts Fetch the latest package lists from server then upgrade. 1 2 apt-get update apt-get upgrade Then install these first: 1 apt-get install dialog perl We need those installed first to correct some error messages about locale: If locale-gen command is missing, apt-get install locales first. 1 2 3 4 locale-gen &quot;en_US.UTF-8&quot; Generating locales... en_US.UTF-8... done Generation complete. Install minimal packages: 1 apt-get install sudo ifupdown net-tools ethtool udev wireless-tools iputils-ping resolvconf wget apt-utils wpasupplicant initramfs-tools Create our Ramdisk. 1 mkinitramfs -o /boot/initrd.img /lib/modules/4.11~ When everything you want are done, exit chroot: 1 exit We need to add /etc/fstab file entry below coz’ if not…it will run on read-only mode. Below are Tab not spacebar 1 echo &quot;/dev/mmcblk0p2 / ext4 defaults,noatime 0 1&quot; &gt;&gt; $HOME/rootfs/etc/fstab Removing unwanted files To reduce the rootfs/ size we can remove some unwanted files. Create a file /etc/dpkg/dpkg.cfg.d/01_nodoc which specifies the desired filters. Example: 1 2 3 4 5 6 7 8 9 path-exclude /usr/share/doc/* # we need to keep copyright files for legal reasons path-include /usr/share/doc/*/copyright path-exclude /usr/share/man/* path-exclude /usr/share/groff/* path-exclude /usr/share/info/* # lintian stuff is small, but really unnecessary path-exclude /usr/share/lintian/* path-exclude /usr/share/linda/* Then you can manually remove any documentation already installed: 1 2 3 4 sudo find rootfs/usr/share/doc -depth -type f ! -name copyright|xargs rm || true sudo find rootfs/usr/share/doc -empty|xargs rmdir || true sudo rm -rf rootfs/usr/share/man/* rootfs/usr/share/groff/* rootfs/usr/share/info/* sudo rm -rf rootfs/usr/share/lintian/* rootfs/usr/share/linda/* rootfs/var/cache/man/* Then copy the $HOME/rootfs/* content to the 2nd partition of your MicroSD card. Creating the Image file (*Optional) We could make an image file with several partition on it. We will create a 700M empty img file: Modify the desired image size according to your needs. I use resize2fs after i boot this up sudo dd if=/dev/zero of=myimage.img bs=700K count=1024 Then partition it using fdisk in my case: 1 2 3 4 5 6 sudo fdisk -l myimage.img Result: | Device w| Boot | Start | End | Sectors | |:-----------|:-----|:----------|:--------|:--------| | myimage1 | | 2048 | 264191 | 1024000 | Fat32 | myimage2 | | 264192 | 1433599 | 3168256 | Linux For 32Bit don’t use Fat32(LTB) Display the name of the assigned loop device: 1 2 3 sudo losetup --find --show myimage.img /dev/loop0 Then we can use fdisk to identify our image file partitions assinged loop 1 2 3 4 5 sudo fdisk -l /dev/loop0 Device: /dev/loop0p1 /dev/loop0p2 Then, to assign a loopback device: and format it. 1 2 3 4 sudo losetup -o $((512*2048)) --sizelimit $((512*264191)) /dev/loop1 myimage.img sudo losetup -o $((512*264192)) --sizelimit $((512*1433599)) /dev/loop2 myimage.img sudo mkfs.vfat -F 32 -n &#39;SYS-BOOT&#39; /dev/loop1 sudo mkfs.ext4 /dev/loop2 mkfs.vfat -n partition name /dev/loop1. Mount and Copy those necessary files that we need to their respected partition. Install dosfstools if cannot mount vfat 1 2 3 4 5 6 7 8 sudo mount /dev/loop1 /mnt/boot sudo mount /dev/loop2 /mnt/rootfs # Then umount and detach: sudo umount /dev/loop1 sudo umount /dev/loop2 sudo losetup --detach /dev/loop1 sudo losetup --detach /dev/loop2 You can now burn that myimage.img to yor MicoSD card. Now boot it up and you should now be able to login. Reference : http://docs.khadas.com/social/BuildUbuntuRootfsViaUbuntuBase/ https://gnu-linux.org/building-ubuntu-rootfs-for-arm.html http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html" />
+<link rel="canonical" href="http://a-delacruz.github.io/ubuntu/rpi3-setup-filesystem.html" />
+<meta property="og:url" content="http://a-delacruz.github.io/ubuntu/rpi3-setup-filesystem.html" />
+<meta property="og:site_name" content="My Personal Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-11-03T00:00:00+08:00" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","url":"http://a-delacruz.github.io/ubuntu/rpi3-setup-filesystem.html","headline":"Using Ubuntu-base arm64 rootfs for Raspberry Pi 3","dateModified":"2017-11-03T00:00:00+08:00","datePublished":"2017-11-03T00:00:00+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/ubuntu/rpi3-setup-filesystem.html"},"description":"Extract the Rootfs To create our bare filesystem, we need: Ubuntu Base 18.04.1 file_download -C - To extract the files in a different directory 1 2 3 wget http://cdimage.ubuntu.com/ubuntu-base/releases/18.04.1/release/ubuntu-base-18.04.1-base-arm64.tar.gz mkdir rootfs sudo tar xzvf ubuntu-base-18.04.1-base-arm64.tar.gz -C $HOME/rootfs Modifying the Rootfs Going back from when we compile the Raspberry Pi 3 kernel, We are goig to install the kernel module and firmware into the rootfs folder that we just created above. 1 2 3 4 5 sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$HOME/bo_4.14/ modules_install INSTALL_MOD_PATH=$HOME/rootfs/ # Starting kernel &gt; 4.14 use your debian based &quot;linux-firmware&quot; package: # For kernel &lt; 4.13 include below commands for firmware: sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$HOME/bo_4.14/ firmware_install INSTALL_FW_PATH=$HOME/rootfs/lib/firmware/ Verify that it was installed correctly. And remove build and source links. 1 2 3 4 5 6 7 8 9 ls $HOME/rootfs/lib/modules/4.11~ modules.builtin modules.devname modules.symbols.bin build kernel modules.builtin.bin modules.order source modules.alias modules.dep modules.softdep modules.alias.bin modules.dep.bin modules.symbols sudo find $HOME/rootfs/ -name build | xargs rm -rf sudo find $HOME/rootfs/ -name source | xargs rm -rf Well use chroot to further setup our filesystem. 1 sudo cp -av /usr/bin/qemu-aarch64-static $HOME/rootfs/usr/bin Then we need to copy resolv.conf from our host machine for internet connection to $HOME/rootfs/etc/: 1 2 3 4 5 # If your host is Ubuntu 17.10 sudo cp -av /run/systemd/resolve/stub-resolv.conf $HOME/rootfs/etc/resolv.conf # For Ubuntu 16.04.3 below sudo cp -av /run/resolvconf/resolv.conf $HOME/rootfs/etc/resolv.conf Enter chroot environment: 1 sudo chroot $HOME/rootfs/ Now that you’re in the chroot environment, we can now add an admin user with sudo permission. 1 2 useradd -G sudo -m -s /bin/bash pi3 echo pi3:pi3 | chpasswd The format input line of chpasswd is: user_name:password. Change root password with these command: 1 passwd root You can setup your hostname here for your target device or in the kernel configuration making sure that the hostname is empty. 1 2 3 echo U-Base_min &gt; /etc/hostname echo 127.0.0.1 localhost &gt; /etc/hosts echo 127.0.1.1 U-Base_min &gt;&gt; /etc/hosts Fetch the latest package lists from server then upgrade. 1 2 apt-get update apt-get upgrade Then install these first: 1 apt-get install dialog perl We need those installed first to correct some error messages about locale: If locale-gen command is missing, apt-get install locales first. 1 2 3 4 locale-gen &quot;en_US.UTF-8&quot; Generating locales... en_US.UTF-8... done Generation complete. Install minimal packages: 1 apt-get install sudo ifupdown net-tools ethtool udev wireless-tools iputils-ping resolvconf wget apt-utils wpasupplicant initramfs-tools Create our Ramdisk. 1 mkinitramfs -o /boot/initrd.img /lib/modules/4.11~ When everything you want are done, exit chroot: 1 exit We need to add /etc/fstab file entry below coz’ if not…it will run on read-only mode. Below are Tab not spacebar 1 echo &quot;/dev/mmcblk0p2 / ext4 defaults,noatime 0 1&quot; &gt;&gt; $HOME/rootfs/etc/fstab Removing unwanted files To reduce the rootfs/ size we can remove some unwanted files. Create a file /etc/dpkg/dpkg.cfg.d/01_nodoc which specifies the desired filters. Example: 1 2 3 4 5 6 7 8 9 path-exclude /usr/share/doc/* # we need to keep copyright files for legal reasons path-include /usr/share/doc/*/copyright path-exclude /usr/share/man/* path-exclude /usr/share/groff/* path-exclude /usr/share/info/* # lintian stuff is small, but really unnecessary path-exclude /usr/share/lintian/* path-exclude /usr/share/linda/* Then you can manually remove any documentation already installed: 1 2 3 4 sudo find rootfs/usr/share/doc -depth -type f ! -name copyright|xargs rm || true sudo find rootfs/usr/share/doc -empty|xargs rmdir || true sudo rm -rf rootfs/usr/share/man/* rootfs/usr/share/groff/* rootfs/usr/share/info/* sudo rm -rf rootfs/usr/share/lintian/* rootfs/usr/share/linda/* rootfs/var/cache/man/* Then copy the $HOME/rootfs/* content to the 2nd partition of your MicroSD card. Creating the Image file (*Optional) We could make an image file with several partition on it. We will create a 700M empty img file: Modify the desired image size according to your needs. I use resize2fs after i boot this up sudo dd if=/dev/zero of=myimage.img bs=700K count=1024 Then partition it using fdisk in my case: 1 2 3 4 5 6 sudo fdisk -l myimage.img Result: | Device w| Boot | Start | End | Sectors | |:-----------|:-----|:----------|:--------|:--------| | myimage1 | | 2048 | 264191 | 1024000 | Fat32 | myimage2 | | 264192 | 1433599 | 3168256 | Linux For 32Bit don’t use Fat32(LTB) Display the name of the assigned loop device: 1 2 3 sudo losetup --find --show myimage.img /dev/loop0 Then we can use fdisk to identify our image file partitions assinged loop 1 2 3 4 5 sudo fdisk -l /dev/loop0 Device: /dev/loop0p1 /dev/loop0p2 Then, to assign a loopback device: and format it. 1 2 3 4 sudo losetup -o $((512*2048)) --sizelimit $((512*264191)) /dev/loop1 myimage.img sudo losetup -o $((512*264192)) --sizelimit $((512*1433599)) /dev/loop2 myimage.img sudo mkfs.vfat -F 32 -n &#39;SYS-BOOT&#39; /dev/loop1 sudo mkfs.ext4 /dev/loop2 mkfs.vfat -n partition name /dev/loop1. Mount and Copy those necessary files that we need to their respected partition. Install dosfstools if cannot mount vfat 1 2 3 4 5 6 7 8 sudo mount /dev/loop1 /mnt/boot sudo mount /dev/loop2 /mnt/rootfs # Then umount and detach: sudo umount /dev/loop1 sudo umount /dev/loop2 sudo losetup --detach /dev/loop1 sudo losetup --detach /dev/loop2 You can now burn that myimage.img to yor MicoSD card. Now boot it up and you should now be able to login. Reference : http://docs.khadas.com/social/BuildUbuntuRootfsViaUbuntuBase/ https://gnu-linux.org/building-ubuntu-rootfs-for-arm.html http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+<body>
+
+    <!-- To Do -->
+        <header class="mdc-top-app-bar mdc-top-app-bar--short mdc-top-app-bar--dense">
+                <div class="mdc-top-app-bar__row">
+                    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                    <a href="/" class="mdc-top-app-bar__navigation-icon my-logo"><img src="/assets/images/logo-bl.png"></a>
+                    </section>
+                    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end my-top-app-bar-btn">
+                        <a href="/about" class="mdc-button">about</a>
+                    </section>
+                </div>
+            </header>
+
+    <div class="posts">
+    <h5 class="mdc-typography--headline5 posts-title">Using Ubuntu-base arm64 rootfs for Raspberry Pi 3</h5>
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- Ad-1 -->
+    <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-6013311002995151"
+        data-ad-slot="2377202477"
+        data-ad-format="auto"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+    <h4 id="extract-the-rootfs">Extract the Rootfs</h4>
+<p>To create our bare filesystem, we need:</p>
+
+<p><a href="http://cdimage.ubuntu.com/ubuntu-base/releases/18.04.1/release/ubuntu-base-18.04.1-base-arm64.tar.gz" class="mdc-button mdc-button--compact">
+        Ubuntu Base 18.04.1
+        <i class="material-icons mdc-button__icon">file_download</i>
+</a></p>
+
+<div class="my-callout my-callout-note">
+    <code class="highlighter-rouge">-C</code> - To extract the files in a different directory
+</div>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="go">wget http://cdimage.ubuntu.com/ubuntu-base/releases/18.04.1/release/ubuntu-base-18.04.1-base-arm64.tar.gz
+mkdir rootfs
+</span><span class="gp">sudo tar xzvf ubuntu-base-18.04.1-base-arm64.tar.gz -C $</span>HOME/rootfs</pre></td></tr></tbody></table></code></pre></figure>
+
+<h4 id="modifying-the-rootfs">Modifying the Rootfs</h4>
+<p>Going back from when we compile the Raspberry Pi 3 kernel, We are goig to install the kernel module and firmware into the rootfs folder that we just created above.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="gp">sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$</span>HOME/bo_4.14/ modules_install <span class="nv">INSTALL_MOD_PATH</span><span class="o">=</span><span class="nv">$HOME</span>/rootfs/
+<span class="go">
+</span><span class="gp">#</span> Starting kernel <span class="o">&gt;</span> 4.14 use your debian based <span class="s2">"linux-firmware"</span> package:
+<span class="gp">#</span> For kernel &lt; 4.13 include below commands <span class="k">for </span>firmware:
+<span class="gp">sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$</span>HOME/bo_4.14/ firmware_install <span class="nv">INSTALL_FW_PATH</span><span class="o">=</span><span class="nv">$HOME</span>/rootfs/lib/firmware/</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Verify that it was installed correctly. And remove <code class="highlighter-rouge">build</code> and <code class="highlighter-rouge">source</code> links.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="gp">ls $</span>HOME/rootfs/lib/modules/4.11~
+<span class="go">
+modules.builtin     modules.devname        modules.symbols.bin  build
+kernel              modules.builtin.bin    modules.order        source
+modules.alias       modules.dep            modules.softdep
+modules.alias.bin   modules.dep.bin        modules.symbols
+
+</span><span class="gp">sudo find $</span>HOME/rootfs/ <span class="nt">-name</span> build | xargs <span class="nb">rm</span> <span class="nt">-rf</span>
+<span class="gp">sudo find $</span>HOME/rootfs/ <span class="nt">-name</span> <span class="nb">source</span> | xargs <span class="nb">rm</span> <span class="nt">-rf</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Well use <code class="highlighter-rouge">chroot</code> to further setup our filesystem.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="gp">sudo cp -av /usr/bin/qemu-aarch64-static $</span>HOME/rootfs/usr/bin</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Then we need to copy <code class="highlighter-rouge">resolv.conf</code> from our host machine for internet connection to <code class="highlighter-rouge">$HOME/rootfs/etc/</code>:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="gp">#</span> If your host is Ubuntu 17.10
+<span class="gp">sudo cp -av /run/systemd/resolve/stub-resolv.conf $</span>HOME/rootfs/etc/resolv.conf
+<span class="go">
+</span><span class="gp">#</span> For Ubuntu 16.04.3 below
+<span class="gp">sudo cp -av /run/resolvconf/resolv.conf $</span>HOME/rootfs/etc/resolv.conf</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Enter chroot environment:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="gp">sudo chroot $</span>HOME/rootfs/</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Now that you’re in the chroot environment, we can now add an admin user with sudo permission.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="go">useradd -G sudo -m -s /bin/bash pi3
+echo pi3:pi3 | chpasswd</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<blockquote>
+  <p>The format input line of chpasswd is: user_name:password.</p>
+</blockquote>
+
+<p><br />
+Change root password with these command:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">passwd root</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>You can setup your <code class="highlighter-rouge">hostname</code> here for your target device or in the kernel configuration making sure that the hostname is empty.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="gp">echo U-Base_min &gt;</span> /etc/hostname
+<span class="gp">echo 127.0.0.1	localhost &gt;</span> /etc/hosts
+<span class="gp">echo 127.0.1.1	U-Base_min &gt;</span><span class="o">&gt;</span> /etc/hosts</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Fetch the latest package lists from server then upgrade.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="go">apt-get update
+apt-get upgrade</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Then install these first:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">apt-get install dialog perl</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>We need those installed first to correct some error messages about locale: If <code class="highlighter-rouge">locale-gen</code> command is missing, <code class="highlighter-rouge">apt-get install locales</code> first.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="go">locale-gen "en_US.UTF-8"
+        Generating locales...
+            en_US.UTF-8... done
+        Generation complete.</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Install minimal packages:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">apt-get install sudo ifupdown net-tools ethtool udev wireless-tools iputils-ping resolvconf wget apt-utils wpasupplicant initramfs-tools</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Create our Ramdisk.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">mkinitramfs -o /boot/initrd.img /lib/modules/4.11~</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>When everything you want are done, exit chroot:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">exit</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>We need to add <code class="highlighter-rouge">/etc/fstab</code> file entry below coz’ if not…it will run on read-only mode. Below are <code class="highlighter-rouge">Tab</code> not <code class="highlighter-rouge">spacebar</code></p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="gp">echo "/dev/mmcblk0p2	/	ext4	defaults,noatime	0	1" &gt;</span><span class="o">&gt;</span> <span class="nv">$HOME</span>/rootfs/etc/fstab</pre></td></tr></tbody></table></code></pre></figure>
+
+<h4 id="removing-unwanted-files">Removing unwanted files</h4>
+<p>To reduce the rootfs/ size we can remove some unwanted files.
+Create a file <code class="highlighter-rouge">/etc/dpkg/dpkg.cfg.d/01_nodoc</code> which specifies the desired filters. Example:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="go">path-exclude /usr/share/doc/*
+</span><span class="gp">#</span> we need to keep copyright files <span class="k">for </span>legal reasons
+<span class="go">path-include /usr/share/doc/*/copyright
+path-exclude /usr/share/man/*
+path-exclude /usr/share/groff/*
+path-exclude /usr/share/info/*
+</span><span class="gp">#</span> lintian stuff is small, but really unnecessary
+<span class="go">path-exclude /usr/share/lintian/*
+path-exclude /usr/share/linda/*</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Then you can manually remove any documentation already installed:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="go">sudo find rootfs/usr/share/doc -depth -type f ! -name copyright|xargs rm || true
+sudo find rootfs/usr/share/doc -empty|xargs rmdir || true
+sudo rm -rf rootfs/usr/share/man/* rootfs/usr/share/groff/* rootfs/usr/share/info/*
+sudo rm -rf rootfs/usr/share/lintian/* rootfs/usr/share/linda/* rootfs/var/cache/man/*</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Then copy the <code class="highlighter-rouge">$HOME/rootfs/*</code> content to the 2nd partition of your MicroSD card.</p>
+
+<p><br /></p>
+<h4 id="creating-the-image-file-optional">Creating the Image file (*Optional)</h4>
+<p>We could make an image file with several partition on it. 
+We will create a 700M empty img file:</p>
+<div class="my-callout my-callout-note">
+    Modify the desired image size according to your needs. I use <code class="highlighter-rouge">resize2fs</code> after i boot this up
+</div>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><span class="go">sudo dd if=/dev/zero of=myimage.img bs=700K count=1024</span></code></pre></figure>
+
+<p>Then partition it using <code class="highlighter-rouge">fdisk</code> in my case:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="go">sudo fdisk -l myimage.img
+        Result:
+        | Device     w| Boot | Start 	| End	  | Sectors |
+        |:-----------|:-----|:----------|:--------|:--------|
+        | myimage1   |      | 2048  	| 264191  | 1024000 | Fat32
+        | myimage2   |      | 264192 	| 1433599 | 3168256 | Linux</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="my-callout my-callout-note">
+    For 32Bit don’t use <code class="highlighter-rouge">Fat32(LTB)</code>
+</div>
+
+<p>Display the name of the assigned loop device:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="go">sudo losetup --find --show myimage.img
+	
+	    /dev/loop0</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Then we can use <code class="highlighter-rouge">fdisk</code> to identify our image file partitions assinged loop</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="go">sudo fdisk -l /dev/loop0
+
+        Device:
+            /dev/loop0p1
+            /dev/loop0p2</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Then, to assign a loopback device: and format it.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="gp">sudo losetup -o $</span><span class="o">((</span>512<span class="k">*</span>2048<span class="o">))</span> <span class="nt">--sizelimit</span> <span class="k">$((</span><span class="m">512</span><span class="o">*</span><span class="m">264191</span><span class="k">))</span> /dev/loop1 myimage.img 
+<span class="gp">sudo losetup -o $</span><span class="o">((</span>512<span class="k">*</span>264192<span class="o">))</span> <span class="nt">--sizelimit</span> <span class="k">$((</span><span class="m">512</span><span class="o">*</span><span class="m">1433599</span><span class="k">))</span> /dev/loop2 myimage.img
+<span class="go">sudo mkfs.vfat -F 32 -n 'SYS-BOOT' /dev/loop1
+sudo mkfs.ext4 /dev/loop2</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="my-callout my-callout-note">
+    mkfs.vfat -n <code class="highlighter-rouge">partition name</code> /dev/loop1.
+</div>
+
+<p>Mount and Copy those necessary files that we need to their respected partition.
+Install <code class="highlighter-rouge">dosfstools</code> if cannot mount vfat</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="go">sudo mount /dev/loop1 /mnt/boot
+sudo mount /dev/loop2 /mnt/rootfs
+
+</span><span class="gp">    #</span> Then umount and detach:
+<span class="go">sudo umount /dev/loop1
+sudo umount /dev/loop2
+sudo losetup --detach /dev/loop1
+sudo losetup --detach /dev/loop2</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>You can now burn that myimage.img to yor MicoSD card.
+Now boot it up and you should now be able to login.</p>
+
+<p><br /></p>
+
+<h5 id="reference-">Reference :</h5>
+<p><a href="http://docs.khadas.com/social/BuildUbuntuRootfsViaUbuntuBase/">http://docs.khadas.com/social/BuildUbuntuRootfsViaUbuntuBase/</a><br />
+<a href="https://gnu-linux.org/building-ubuntu-rootfs-for-arm.html">https://gnu-linux.org/building-ubuntu-rootfs-for-arm.html</a><br />
+<a href="http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html">http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html</a></p>
+
+
+    <hr >
+
+</div>
+
+    <!-- Material Design -->
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js" async></script>
+    <script src="/assets/js/site.js" async></script>
+
+    
+<!-- Google Analytics -->
+<script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-99256627-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <amp-auto-ads type="adsense"
+              data-ad-client="ca-pub-6013311002995151">
+    </amp-auto-ads>
+    
+</body>
+
+</html>

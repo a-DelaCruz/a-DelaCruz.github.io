@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang=" en-US ">
+    <head>
+    <meta charset="utf-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="theme-color" content="#FFB74D" />
+    <meta name="keywords" content="Raspberry Pi 3 64bit Kernel">
+
+    <title>
+            Raspberry Pi 3 Alpine Linux arm64
+        
+    </title>
+
+    <meta name="description" content="
+            *** 18-09-20: Will update soon...*** 17-07-06: To fix brcmfmac loading error: directly place brcm folder inside our custom initramfs-rpi3 file.*** 17-07-06: ...
+        ">
+
+    <link href="https://fonts.googleapis.com/css?family=Patrick+Hand+SC&effect=shadow-multiple" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+
+    <!-- Favicon head tag -->
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+
+    <!-- Syntax Highligther -->
+    <link href="/assets/css/syntax.css" rel="stylesheet" >
+
+    <!-- Google fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Orbitron:400,500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Mogra" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Spectral+SC:700" rel="stylesheet">
+
+    <!-- To DO-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+    
+    <!-- Google Adsense -->
+    
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-6013311002995151", enable_page_level_ads: true });
+        </script>
+        <script async custom-element="amp-auto-ads"
+            src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+        </script>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Raspberry Pi 3 Alpine Linux arm64 | My Personal Notes</title>
+<meta name="generator" content="Jekyll v3.8.4" />
+<meta property="og:title" content="Raspberry Pi 3 Alpine Linux arm64" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="*** 18-09-20: Will update soon... *** 17-07-06: To fix brcmfmac loading error: directly place brcm folder inside our custom initramfs-rpi3 file. *** 17-07-06: b43 is optional… As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image for .NetCore because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3. Alpine 3.7 Generic arm64file_download Make sure SquashFS is enabled 1 2 3 4 5 // Kernel config File systems |- Miscellaneous filesystems |- [*] SquashFS 4.0 For our custom kernel and U-boot… just follow Raspberry Pi 3 64-bit kernel. The files that we need from alpine to modify is initramfs-vanilla, and a copy of apk folder (alpine.apkovl.tar.gz is optional). so go ahead and extract them. initramfs-vanilla is a compressed cpio archive. To extract it we do this: 1 2 3 mkdir $HOME/temp cd $HOME/temp sudo gunzip -c /boot/initramfs-vanilla | cpio -i Then we need to install our latest modules into it…assuming you already compiled a kernel following this Raspberry Pi 3 64-bit kernel. 1 2 3 4 5 6 7 8 9 sudo ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make -C rpi-4.14/ modules_install INSTALL_MOD_PATH=$HOME/temp/ # When it is done go back to /temp/ folder where we extract the initramfs and into the modules folder. cd $HOME/temp/lib/modules/ # And remove the previous version and the build, source folder symlink in $HOME/temp/lib/modules/4.1x~/ folder sudo rm -rf 4.9~/ Now we have our custom initramfs and then recreate the compressed cpio archive again. Inside the folder run: 1 2 3 sudo find . | cpio -H newc -o | gzip -9 &gt; [file destination]/initramfs-rpi3-cpio cd .. sudo mkimage -A arm64 -O linux -T ramdisk -d initramfs-rpi3-cpio initramfs-rpi3 // For U-boot modloop-vanilla is a squashfs file. We can make from scratch or unsquash it using this command: 1 sudo unsquashfs -f -d [file destination] [file location]/file.squashfs To create our own modloop file let start by making a folder 1 2 sudo mkdir modules # Then inside this module, let&#39;s install again our rpi-4.11y modules from above After you’ve installed our modules from above on the modules folder that we’ve just created.. you’ll have a folder structure like so: 1 2 3 4 5 6 7 8 /modules |- /lib |- /firmware # firmware_install INSTALL_FW_PATH=[in this location or just use from the moodlop-vanilla] # Use firmware_install if using kernel &lt;- 4.13 |- /modules # again remove build and source symlink folder here Rearrange above modules folder to: 1 2 /modules/modules/firmware /modules/modules/4.1x~ Squash it using this command: 1 sudo mksquashfs [folder to be squash] [filename] -comp [compression method: I use &#39;xz&#39; -Xdict-size 100% And now we have our own initramfs-rpi3 and modloop-rpi3. Our µsd card should now look like this: 1 2 3 4 5 6 7 8 9 10 11 12 13 /apk /boot/Image /boot/u-boot.bin /boot/boot.scr /boot/initramfs-rpi3 /boot/modloop-rpi3 bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt alpine.apkovl.tar.gz // optional will be created once we setup our alpine linux We’ll modify the cmdline.txt and boot.scr for alpine linux. alerts/code.html type=”cmdline.txt:” code=” 1 2 3 modules=loop,squashfs,sd-mod,usb-storage quiet net.ifnames=0 dwc_otg.lpm_enable=0 console=ttyS0,115200 fsck.repair=yes rootwait # the quiet command can be remove: it just hide the message buffer of kernel. `ttyS0` can be replace by `ttyAMA0` 1 2 3 4 5 6 7 8 9 fdt addr 0x100 fdt get value bootargs /chosen bootargs setenv kernel_addr_r 0x01000000 setenv ramdisk_addr_r 0x02100000 fatload mmc 0:1 ${kernel_addr_r} boot/Image fatload mmc 0:1 ${ramdisk_addr_r} boot/initramfs-rpi3 setenv initrdsize $filesize fatload mmc 0:1 ${fdt_addr_r} bcm2710-rpi-3-b.dtb booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r} Go ahead noew and try to boot it up. You should have an output like this: As you can see… there’s a hwclock error since our raspberry pi 3 don’t have any. So after you run setup-alpine and use lbu commit to save changes…run this: 1 2 rc-update add swclock boot // enable the software clock rc-update del hwclock boot // disable the hardware clock In my case i use Busybox NTP as it might be the most lightweight solution. Save the changes and reboot. 1 2 3 lbu commit apk add wireless-tools wpa_supplicant // will be installed even when not connected to the net reboot Wifi: (*Optional) I didn’t include the brcm above because i encouter a brcmf_sdio_htclk error but can be resolve by reloading the module: brcmfmac The good thing about alpine linux is if you make a firmware folder on the root directory of our µsd card, it’ll be recognized by alpine and load it once alpine boot up. Don’t worry if the rest of the folder inside the OS fimrware folder is gone(it’s just hidden in plain site). So i place my brcm folder there for now. According to alpine linux… Connecting to a wireless access point Broadcom Wi-Fi Chipset Users: we need b43-firmware so go ahead and follow that or we can compile it somewhere else like what i did. On ubuntu 16.04 i install b43-fwcutter then get b43-firmware and follow the instruction here 1 2 tar -xjf broadcom-wl-4.150.10.5.tar.bz2 // make sure bzip is installed b43-fwcutter -w [$FIRMWARE_INSTALL_DIR/b43] broadcom-wl-4.150.10.5/driver/wl_apsta_mimo.o Then copy that b43 folder to firmware folder on the root of our µsd card. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 /apk /boot/Image /boot/kernel8.img /boot/boot.scr /boot/initramfs-rpi3 /boot/modloop-rpi3 /firmware/b43 /firmware/brcm bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt alpine.apkovl.tar.gz # optional will be created once we setup our alpine linux Load the b43 kernel and enable it at boot up: 1 2 3 modprobe b43 echo b43 &gt;&gt; /etc/modules lbu commit // To save changes If you run dmesg command and display a brcmfmac error just reload brcmfmac module: 1 2 modprobe -r brcmfmac // For now modprobe brcmfmac Reference : http://backreference.org/2010/07/04/modifying-initrdinitramfs-files/ https://askubuntu.com/questions/437880/extract-a-squashfs-to-an-existing-directory https://wiki.alpinelinux.org/wiki/DIY_Fully_working_Alpine_Linux_for_Allwinner_and_Other_ARM_SOCs https://wiki.alpinelinux.org/wiki/Raspberry_Pi" />
+<meta property="og:description" content="*** 18-09-20: Will update soon... *** 17-07-06: To fix brcmfmac loading error: directly place brcm folder inside our custom initramfs-rpi3 file. *** 17-07-06: b43 is optional… As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image for .NetCore because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3. Alpine 3.7 Generic arm64file_download Make sure SquashFS is enabled 1 2 3 4 5 // Kernel config File systems |- Miscellaneous filesystems |- [*] SquashFS 4.0 For our custom kernel and U-boot… just follow Raspberry Pi 3 64-bit kernel. The files that we need from alpine to modify is initramfs-vanilla, and a copy of apk folder (alpine.apkovl.tar.gz is optional). so go ahead and extract them. initramfs-vanilla is a compressed cpio archive. To extract it we do this: 1 2 3 mkdir $HOME/temp cd $HOME/temp sudo gunzip -c /boot/initramfs-vanilla | cpio -i Then we need to install our latest modules into it…assuming you already compiled a kernel following this Raspberry Pi 3 64-bit kernel. 1 2 3 4 5 6 7 8 9 sudo ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make -C rpi-4.14/ modules_install INSTALL_MOD_PATH=$HOME/temp/ # When it is done go back to /temp/ folder where we extract the initramfs and into the modules folder. cd $HOME/temp/lib/modules/ # And remove the previous version and the build, source folder symlink in $HOME/temp/lib/modules/4.1x~/ folder sudo rm -rf 4.9~/ Now we have our custom initramfs and then recreate the compressed cpio archive again. Inside the folder run: 1 2 3 sudo find . | cpio -H newc -o | gzip -9 &gt; [file destination]/initramfs-rpi3-cpio cd .. sudo mkimage -A arm64 -O linux -T ramdisk -d initramfs-rpi3-cpio initramfs-rpi3 // For U-boot modloop-vanilla is a squashfs file. We can make from scratch or unsquash it using this command: 1 sudo unsquashfs -f -d [file destination] [file location]/file.squashfs To create our own modloop file let start by making a folder 1 2 sudo mkdir modules # Then inside this module, let&#39;s install again our rpi-4.11y modules from above After you’ve installed our modules from above on the modules folder that we’ve just created.. you’ll have a folder structure like so: 1 2 3 4 5 6 7 8 /modules |- /lib |- /firmware # firmware_install INSTALL_FW_PATH=[in this location or just use from the moodlop-vanilla] # Use firmware_install if using kernel &lt;- 4.13 |- /modules # again remove build and source symlink folder here Rearrange above modules folder to: 1 2 /modules/modules/firmware /modules/modules/4.1x~ Squash it using this command: 1 sudo mksquashfs [folder to be squash] [filename] -comp [compression method: I use &#39;xz&#39; -Xdict-size 100% And now we have our own initramfs-rpi3 and modloop-rpi3. Our µsd card should now look like this: 1 2 3 4 5 6 7 8 9 10 11 12 13 /apk /boot/Image /boot/u-boot.bin /boot/boot.scr /boot/initramfs-rpi3 /boot/modloop-rpi3 bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt alpine.apkovl.tar.gz // optional will be created once we setup our alpine linux We’ll modify the cmdline.txt and boot.scr for alpine linux. alerts/code.html type=”cmdline.txt:” code=” 1 2 3 modules=loop,squashfs,sd-mod,usb-storage quiet net.ifnames=0 dwc_otg.lpm_enable=0 console=ttyS0,115200 fsck.repair=yes rootwait # the quiet command can be remove: it just hide the message buffer of kernel. `ttyS0` can be replace by `ttyAMA0` 1 2 3 4 5 6 7 8 9 fdt addr 0x100 fdt get value bootargs /chosen bootargs setenv kernel_addr_r 0x01000000 setenv ramdisk_addr_r 0x02100000 fatload mmc 0:1 ${kernel_addr_r} boot/Image fatload mmc 0:1 ${ramdisk_addr_r} boot/initramfs-rpi3 setenv initrdsize $filesize fatload mmc 0:1 ${fdt_addr_r} bcm2710-rpi-3-b.dtb booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r} Go ahead noew and try to boot it up. You should have an output like this: As you can see… there’s a hwclock error since our raspberry pi 3 don’t have any. So after you run setup-alpine and use lbu commit to save changes…run this: 1 2 rc-update add swclock boot // enable the software clock rc-update del hwclock boot // disable the hardware clock In my case i use Busybox NTP as it might be the most lightweight solution. Save the changes and reboot. 1 2 3 lbu commit apk add wireless-tools wpa_supplicant // will be installed even when not connected to the net reboot Wifi: (*Optional) I didn’t include the brcm above because i encouter a brcmf_sdio_htclk error but can be resolve by reloading the module: brcmfmac The good thing about alpine linux is if you make a firmware folder on the root directory of our µsd card, it’ll be recognized by alpine and load it once alpine boot up. Don’t worry if the rest of the folder inside the OS fimrware folder is gone(it’s just hidden in plain site). So i place my brcm folder there for now. According to alpine linux… Connecting to a wireless access point Broadcom Wi-Fi Chipset Users: we need b43-firmware so go ahead and follow that or we can compile it somewhere else like what i did. On ubuntu 16.04 i install b43-fwcutter then get b43-firmware and follow the instruction here 1 2 tar -xjf broadcom-wl-4.150.10.5.tar.bz2 // make sure bzip is installed b43-fwcutter -w [$FIRMWARE_INSTALL_DIR/b43] broadcom-wl-4.150.10.5/driver/wl_apsta_mimo.o Then copy that b43 folder to firmware folder on the root of our µsd card. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 /apk /boot/Image /boot/kernel8.img /boot/boot.scr /boot/initramfs-rpi3 /boot/modloop-rpi3 /firmware/b43 /firmware/brcm bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt alpine.apkovl.tar.gz # optional will be created once we setup our alpine linux Load the b43 kernel and enable it at boot up: 1 2 3 modprobe b43 echo b43 &gt;&gt; /etc/modules lbu commit // To save changes If you run dmesg command and display a brcmfmac error just reload brcmfmac module: 1 2 modprobe -r brcmfmac // For now modprobe brcmfmac Reference : http://backreference.org/2010/07/04/modifying-initrdinitramfs-files/ https://askubuntu.com/questions/437880/extract-a-squashfs-to-an-existing-directory https://wiki.alpinelinux.org/wiki/DIY_Fully_working_Alpine_Linux_for_Allwinner_and_Other_ARM_SOCs https://wiki.alpinelinux.org/wiki/Raspberry_Pi" />
+<link rel="canonical" href="http://a-delacruz.github.io/alpine/alpine-linux.html" />
+<meta property="og:url" content="http://a-delacruz.github.io/alpine/alpine-linux.html" />
+<meta property="og:site_name" content="My Personal Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-06-15T00:00:00+08:00" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","url":"http://a-delacruz.github.io/alpine/alpine-linux.html","headline":"Raspberry Pi 3 Alpine Linux arm64","dateModified":"2017-06-15T00:00:00+08:00","datePublished":"2017-06-15T00:00:00+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/alpine/alpine-linux.html"},"description":"*** 18-09-20: Will update soon... *** 17-07-06: To fix brcmfmac loading error: directly place brcm folder inside our custom initramfs-rpi3 file. *** 17-07-06: b43 is optional… As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image for .NetCore because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3. Alpine 3.7 Generic arm64file_download Make sure SquashFS is enabled 1 2 3 4 5 // Kernel config File systems |- Miscellaneous filesystems |- [*] SquashFS 4.0 For our custom kernel and U-boot… just follow Raspberry Pi 3 64-bit kernel. The files that we need from alpine to modify is initramfs-vanilla, and a copy of apk folder (alpine.apkovl.tar.gz is optional). so go ahead and extract them. initramfs-vanilla is a compressed cpio archive. To extract it we do this: 1 2 3 mkdir $HOME/temp cd $HOME/temp sudo gunzip -c /boot/initramfs-vanilla | cpio -i Then we need to install our latest modules into it…assuming you already compiled a kernel following this Raspberry Pi 3 64-bit kernel. 1 2 3 4 5 6 7 8 9 sudo ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make -C rpi-4.14/ modules_install INSTALL_MOD_PATH=$HOME/temp/ # When it is done go back to /temp/ folder where we extract the initramfs and into the modules folder. cd $HOME/temp/lib/modules/ # And remove the previous version and the build, source folder symlink in $HOME/temp/lib/modules/4.1x~/ folder sudo rm -rf 4.9~/ Now we have our custom initramfs and then recreate the compressed cpio archive again. Inside the folder run: 1 2 3 sudo find . | cpio -H newc -o | gzip -9 &gt; [file destination]/initramfs-rpi3-cpio cd .. sudo mkimage -A arm64 -O linux -T ramdisk -d initramfs-rpi3-cpio initramfs-rpi3 // For U-boot modloop-vanilla is a squashfs file. We can make from scratch or unsquash it using this command: 1 sudo unsquashfs -f -d [file destination] [file location]/file.squashfs To create our own modloop file let start by making a folder 1 2 sudo mkdir modules # Then inside this module, let&#39;s install again our rpi-4.11y modules from above After you’ve installed our modules from above on the modules folder that we’ve just created.. you’ll have a folder structure like so: 1 2 3 4 5 6 7 8 /modules |- /lib |- /firmware # firmware_install INSTALL_FW_PATH=[in this location or just use from the moodlop-vanilla] # Use firmware_install if using kernel &lt;- 4.13 |- /modules # again remove build and source symlink folder here Rearrange above modules folder to: 1 2 /modules/modules/firmware /modules/modules/4.1x~ Squash it using this command: 1 sudo mksquashfs [folder to be squash] [filename] -comp [compression method: I use &#39;xz&#39; -Xdict-size 100% And now we have our own initramfs-rpi3 and modloop-rpi3. Our µsd card should now look like this: 1 2 3 4 5 6 7 8 9 10 11 12 13 /apk /boot/Image /boot/u-boot.bin /boot/boot.scr /boot/initramfs-rpi3 /boot/modloop-rpi3 bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt alpine.apkovl.tar.gz // optional will be created once we setup our alpine linux We’ll modify the cmdline.txt and boot.scr for alpine linux. alerts/code.html type=”cmdline.txt:” code=” 1 2 3 modules=loop,squashfs,sd-mod,usb-storage quiet net.ifnames=0 dwc_otg.lpm_enable=0 console=ttyS0,115200 fsck.repair=yes rootwait # the quiet command can be remove: it just hide the message buffer of kernel. `ttyS0` can be replace by `ttyAMA0` 1 2 3 4 5 6 7 8 9 fdt addr 0x100 fdt get value bootargs /chosen bootargs setenv kernel_addr_r 0x01000000 setenv ramdisk_addr_r 0x02100000 fatload mmc 0:1 ${kernel_addr_r} boot/Image fatload mmc 0:1 ${ramdisk_addr_r} boot/initramfs-rpi3 setenv initrdsize $filesize fatload mmc 0:1 ${fdt_addr_r} bcm2710-rpi-3-b.dtb booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r} Go ahead noew and try to boot it up. You should have an output like this: As you can see… there’s a hwclock error since our raspberry pi 3 don’t have any. So after you run setup-alpine and use lbu commit to save changes…run this: 1 2 rc-update add swclock boot // enable the software clock rc-update del hwclock boot // disable the hardware clock In my case i use Busybox NTP as it might be the most lightweight solution. Save the changes and reboot. 1 2 3 lbu commit apk add wireless-tools wpa_supplicant // will be installed even when not connected to the net reboot Wifi: (*Optional) I didn’t include the brcm above because i encouter a brcmf_sdio_htclk error but can be resolve by reloading the module: brcmfmac The good thing about alpine linux is if you make a firmware folder on the root directory of our µsd card, it’ll be recognized by alpine and load it once alpine boot up. Don’t worry if the rest of the folder inside the OS fimrware folder is gone(it’s just hidden in plain site). So i place my brcm folder there for now. According to alpine linux… Connecting to a wireless access point Broadcom Wi-Fi Chipset Users: we need b43-firmware so go ahead and follow that or we can compile it somewhere else like what i did. On ubuntu 16.04 i install b43-fwcutter then get b43-firmware and follow the instruction here 1 2 tar -xjf broadcom-wl-4.150.10.5.tar.bz2 // make sure bzip is installed b43-fwcutter -w [$FIRMWARE_INSTALL_DIR/b43] broadcom-wl-4.150.10.5/driver/wl_apsta_mimo.o Then copy that b43 folder to firmware folder on the root of our µsd card. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 /apk /boot/Image /boot/kernel8.img /boot/boot.scr /boot/initramfs-rpi3 /boot/modloop-rpi3 /firmware/b43 /firmware/brcm bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt alpine.apkovl.tar.gz # optional will be created once we setup our alpine linux Load the b43 kernel and enable it at boot up: 1 2 3 modprobe b43 echo b43 &gt;&gt; /etc/modules lbu commit // To save changes If you run dmesg command and display a brcmfmac error just reload brcmfmac module: 1 2 modprobe -r brcmfmac // For now modprobe brcmfmac Reference : http://backreference.org/2010/07/04/modifying-initrdinitramfs-files/ https://askubuntu.com/questions/437880/extract-a-squashfs-to-an-existing-directory https://wiki.alpinelinux.org/wiki/DIY_Fully_working_Alpine_Linux_for_Allwinner_and_Other_ARM_SOCs https://wiki.alpinelinux.org/wiki/Raspberry_Pi","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+<body>
+
+    <!-- To Do -->
+        <header class="mdc-top-app-bar mdc-top-app-bar--short mdc-top-app-bar--dense">
+                <div class="mdc-top-app-bar__row">
+                    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                    <a href="/" class="mdc-top-app-bar__navigation-icon my-logo"><img src="/assets/images/logo-bl.png"></a>
+                    </section>
+                    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end my-top-app-bar-btn">
+                        <a href="/about" class="mdc-button">about</a>
+                    </section>
+                </div>
+            </header>
+
+    <div class="posts">
+    <h5 class="mdc-typography--headline5 posts-title">Raspberry Pi 3 Alpine Linux arm64</h5>
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- Ad-1 -->
+    <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-6013311002995151"
+        data-ad-slot="2377202477"
+        data-ad-format="auto"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+    <h6 id="-18-09-20-will-update-soon">*** 18-09-20: <code class="highlighter-rouge">Will update soon...</code></h6>
+<h6 id="-17-07-06-to-fix-brcmfmac-loading-error-directly-place-brcm-folder-inside-our-custom-initramfs-rpi3-file">*** 17-07-06: To fix brcmfmac loading error: directly place <code class="highlighter-rouge">brcm</code> folder inside our custom <code class="highlighter-rouge">initramfs-rpi3</code> file.</h6>
+<h6 id="-17-07-06-b43-is-optional">*** 17-07-06: <code class="highlighter-rouge">b43</code> is optional…</h6>
+
+<p>As i was been busy studying and learning about Docker and how nice it is to use Alpine linux as the docker image for .NetCore because of it being small in size… unlike using ubuntu as a docker image file…This time… i decided to try Alpine linux on Raspberry Pi 3.</p>
+
+<p><a href="http://dl-cdn.alpinelinux.org/alpine/v3.7/releases/aarch64/alpine-uboot-3.7.0-aarch64.tar.gz" class="card btn blue">Alpine 3.7 Generic arm64<i class="material-icons right">file_download</i></a></p>
+
+<div class="my-callout my-callout-note">
+    Make sure <code class="highlighter-rouge">SquashFS is enabled</code>
+</div>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="go">// Kernel config
+
+File systems
+    |-  Miscellaneous filesystems
+        |-  [*] SquashFS 4.0</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="my-callout my-callout-note">
+    For our custom <code class="highlighter-rouge">kernel and U-boot</code>… just follow <a href="/ubuntu/rpi3-setup-64bit-kernel">Raspberry Pi 3 64-bit kernel</a>.
+</div>
+
+<p>The files that we need from alpine to modify is <code class="highlighter-rouge">initramfs-vanilla</code>, and a copy of <code class="highlighter-rouge">apk</code> folder (<code class="highlighter-rouge">alpine.apkovl.tar.gz</code> is optional). so go ahead and extract them.</p>
+
+<p><code class="highlighter-rouge">initramfs-vanilla</code> is a compressed cpio archive. To extract it we do this:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="gp">mkdir $</span>HOME/temp
+<span class="gp">cd $</span>HOME/temp
+<span class="go">sudo gunzip -c /boot/initramfs-vanilla | cpio -i</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Then we need to install our latest modules into it…assuming you already compiled a kernel following this <a href="/ubuntu/rpi3-setup-64bit-kernel">Raspberry Pi 3 64-bit kernel</a>.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="gp">sudo ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make -C rpi-4.14/ modules_install INSTALL_MOD_PATH=$</span>HOME/temp/
+<span class="go">        
+</span><span class="gp">        #</span> When it is <span class="k">done </span>go back to /temp/ folder where we extract the initramfs and into the modules folder.
+<span class="go">
+</span><span class="gp">cd $</span>HOME/temp/lib/modules/
+<span class="go">        
+</span><span class="gp">        #</span> And remove the previous version and the build, <span class="nb">source </span>folder symlink <span class="k">in</span> <span class="nv">$HOME</span>/temp/lib/modules/4.1x~/ folder
+<span class="go">
+sudo rm -rf 4.9~/</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Now we have our custom initramfs and then recreate the compressed cpio archive again.
+Inside the folder run:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="gp">sudo find . | cpio -H newc -o | gzip -9 &gt;</span> <span class="o">[</span>file destination]/initramfs-rpi3-cpio
+<span class="go">cd ..
+sudo mkimage -A arm64 -O linux -T ramdisk -d initramfs-rpi3-cpio initramfs-rpi3 // For U-boot</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p><code class="highlighter-rouge">modloop-vanilla</code> is a squashfs file. We can make from scratch or unsquash it using this command:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">sudo unsquashfs -f -d [file destination] [file location]/file.squashfs</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>To create our own <code class="highlighter-rouge">modloop</code> file let start by making a folder</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="go">sudo mkdir modules 
+</span><span class="gp">        #</span> Then inside this module, <span class="nb">let</span><span class="s1">'s install again our rpi-4.11y modules from above</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>After you’ve installed <code class="highlighter-rouge">our modules from above</code> on the modules folder that we’ve just created.. you’ll have a folder structure like so:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="go">/modules
+        |- /lib
+                |- /firmware
+</span><span class="gp">                        #</span> firmware_install <span class="nv">INSTALL_FW_PATH</span><span class="o">=[</span><span class="k">in </span>this location or just use from the moodlop-vanilla]
+<span class="gp">                        #</span> Use firmware_install <span class="k">if </span>using kernel &lt;- 4.13
+<span class="go">
+                |- /modules
+</span><span class="gp">                        #</span> again remove build and <span class="nb">source </span>symlink folder here</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Rearrange above modules folder to:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="go">/modules/modules/firmware
+/modules/modules/4.1x~</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Squash it using this command:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">sudo mksquashfs [folder to be squash] [filename] -comp [compression method: I use 'xz' -Xdict-size 100%</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>And now we have our own <code class="highlighter-rouge">initramfs-rpi3</code> and <code class="highlighter-rouge">modloop-rpi3</code>. Our µsd card should now look like this:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre></td><td class="code"><pre><span class="go">/apk
+/boot/Image
+/boot/u-boot.bin
+/boot/boot.scr
+/boot/initramfs-rpi3
+/boot/modloop-rpi3
+bcm2710-rpi-3-b.dtb
+bootcode.bin
+start.elf 
+fixup.dat 
+config.txt
+cmdline.txt
+alpine.apkovl.tar.gz // optional will be created once we setup our alpine linux</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>We’ll modify the <code class="highlighter-rouge">cmdline.txt</code> and <code class="highlighter-rouge">boot.scr</code> for alpine linux.
+ alerts/code.html type=”cmdline.txt:” code=”<br /></p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="go">modules=loop,squashfs,sd-mod,usb-storage quiet net.ifnames=0 dwc_otg.lpm_enable=0 console=ttyS0,115200 fsck.repair=yes rootwait
+
+</span><span class="gp">#</span> the quiet <span class="nb">command </span>can be remove: it just hide the message buffer of kernel. <span class="sb">`</span>ttyS0<span class="sb">`</span> can be replace by <span class="sb">`</span>ttyAMA0<span class="sb">`</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="go">fdt addr 0x100
+fdt get value bootargs /chosen bootargs
+setenv kernel_addr_r 0x01000000
+setenv ramdisk_addr_r 0x02100000
+</span><span class="gp">fatload mmc 0:1 $</span><span class="o">{</span>kernel_addr_r<span class="o">}</span> boot/Image
+<span class="gp">fatload mmc 0:1 $</span><span class="o">{</span>ramdisk_addr_r<span class="o">}</span> boot/initramfs-rpi3
+<span class="gp">setenv initrdsize $</span>filesize
+<span class="gp">fatload mmc 0:1 $</span><span class="o">{</span>fdt_addr_r<span class="o">}</span> bcm2710-rpi-3-b.dtb
+<span class="gp">booti $</span><span class="o">{</span>kernel_addr_r<span class="o">}</span> <span class="k">${</span><span class="nv">ramdisk_addr_r</span><span class="k">}</span>:<span class="k">${</span><span class="nv">initrdsize</span><span class="k">}</span> <span class="k">${</span><span class="nv">fdt_addr_r</span><span class="k">}</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Go ahead noew and try to boot it up. You should have an output like this:</p>
+
+<p><img src="/assets/images/alpine/alpine-linux-arm64-rpi3.jpg" alt="" class="responsive-img" /></p>
+
+<p>As you can see… there’s a hwclock error since our raspberry pi 3 don’t have any. So after you run <code class="highlighter-rouge">setup-alpine</code> and use <code class="highlighter-rouge">lbu commit </code> to save changes…run this:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="go">rc-update add swclock boot    // enable the software clock
+rc-update del hwclock boot    // disable the hardware clock</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>In my case i use <code class="highlighter-rouge">Busybox NTP</code> as it might be the most lightweight solution. Save the changes and reboot.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="go">lbu commit
+apk add wireless-tools wpa_supplicant  // will be installed even when not connected to the net
+reboot</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p><br /></p>
+
+<h4 id="wifi-optional">Wifi: (*Optional)</h4>
+
+<p>I didn’t include the <code class="highlighter-rouge">brcm</code> above because i encouter a <code class="highlighter-rouge">brcmf_sdio_htclk</code> error but can be resolve by reloading the module: <code class="highlighter-rouge">brcmfmac</code>
+The good thing about alpine linux is if you make a <code class="highlighter-rouge">firmware folder</code> on the root directory of our µsd card, it’ll be recognized by alpine and load it once alpine boot up. Don’t worry if the rest of the folder inside the OS fimrware folder is gone(it’s  just hidden in plain site). So i place my brcm folder there for now.</p>
+
+<p>According to alpine linux… <a href="https://wiki.alpinelinux.org/wiki/Connecting_to_a_wireless_access_point">Connecting to a wireless access point</a> Broadcom Wi-Fi Chipset Users: we need <code class="highlighter-rouge">b43-firmware</code> so go ahead and follow that or we can compile it somewhere else like what i did.</p>
+
+<p>On ubuntu 16.04 i install <code class="highlighter-rouge">b43-fwcutter</code> then get <a href="http://mirror2.openwrt.org/sources/broadcom-wl-4.150.10.5.tar.bz2">b43-firmware</a> and follow the instruction <a href="http://linuxwireless.org/en/users/Drivers/b43/">here</a></p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="go">tar -xjf broadcom-wl-4.150.10.5.tar.bz2       // make sure bzip is installed
+</span><span class="gp">b43-fwcutter -w [$</span>FIRMWARE_INSTALL_DIR/b43] broadcom-wl-4.150.10.5/driver/wl_apsta_mimo.o</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Then copy that <code class="highlighter-rouge">b43</code> folder to firmware folder on the root of our µsd card.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre></td><td class="code"><pre><span class="go">/apk
+/boot/Image
+/boot/kernel8.img
+/boot/boot.scr
+/boot/initramfs-rpi3
+/boot/modloop-rpi3
+/firmware/b43
+/firmware/brcm
+bcm2710-rpi-3-b.dtb
+bootcode.bin
+start.elf 
+fixup.dat 
+config.txt
+cmdline.txt
+</span><span class="gp">alpine.apkovl.tar.gz #</span> optional will be created once we setup our alpine linux</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Load the <code class="highlighter-rouge">b43</code> kernel and enable it at boot up:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="go">modprobe b43
+</span><span class="gp">echo b43 &gt;</span><span class="o">&gt;</span> /etc/modules
+<span class="go">lbu commit    // To save changes</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>If you run <code class="highlighter-rouge">dmesg</code> command and display a brcmfmac error just reload <code class="highlighter-rouge">brcmfmac module</code>:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="go">modprobe -r brcmfmac  // For now
+modprobe brcmfmac</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p><br /></p>
+
+<h5 id="reference-">Reference :</h5>
+
+<p><a href="http://backreference.org/2010/07/04/modifying-initrdinitramfs-files/">http://backreference.org/2010/07/04/modifying-initrdinitramfs-files/</a><br />
+<a href="https://askubuntu.com/questions/437880/extract-a-squashfs-to-an-existing-directory">https://askubuntu.com/questions/437880/extract-a-squashfs-to-an-existing-directory</a><br />
+<a href="https://wiki.alpinelinux.org/wiki/DIY_Fully_working_Alpine_Linux_for_Allwinner_and_Other_ARM_SOCs">https://wiki.alpinelinux.org/wiki/DIY_Fully_working_Alpine_Linux_for_Allwinner_and_Other_ARM_SOCs</a><br />
+<a href="https://wiki.alpinelinux.org/wiki/Raspberry_Pi">https://wiki.alpinelinux.org/wiki/Raspberry_Pi</a></p>
+
+
+    <hr >
+
+</div>
+
+    <!-- Material Design -->
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js" async></script>
+    <script src="/assets/js/site.js" async></script>
+
+    
+<!-- Google Analytics -->
+<script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-99256627-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <amp-auto-ads type="adsense"
+              data-ad-client="ca-pub-6013311002995151">
+    </amp-auto-ads>
+    
+</body>
+
+</html>

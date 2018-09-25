@@ -1,0 +1,576 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'install', '@material/shape' ]
+2 info using npm@3.5.2
+3 info using node@v8.10.0
+4 silly loadCurrentTree Starting
+5 silly install loadCurrentTree
+6 silly install readLocalPackageData
+7 silly fetchPackageMetaData @material/shape
+8 silly fetchNamedPackageData @material/shape
+9 silly mapToRegistry name @material/shape
+10 silly mapToRegistry scope (from package name) @material
+11 verbose mapToRegistry no registry URL found in name for scope @material
+12 silly mapToRegistry using default registry
+13 silly mapToRegistry registry https://registry.npmjs.org/
+14 silly mapToRegistry uri https://registry.npmjs.org/@material%2fshape
+15 verbose request uri https://registry.npmjs.org/@material%2fshape
+16 verbose request no auth needed
+17 info attempt registry request try #1 at 7:23:39 PM
+18 verbose request id 04073b681614dff2
+19 verbose etag W/"12dc6754fe5cc6f2b25189688fce23d1"
+20 verbose lastModified Mon, 27 Aug 2018 17:40:11 GMT
+21 http request GET https://registry.npmjs.org/@material%2fshape
+22 http 304 https://registry.npmjs.org/@material%2fshape
+23 verbose headers { date: 'Thu, 20 Sep 2018 11:23:43 GMT',
+23 verbose headers   connection: 'keep-alive',
+23 verbose headers   'set-cookie':
+23 verbose headers    [ '__cfduid=dd991631123dda5747d018ea0c4e8f74a1537442622; expires=Fri, 20-Sep-19 11:23:42 GMT; path=/; domain=.registry.npmjs.org; HttpOnly' ],
+23 verbose headers   'cf-cache-status': 'REVALIDATED',
+23 verbose headers   'cache-control': 'public, max-age=300',
+23 verbose headers   'cf-ray': '45d3ebe4b9334841-MNL',
+23 verbose headers   etag: '"12dc6754fe5cc6f2b25189688fce23d1"',
+23 verbose headers   'expect-ct': 'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+23 verbose headers   'last-modified': 'Mon, 27 Aug 2018 17:40:11 GMT',
+23 verbose headers   vary: 'Accept-Encoding',
+23 verbose headers   server: 'cloudflare' }
+24 silly get cb [ 304,
+24 silly get   { date: 'Thu, 20 Sep 2018 11:23:43 GMT',
+24 silly get     connection: 'keep-alive',
+24 silly get     'set-cookie':
+24 silly get      [ '__cfduid=dd991631123dda5747d018ea0c4e8f74a1537442622; expires=Fri, 20-Sep-19 11:23:42 GMT; path=/; domain=.registry.npmjs.org; HttpOnly' ],
+24 silly get     'cf-cache-status': 'REVALIDATED',
+24 silly get     'cache-control': 'public, max-age=300',
+24 silly get     'cf-ray': '45d3ebe4b9334841-MNL',
+24 silly get     etag: '"12dc6754fe5cc6f2b25189688fce23d1"',
+24 silly get     'expect-ct': 'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+24 silly get     'last-modified': 'Mon, 27 Aug 2018 17:40:11 GMT',
+24 silly get     vary: 'Accept-Encoding',
+24 silly get     server: 'cloudflare' } ]
+25 verbose etag https://registry.npmjs.org/@material%2fshape from cache
+26 verbose get saving @material/shape to /home/cranz/.npm/registry.npmjs.org/_40material_252fshape/.cache.json
+27 silly install normalizeTree
+28 silly loadCurrentTree Finishing
+29 silly loadIdealTree Starting
+30 silly install loadIdealTree
+31 silly cloneCurrentTree Starting
+32 silly install cloneCurrentTreeToIdealTree
+33 silly cloneCurrentTree Finishing
+34 silly loadShrinkwrap Starting
+35 silly install loadShrinkwrap
+36 silly loadShrinkwrap Finishing
+37 silly loadAllDepsIntoIdealTree Starting
+38 silly install loadAllDepsIntoIdealTree
+39 silly resolveWithNewModule @material/shape@0.39.0 checking installable status
+40 silly cache add args [ '@material/shape', null ]
+41 verbose cache add spec @material/shape
+42 silly cache add parsed spec Result {
+42 silly cache add   raw: '@material/shape',
+42 silly cache add   scope: '@material',
+42 silly cache add   name: '@material/shape',
+42 silly cache add   rawSpec: '',
+42 silly cache add   spec: 'latest',
+42 silly cache add   type: 'tag' }
+43 silly addNamed @material/shape@latest
+44 verbose addNamed "latest" is being treated as a dist-tag for @material/shape
+45 info addNameTag [ '@material/shape', 'latest' ]
+46 silly mapToRegistry name @material/shape
+47 silly mapToRegistry scope (from package name) @material
+48 verbose mapToRegistry no registry URL found in name for scope @material
+49 silly mapToRegistry using default registry
+50 silly mapToRegistry registry https://registry.npmjs.org/
+51 silly mapToRegistry uri https://registry.npmjs.org/@material%2fshape
+52 verbose addNameTag registry:https://registry.npmjs.org/@material%2fshape not in flight; fetching
+53 verbose get https://registry.npmjs.org/@material%2fshape not expired, no request
+54 silly addNameTag next cb for @material/shape with tag latest
+55 silly addNamed @material/shape@0.39.0
+56 verbose addNamed "0.39.0" is a plain semver version for @material/shape
+57 silly cache afterAdd @material/shape@0.39.0
+58 verbose afterAdd /home/cranz/.npm/@material/shape/0.39.0/package/package.json not in flight; writing
+59 verbose afterAdd /home/cranz/.npm/@material/shape/0.39.0/package/package.json written
+60 silly loadAllDepsIntoIdealTree Finishing
+61 silly idealTree:prePrune M-Blog
+61 silly idealTree:prePrune ├── @material/animation@0.39.0
+61 silly idealTree:prePrune ├── @material/base@0.39.0
+61 silly idealTree:prePrune ├── @material/button@0.39.3
+61 silly idealTree:prePrune ├── @material/card@0.39.3
+61 silly idealTree:prePrune ├── @material/elevation@0.39.1
+61 silly idealTree:prePrune ├── @material/layout-grid@0.39.0
+61 silly idealTree:prePrune ├── @material/list@0.39.3
+61 silly idealTree:prePrune ├── @material/ripple@0.39.3
+61 silly idealTree:prePrune ├── @material/rtl@0.39.1
+61 silly idealTree:prePrune ├── @material/shape@0.39.0
+61 silly idealTree:prePrune ├── @material/tab-bar@0.39.3
+61 silly idealTree:prePrune ├── @material/tab-indicator@0.39.3
+61 silly idealTree:prePrune ├── @material/tab-scroller@0.39.3
+61 silly idealTree:prePrune ├── @material/tab@0.39.3
+61 silly idealTree:prePrune ├── @material/theme@0.39.1
+61 silly idealTree:prePrune ├── @material/top-app-bar@0.39.3
+61 silly idealTree:prePrune └── @material/typography@0.39.0
+62 silly loadIdealTree Finishing
+63 silly currentTree M-Blog
+63 silly currentTree ├── @material/animation@0.39.0
+63 silly currentTree ├── @material/base@0.39.0
+63 silly currentTree ├── @material/button@0.39.3
+63 silly currentTree ├── @material/card@0.39.3
+63 silly currentTree ├── @material/elevation@0.39.1
+63 silly currentTree ├── @material/layout-grid@0.39.0
+63 silly currentTree ├── @material/list@0.39.3
+63 silly currentTree ├── @material/ripple@0.39.3
+63 silly currentTree ├── @material/rtl@0.39.1
+63 silly currentTree ├── @material/tab-bar@0.39.3
+63 silly currentTree ├── @material/tab-indicator@0.39.3
+63 silly currentTree ├── @material/tab-scroller@0.39.3
+63 silly currentTree ├── @material/tab@0.39.3
+63 silly currentTree ├── @material/theme@0.39.1
+63 silly currentTree ├── @material/top-app-bar@0.39.3
+63 silly currentTree └── @material/typography@0.39.0
+64 silly idealTree M-Blog
+64 silly idealTree ├── @material/animation@0.39.0
+64 silly idealTree ├── @material/base@0.39.0
+64 silly idealTree ├── @material/button@0.39.3
+64 silly idealTree ├── @material/card@0.39.3
+64 silly idealTree ├── @material/elevation@0.39.1
+64 silly idealTree ├── @material/layout-grid@0.39.0
+64 silly idealTree ├── @material/list@0.39.3
+64 silly idealTree ├── @material/ripple@0.39.3
+64 silly idealTree ├── @material/rtl@0.39.1
+64 silly idealTree ├── @material/shape@0.39.0
+64 silly idealTree ├── @material/tab-bar@0.39.3
+64 silly idealTree ├── @material/tab-indicator@0.39.3
+64 silly idealTree ├── @material/tab-scroller@0.39.3
+64 silly idealTree ├── @material/tab@0.39.3
+64 silly idealTree ├── @material/theme@0.39.1
+64 silly idealTree ├── @material/top-app-bar@0.39.3
+64 silly idealTree └── @material/typography@0.39.0
+65 silly generateActionsToTake Starting
+66 silly install generateActionsToTake
+67 silly generateActionsToTake Finishing
+68 silly diffTrees action count 9
+69 silly diffTrees update @material/elevation@0.39.1
+70 silly diffTrees update @material/typography@0.39.0
+71 silly diffTrees update @material/button@0.39.3
+72 silly diffTrees update @material/card@0.39.3
+73 silly diffTrees update @material/layout-grid@0.39.0
+74 silly diffTrees update @material/list@0.39.3
+75 silly diffTrees add @material/shape@0.39.0
+76 silly diffTrees update @material/tab-bar@0.39.3
+77 silly diffTrees update @material/top-app-bar@0.39.3
+78 silly decomposeActions action count 72
+79 silly decomposeActions fetch @material/elevation@0.39.1
+80 silly decomposeActions extract @material/elevation@0.39.1
+81 silly decomposeActions test @material/elevation@0.39.1
+82 silly decomposeActions preinstall @material/elevation@0.39.1
+83 silly decomposeActions build @material/elevation@0.39.1
+84 silly decomposeActions install @material/elevation@0.39.1
+85 silly decomposeActions postinstall @material/elevation@0.39.1
+86 silly decomposeActions finalize @material/elevation@0.39.1
+87 silly decomposeActions fetch @material/typography@0.39.0
+88 silly decomposeActions extract @material/typography@0.39.0
+89 silly decomposeActions test @material/typography@0.39.0
+90 silly decomposeActions preinstall @material/typography@0.39.0
+91 silly decomposeActions build @material/typography@0.39.0
+92 silly decomposeActions install @material/typography@0.39.0
+93 silly decomposeActions postinstall @material/typography@0.39.0
+94 silly decomposeActions finalize @material/typography@0.39.0
+95 silly decomposeActions fetch @material/button@0.39.3
+96 silly decomposeActions extract @material/button@0.39.3
+97 silly decomposeActions test @material/button@0.39.3
+98 silly decomposeActions preinstall @material/button@0.39.3
+99 silly decomposeActions build @material/button@0.39.3
+100 silly decomposeActions install @material/button@0.39.3
+101 silly decomposeActions postinstall @material/button@0.39.3
+102 silly decomposeActions finalize @material/button@0.39.3
+103 silly decomposeActions fetch @material/card@0.39.3
+104 silly decomposeActions extract @material/card@0.39.3
+105 silly decomposeActions test @material/card@0.39.3
+106 silly decomposeActions preinstall @material/card@0.39.3
+107 silly decomposeActions build @material/card@0.39.3
+108 silly decomposeActions install @material/card@0.39.3
+109 silly decomposeActions postinstall @material/card@0.39.3
+110 silly decomposeActions finalize @material/card@0.39.3
+111 silly decomposeActions fetch @material/layout-grid@0.39.0
+112 silly decomposeActions extract @material/layout-grid@0.39.0
+113 silly decomposeActions test @material/layout-grid@0.39.0
+114 silly decomposeActions preinstall @material/layout-grid@0.39.0
+115 silly decomposeActions build @material/layout-grid@0.39.0
+116 silly decomposeActions install @material/layout-grid@0.39.0
+117 silly decomposeActions postinstall @material/layout-grid@0.39.0
+118 silly decomposeActions finalize @material/layout-grid@0.39.0
+119 silly decomposeActions fetch @material/list@0.39.3
+120 silly decomposeActions extract @material/list@0.39.3
+121 silly decomposeActions test @material/list@0.39.3
+122 silly decomposeActions preinstall @material/list@0.39.3
+123 silly decomposeActions build @material/list@0.39.3
+124 silly decomposeActions install @material/list@0.39.3
+125 silly decomposeActions postinstall @material/list@0.39.3
+126 silly decomposeActions finalize @material/list@0.39.3
+127 silly decomposeActions fetch @material/shape@0.39.0
+128 silly decomposeActions extract @material/shape@0.39.0
+129 silly decomposeActions test @material/shape@0.39.0
+130 silly decomposeActions preinstall @material/shape@0.39.0
+131 silly decomposeActions build @material/shape@0.39.0
+132 silly decomposeActions install @material/shape@0.39.0
+133 silly decomposeActions postinstall @material/shape@0.39.0
+134 silly decomposeActions finalize @material/shape@0.39.0
+135 silly decomposeActions fetch @material/tab-bar@0.39.3
+136 silly decomposeActions extract @material/tab-bar@0.39.3
+137 silly decomposeActions test @material/tab-bar@0.39.3
+138 silly decomposeActions preinstall @material/tab-bar@0.39.3
+139 silly decomposeActions build @material/tab-bar@0.39.3
+140 silly decomposeActions install @material/tab-bar@0.39.3
+141 silly decomposeActions postinstall @material/tab-bar@0.39.3
+142 silly decomposeActions finalize @material/tab-bar@0.39.3
+143 silly decomposeActions fetch @material/top-app-bar@0.39.3
+144 silly decomposeActions extract @material/top-app-bar@0.39.3
+145 silly decomposeActions test @material/top-app-bar@0.39.3
+146 silly decomposeActions preinstall @material/top-app-bar@0.39.3
+147 silly decomposeActions build @material/top-app-bar@0.39.3
+148 silly decomposeActions install @material/top-app-bar@0.39.3
+149 silly decomposeActions postinstall @material/top-app-bar@0.39.3
+150 silly decomposeActions finalize @material/top-app-bar@0.39.3
+151 silly executeActions Starting
+152 silly install executeActions
+153 silly doSerial global-install 0
+154 silly doParallel fetch 9
+155 verbose lock using /home/cranz/.npm/_locks/staging-980c6c31e81b2e6d.lock for /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging
+156 silly doParallel extract 9
+157 silly extract @material/elevation@0.39.1
+158 silly extract @material/typography@0.39.0
+159 silly extract @material/button@0.39.3
+160 silly extract @material/card@0.39.3
+161 silly extract @material/layout-grid@0.39.0
+162 silly extract @material/list@0.39.3
+163 silly extract @material/shape@0.39.0
+164 silly extract @material/tab-bar@0.39.3
+165 silly extract @material/top-app-bar@0.39.3
+166 verbose unbuild node_modules/.staging/@material/typography-1f88c0ee
+167 verbose unbuild node_modules/.staging/@material/elevation-536e50dc
+168 verbose unbuild node_modules/.staging/@material/card-e89951f7
+169 verbose unbuild node_modules/.staging/@material/layout-grid-e88962d9
+170 verbose unbuild node_modules/.staging/@material/list-7e058e2a
+171 verbose unbuild node_modules/.staging/@material/button-e9123b76
+172 verbose unbuild node_modules/.staging/@material/top-app-bar-badb6464
+173 verbose unbuild node_modules/.staging/@material/tab-bar-8b2aedf8
+174 verbose unbuild node_modules/.staging/@material/shape-10dc25c4
+175 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/card-e89951f7 is being purged from base /media/sf_E-Linux/Dev-Blog/M-Blog
+176 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/card-e89951f7
+177 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/typography-1f88c0ee is being purged from base /media/sf_E-Linux/Dev-Blog/M-Blog
+178 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/typography-1f88c0ee
+179 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/elevation-536e50dc is being purged from base /media/sf_E-Linux/Dev-Blog/M-Blog
+180 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/elevation-536e50dc
+181 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/layout-grid-e88962d9 is being purged from base /media/sf_E-Linux/Dev-Blog/M-Blog
+182 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/layout-grid-e88962d9
+183 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/button-e9123b76 is being purged from base /media/sf_E-Linux/Dev-Blog/M-Blog
+184 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/button-e9123b76
+185 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/list-7e058e2a is being purged from base /media/sf_E-Linux/Dev-Blog/M-Blog
+186 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/list-7e058e2a
+187 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/tab-bar-8b2aedf8 is being purged from base /media/sf_E-Linux/Dev-Blog/M-Blog
+188 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/tab-bar-8b2aedf8
+189 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/top-app-bar-badb6464 is being purged from base /media/sf_E-Linux/Dev-Blog/M-Blog
+190 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/top-app-bar-badb6464
+191 verbose tar unpack /home/cranz/.npm/@material/typography/0.39.0/package.tgz
+192 verbose tar unpacking to /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/typography-1f88c0ee
+193 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/typography-1f88c0ee is being purged
+194 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/typography-1f88c0ee
+195 verbose tar unpack /home/cranz/.npm/@material/card/0.39.3/package.tgz
+196 verbose tar unpacking to /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/card-e89951f7
+197 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/card-e89951f7 is being purged
+198 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/card-e89951f7
+199 verbose tar unpack /home/cranz/.npm/@material/elevation/0.39.1/package.tgz
+200 verbose tar unpacking to /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/elevation-536e50dc
+201 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/elevation-536e50dc is being purged
+202 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/elevation-536e50dc
+203 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/shape-10dc25c4 is being purged from base /media/sf_E-Linux/Dev-Blog/M-Blog
+204 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/shape-10dc25c4
+205 verbose tar unpack /home/cranz/.npm/@material/button/0.39.3/package.tgz
+206 verbose tar unpacking to /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/button-e9123b76
+207 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/button-e9123b76 is being purged
+208 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/button-e9123b76
+209 verbose tar unpack /home/cranz/.npm/@material/layout-grid/0.39.0/package.tgz
+210 verbose tar unpacking to /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/layout-grid-e88962d9
+211 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/layout-grid-e88962d9 is being purged
+212 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/layout-grid-e88962d9
+213 verbose tar unpack /home/cranz/.npm/@material/list/0.39.3/package.tgz
+214 verbose tar unpacking to /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/list-7e058e2a
+215 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/list-7e058e2a is being purged
+216 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/list-7e058e2a
+217 verbose tar unpack /home/cranz/.npm/@material/tab-bar/0.39.3/package.tgz
+218 verbose tar unpacking to /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/tab-bar-8b2aedf8
+219 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/tab-bar-8b2aedf8 is being purged
+220 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/tab-bar-8b2aedf8
+221 verbose tar unpack /home/cranz/.npm/@material/top-app-bar/0.39.3/package.tgz
+222 verbose tar unpacking to /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/top-app-bar-badb6464
+223 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/top-app-bar-badb6464 is being purged
+224 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/top-app-bar-badb6464
+225 silly gunzTarPerm modes [ '775', '664' ]
+226 silly gunzTarPerm modes [ '775', '664' ]
+227 verbose tar unpack /home/cranz/.npm/@material/shape/0.39.0/package.tgz
+228 verbose tar unpacking to /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/shape-10dc25c4
+229 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/shape-10dc25c4 is being purged
+230 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/shape-10dc25c4
+231 silly gunzTarPerm modes [ '775', '664' ]
+232 silly gunzTarPerm modes [ '775', '664' ]
+233 silly gunzTarPerm modes [ '775', '664' ]
+234 silly gunzTarPerm modes [ '775', '664' ]
+235 silly gunzTarPerm modes [ '775', '664' ]
+236 silly gunzTarPerm modes [ '775', '664' ]
+237 silly gunzTarPerm modes [ '775', '664' ]
+238 silly gunzTarPerm extractEntry package.json
+239 silly gunzTarPerm modified mode [ 'package.json', 416, 436 ]
+240 silly gunzTarPerm extractEntry package.json
+241 silly gunzTarPerm modified mode [ 'package.json', 416, 436 ]
+242 silly gunzTarPerm extractEntry package.json
+243 silly gunzTarPerm modified mode [ 'package.json', 416, 436 ]
+244 silly gunzTarPerm extractEntry package.json
+245 silly gunzTarPerm modified mode [ 'package.json', 416, 436 ]
+246 silly gunzTarPerm extractEntry package.json
+247 silly gunzTarPerm modified mode [ 'package.json', 416, 436 ]
+248 silly gunzTarPerm extractEntry package.json
+249 silly gunzTarPerm modified mode [ 'package.json', 416, 436 ]
+250 silly gunzTarPerm extractEntry package.json
+251 silly gunzTarPerm modified mode [ 'package.json', 416, 436 ]
+252 silly gunzTarPerm extractEntry package.json
+253 silly gunzTarPerm modified mode [ 'package.json', 416, 436 ]
+254 silly gunzTarPerm extractEntry package.json
+255 silly gunzTarPerm modified mode [ 'package.json', 416, 436 ]
+256 silly gunzTarPerm extractEntry _functions.scss
+257 silly gunzTarPerm modified mode [ '_functions.scss', 416, 436 ]
+258 silly gunzTarPerm extractEntry _mixins.scss
+259 silly gunzTarPerm modified mode [ '_mixins.scss', 416, 436 ]
+260 silly gunzTarPerm extractEntry _mixins.scss
+261 silly gunzTarPerm modified mode [ '_mixins.scss', 416, 436 ]
+262 silly gunzTarPerm extractEntry _variables.scss
+263 silly gunzTarPerm modified mode [ '_variables.scss', 416, 436 ]
+264 silly gunzTarPerm extractEntry _mixins.scss
+265 silly gunzTarPerm modified mode [ '_mixins.scss', 416, 436 ]
+266 silly gunzTarPerm extractEntry _variables.scss
+267 silly gunzTarPerm modified mode [ '_variables.scss', 416, 436 ]
+268 silly gunzTarPerm extractEntry _mixins.scss
+269 silly gunzTarPerm modified mode [ '_mixins.scss', 416, 436 ]
+270 silly gunzTarPerm extractEntry _variables.scss
+271 silly gunzTarPerm modified mode [ '_variables.scss', 416, 436 ]
+272 silly gunzTarPerm extractEntry _mixins.scss
+273 silly gunzTarPerm modified mode [ '_mixins.scss', 416, 436 ]
+274 silly gunzTarPerm extractEntry _variables.scss
+275 silly gunzTarPerm modified mode [ '_variables.scss', 416, 436 ]
+276 silly gunzTarPerm extractEntry _mixins.scss
+277 silly gunzTarPerm modified mode [ '_mixins.scss', 416, 436 ]
+278 silly gunzTarPerm extractEntry _variables.scss
+279 silly gunzTarPerm modified mode [ '_variables.scss', 416, 436 ]
+280 silly gunzTarPerm extractEntry _mixins.scss
+281 silly gunzTarPerm modified mode [ '_mixins.scss', 416, 436 ]
+282 silly gunzTarPerm extractEntry adapter.js
+283 silly gunzTarPerm modified mode [ 'adapter.js', 416, 436 ]
+284 silly gunzTarPerm extractEntry _mixins.scss
+285 silly gunzTarPerm modified mode [ '_mixins.scss', 416, 436 ]
+286 silly gunzTarPerm extractEntry _variables.scss
+287 silly gunzTarPerm modified mode [ '_variables.scss', 416, 436 ]
+288 silly gunzTarPerm extractEntry _mixins.scss
+289 silly gunzTarPerm modified mode [ '_mixins.scss', 416, 436 ]
+290 silly gunzTarPerm extractEntry mdc-shape.scss
+291 silly gunzTarPerm modified mode [ 'mdc-shape.scss', 416, 436 ]
+292 silly gunzTarPerm extractEntry _variables.scss
+293 silly gunzTarPerm modified mode [ '_variables.scss', 416, 436 ]
+294 silly gunzTarPerm extractEntry mdc-typography.scss
+295 silly gunzTarPerm modified mode [ 'mdc-typography.scss', 416, 436 ]
+296 silly gunzTarPerm extractEntry mdc-elevation.scss
+297 silly gunzTarPerm modified mode [ 'mdc-elevation.scss', 416, 436 ]
+298 silly gunzTarPerm extractEntry README.md
+299 silly gunzTarPerm modified mode [ 'README.md', 416, 436 ]
+300 silly gunzTarPerm extractEntry mdc-layout-grid.scss
+301 silly gunzTarPerm modified mode [ 'mdc-layout-grid.scss', 416, 436 ]
+302 silly gunzTarPerm extractEntry README.md
+303 silly gunzTarPerm modified mode [ 'README.md', 416, 436 ]
+304 silly gunzTarPerm extractEntry mdc-card.scss
+305 silly gunzTarPerm modified mode [ 'mdc-card.scss', 416, 436 ]
+306 silly gunzTarPerm extractEntry README.md
+307 silly gunzTarPerm modified mode [ 'README.md', 416, 436 ]
+308 silly gunzTarPerm extractEntry adapter.js
+309 silly gunzTarPerm modified mode [ 'adapter.js', 416, 436 ]
+310 silly gunzTarPerm extractEntry constants.js
+311 silly gunzTarPerm modified mode [ 'constants.js', 416, 436 ]
+312 silly gunzTarPerm extractEntry adapter.js
+313 silly gunzTarPerm modified mode [ 'adapter.js', 416, 436 ]
+314 silly gunzTarPerm extractEntry constants.js
+315 silly gunzTarPerm modified mode [ 'constants.js', 416, 436 ]
+316 silly gunzTarPerm extractEntry constants.js
+317 silly gunzTarPerm modified mode [ 'constants.js', 416, 436 ]
+318 silly gunzTarPerm extractEntry foundation.js
+319 silly gunzTarPerm modified mode [ 'foundation.js', 416, 436 ]
+320 silly gunzTarPerm extractEntry README.md
+321 silly gunzTarPerm modified mode [ 'README.md', 416, 436 ]
+322 silly gunzTarPerm extractEntry dist/mdc.shape.css
+323 silly gunzTarPerm modified mode [ 'dist/mdc.shape.css', 416, 436 ]
+324 silly gunzTarPerm extractEntry mdc-button.scss
+325 silly gunzTarPerm modified mode [ 'mdc-button.scss', 416, 436 ]
+326 silly gunzTarPerm extractEntry README.md
+327 silly gunzTarPerm modified mode [ 'README.md', 416, 436 ]
+328 silly gunzTarPerm extractEntry README.md
+329 silly gunzTarPerm modified mode [ 'README.md', 416, 436 ]
+330 silly gunzTarPerm extractEntry dist/mdc.typography.css
+331 silly gunzTarPerm modified mode [ 'dist/mdc.typography.css', 416, 436 ]
+332 silly gunzTarPerm extractEntry dist/mdc.typography.min.css
+333 silly gunzTarPerm modified mode [ 'dist/mdc.typography.min.css', 416, 436 ]
+334 silly gunzTarPerm extractEntry dist/mdc.elevation.css
+335 silly gunzTarPerm modified mode [ 'dist/mdc.elevation.css', 416, 436 ]
+336 silly gunzTarPerm extractEntry dist/mdc.elevation.min.css
+337 silly gunzTarPerm modified mode [ 'dist/mdc.elevation.min.css', 416, 436 ]
+338 silly gunzTarPerm extractEntry dist/mdc.layout-grid.css
+339 silly gunzTarPerm modified mode [ 'dist/mdc.layout-grid.css', 416, 436 ]
+340 silly gunzTarPerm extractEntry dist/mdc.card.css
+341 silly gunzTarPerm modified mode [ 'dist/mdc.card.css', 416, 436 ]
+342 silly gunzTarPerm extractEntry foundation.js
+343 silly gunzTarPerm modified mode [ 'foundation.js', 416, 436 ]
+344 silly gunzTarPerm extractEntry index.js
+345 silly gunzTarPerm modified mode [ 'index.js', 416, 436 ]
+346 silly gunzTarPerm extractEntry mdc-list.scss
+347 silly gunzTarPerm modified mode [ 'mdc-list.scss', 416, 436 ]
+348 silly gunzTarPerm extractEntry README.md
+349 silly gunzTarPerm modified mode [ 'README.md', 416, 436 ]
+350 silly gunzTarPerm extractEntry dist/mdc.list.css
+351 silly gunzTarPerm modified mode [ 'dist/mdc.list.css', 416, 436 ]
+352 silly gunzTarPerm extractEntry dist/mdc.list.js
+353 silly gunzTarPerm modified mode [ 'dist/mdc.list.js', 416, 436 ]
+354 silly gunzTarPerm extractEntry dist/mdc.list.min.css
+355 silly gunzTarPerm modified mode [ 'dist/mdc.list.min.css', 416, 436 ]
+356 silly gunzTarPerm extractEntry dist/mdc.list.min.js
+357 silly gunzTarPerm modified mode [ 'dist/mdc.list.min.js', 416, 436 ]
+358 silly gunzTarPerm extractEntry foundation.js
+359 silly gunzTarPerm modified mode [ 'foundation.js', 416, 436 ]
+360 silly gunzTarPerm extractEntry index.js
+361 silly gunzTarPerm modified mode [ 'index.js', 416, 436 ]
+362 silly gunzTarPerm extractEntry mdc-top-app-bar.scss
+363 silly gunzTarPerm modified mode [ 'mdc-top-app-bar.scss', 416, 436 ]
+364 silly gunzTarPerm extractEntry README.md
+365 silly gunzTarPerm modified mode [ 'README.md', 416, 436 ]
+366 silly gunzTarPerm extractEntry dist/mdc.top-app-bar.css
+367 silly gunzTarPerm modified mode [ 'dist/mdc.top-app-bar.css', 416, 436 ]
+368 silly gunzTarPerm extractEntry dist/mdc.top-app-bar.min.css
+369 silly gunzTarPerm modified mode [ 'dist/mdc.top-app-bar.min.css', 416, 436 ]
+370 silly gunzTarPerm extractEntry dist/mdc.topAppBar.js
+371 silly gunzTarPerm modified mode [ 'dist/mdc.topAppBar.js', 416, 436 ]
+372 silly gunzTarPerm extractEntry dist/mdc.topAppBar.min.js
+373 silly gunzTarPerm modified mode [ 'dist/mdc.topAppBar.min.js', 416, 436 ]
+374 silly gunzTarPerm extractEntry fixed/foundation.js
+375 silly gunzTarPerm modified mode [ 'fixed/foundation.js', 416, 436 ]
+376 silly gunzTarPerm extractEntry short/foundation.js
+377 silly gunzTarPerm modified mode [ 'short/foundation.js', 416, 436 ]
+378 silly gunzTarPerm extractEntry standard/foundation.js
+379 silly gunzTarPerm modified mode [ 'standard/foundation.js', 416, 436 ]
+380 silly gunzTarPerm extractEntry index.js
+381 silly gunzTarPerm modified mode [ 'index.js', 416, 436 ]
+382 silly gunzTarPerm extractEntry dist/mdc.shape.min.css
+383 silly gunzTarPerm modified mode [ 'dist/mdc.shape.min.css', 416, 436 ]
+384 silly gunzTarPerm extractEntry dist/mdc.button.css
+385 silly gunzTarPerm modified mode [ 'dist/mdc.button.css', 416, 436 ]
+386 silly gunzTarPerm extractEntry dist/mdc.layout-grid.min.css
+387 silly gunzTarPerm modified mode [ 'dist/mdc.layout-grid.min.css', 416, 436 ]
+388 silly gunzTarPerm extractEntry dist/mdc.card.min.css
+389 silly gunzTarPerm modified mode [ 'dist/mdc.card.min.css', 416, 436 ]
+390 silly gunzTarPerm extractEntry mdc-tab-bar.scss
+391 silly gunzTarPerm modified mode [ 'mdc-tab-bar.scss', 416, 436 ]
+392 silly gunzTarPerm extractEntry README.md
+393 silly gunzTarPerm modified mode [ 'README.md', 416, 436 ]
+394 silly gunzTarPerm extractEntry dist/mdc.button.min.css
+395 silly gunzTarPerm modified mode [ 'dist/mdc.button.min.css', 416, 436 ]
+396 silly gunzTarPerm extractEntry dist/mdc.tab-bar.css
+397 silly gunzTarPerm modified mode [ 'dist/mdc.tab-bar.css', 416, 436 ]
+398 silly gunzTarPerm extractEntry dist/mdc.tab-bar.min.css
+399 silly gunzTarPerm modified mode [ 'dist/mdc.tab-bar.min.css', 416, 436 ]
+400 silly gunzTarPerm extractEntry dist/mdc.tabBar.js
+401 silly gunzTarPerm modified mode [ 'dist/mdc.tabBar.js', 416, 436 ]
+402 silly gunzTarPerm extractEntry dist/mdc.tabBar.min.js
+403 silly gunzTarPerm modified mode [ 'dist/mdc.tabBar.min.js', 416, 436 ]
+404 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/shape-10dc25c4/node_modules is being purged
+405 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/shape-10dc25c4/node_modules
+406 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/card-e89951f7/node_modules is being purged
+407 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/card-e89951f7/node_modules
+408 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/elevation-536e50dc/node_modules is being purged
+409 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/elevation-536e50dc/node_modules
+410 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/layout-grid-e88962d9/node_modules is being purged
+411 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/layout-grid-e88962d9/node_modules
+412 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/button-e9123b76/node_modules is being purged
+413 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/button-e9123b76/node_modules
+414 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/typography-1f88c0ee/node_modules is being purged
+415 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/typography-1f88c0ee/node_modules
+416 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/list-7e058e2a/node_modules is being purged
+417 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/list-7e058e2a/node_modules
+418 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/tab-bar-8b2aedf8/node_modules is being purged
+419 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/tab-bar-8b2aedf8/node_modules
+420 silly gentlyRm /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/top-app-bar-badb6464/node_modules is being purged
+421 verbose gentlyRm don't care about contents; nuking /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/top-app-bar-badb6464/node_modules
+422 silly doParallel preinstall 9
+423 silly preinstall @material/elevation@0.39.1 /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/elevation-536e50dc
+424 info lifecycle @material/elevation@0.39.1~preinstall: @material/elevation@0.39.1
+425 silly preinstall @material/typography@0.39.0 /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/typography-1f88c0ee
+426 info lifecycle @material/typography@0.39.0~preinstall: @material/typography@0.39.0
+427 silly preinstall @material/button@0.39.3 /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/button-e9123b76
+428 info lifecycle @material/button@0.39.3~preinstall: @material/button@0.39.3
+429 silly preinstall @material/card@0.39.3 /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/card-e89951f7
+430 info lifecycle @material/card@0.39.3~preinstall: @material/card@0.39.3
+431 silly preinstall @material/layout-grid@0.39.0 /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/layout-grid-e88962d9
+432 info lifecycle @material/layout-grid@0.39.0~preinstall: @material/layout-grid@0.39.0
+433 silly preinstall @material/list@0.39.3 /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/list-7e058e2a
+434 info lifecycle @material/list@0.39.3~preinstall: @material/list@0.39.3
+435 silly preinstall @material/shape@0.39.0 /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/shape-10dc25c4
+436 info lifecycle @material/shape@0.39.0~preinstall: @material/shape@0.39.0
+437 silly preinstall @material/tab-bar@0.39.3 /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/tab-bar-8b2aedf8
+438 info lifecycle @material/tab-bar@0.39.3~preinstall: @material/tab-bar@0.39.3
+439 silly preinstall @material/top-app-bar@0.39.3 /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/top-app-bar-badb6464
+440 info lifecycle @material/top-app-bar@0.39.3~preinstall: @material/top-app-bar@0.39.3
+441 silly lifecycle @material/typography@0.39.0~preinstall: no script for preinstall, continuing
+442 silly lifecycle @material/elevation@0.39.1~preinstall: no script for preinstall, continuing
+443 silly lifecycle @material/button@0.39.3~preinstall: no script for preinstall, continuing
+444 silly lifecycle @material/card@0.39.3~preinstall: no script for preinstall, continuing
+445 silly lifecycle @material/layout-grid@0.39.0~preinstall: no script for preinstall, continuing
+446 silly lifecycle @material/list@0.39.3~preinstall: no script for preinstall, continuing
+447 silly lifecycle @material/shape@0.39.0~preinstall: no script for preinstall, continuing
+448 silly lifecycle @material/tab-bar@0.39.3~preinstall: no script for preinstall, continuing
+449 silly lifecycle @material/top-app-bar@0.39.3~preinstall: no script for preinstall, continuing
+450 silly doReverseSerial remove 0
+451 silly doSerial move 0
+452 silly doSerial finalize 9
+453 silly finalize /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/@material/elevation
+454 silly finalize /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/@material/typography
+455 silly finalize /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/@material/button
+456 silly finalize /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/@material/card
+457 silly finalize /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/@material/layout-grid
+458 silly finalize /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/@material/list
+459 silly finalize /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/@material/shape
+460 verbose unlock done using /home/cranz/.npm/_locks/staging-980c6c31e81b2e6d.lock for /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging
+461 silly rollbackFailedOptional Starting
+462 silly rollbackFailedOptional Finishing
+463 silly runTopLevelLifecycles Starting
+464 silly runTopLevelLifecycles Finishing
+465 silly install printInstalled
+466 warn enoent ENOENT: no such file or directory, open '/media/sf_E-Linux/Dev-Blog/M-Blog/package.json'
+467 warn M-Blog No description
+468 warn M-Blog No repository field.
+469 warn M-Blog No README data
+470 warn M-Blog No license field.
+471 verbose stack Error: EPERM: operation not permitted, rename '/media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/shape-10dc25c4' -> '/media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/@material/shape'
+471 verbose stack     at destStatted (/usr/share/npm/lib/install/action/finalize.js:25:7)
+471 verbose stack     at FSReqWrap.oncomplete (fs.js:152:21)
+471 verbose stack
+471 verbose stack Error: EPERM: operation not permitted, rename '/media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/shape-10dc25c4' -> '/media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/@material/shape'
+472 verbose cwd /media/sf_E-Linux/Dev-Blog/M-Blog
+473 error Linux 4.15.0-34-generic
+474 error argv "/usr/bin/node" "/usr/bin/npm" "install" "@material/shape"
+475 error node v8.10.0
+476 error npm  v3.5.2
+477 error path /media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/shape-10dc25c4
+478 error code EPERM
+479 error errno -1
+480 error syscall rename
+481 error Error: EPERM: operation not permitted, rename '/media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/shape-10dc25c4' -> '/media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/@material/shape'
+481 error     at destStatted (/usr/share/npm/lib/install/action/finalize.js:25:7)
+481 error     at FSReqWrap.oncomplete (fs.js:152:21)
+481 error
+481 error Error: EPERM: operation not permitted, rename '/media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/shape-10dc25c4' -> '/media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/@material/shape'
+481 error  Error: EPERM: operation not permitted, rename '/media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/shape-10dc25c4' -> '/media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/@material/shape'
+481 error     at destStatted (/usr/share/npm/lib/install/action/finalize.js:25:7)
+481 error     at FSReqWrap.oncomplete (fs.js:152:21)
+481 error
+481 error Error: EPERM: operation not permitted, rename '/media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/.staging/@material/shape-10dc25c4' -> '/media/sf_E-Linux/Dev-Blog/M-Blog/node_modules/@material/shape'
+482 error Please try running this command again as root/Administrator.
+483 verbose exit [ -1, true ]
