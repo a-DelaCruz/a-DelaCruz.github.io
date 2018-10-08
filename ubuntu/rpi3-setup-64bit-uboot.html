@@ -36,29 +36,21 @@
     
     <!-- Google Adsense -->
     
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-6013311002995151", enable_page_level_ads: true });
-        </script>
-        <script async custom-element="amp-auto-ads"
-            src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
-        </script>
-    
 
     <!-- Begin Jekyll SEO tag v2.5.0 -->
 <title>Raspberry Pi 3 with 64-bit U-Boot | My Personal Notes</title>
 <meta name="generator" content="Jekyll v3.8.4" />
 <meta property="og:title" content="Raspberry Pi 3 with 64-bit U-Boot" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="This time let’s try to use U-Boot to load the Linux kernel and boot our Raspberry Pi 3. We need : U-Boot v.2017.11 file_download Get The SourceCode Get the source code by cloning the U-Boot git repository : 1 git clone --depth 1 --branch v2017.11 git://git.denx.de/u-boot.git v2017.11 or download the tar file : 1 wget ftp://ftp.denx.de/pub/u-boot/u-boot-2017.11.tar.bz2 Compile U-Boot rpi_3_defconfig - arm64 config RPi 3. -C source folder v2017.11 1 2 3 4 5 6 sudo make -C v2017.11/ CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig sudo make -C v2017.11/ CROSS_COMPILE=aarch64-linux-gnu- # For v2017.05 use below sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- After it has been built. Locate u-boot.bin in your output_path as this is the file we need. Create the Bootscript Create a rpi3-bootscript.txt file and copy paste the code below : 1 2 3 4 5 6 7 8 // rpi3-bootscript.txt setenv kernel_addr_r 0x01000000 setenv ramdisk_addr_r 0x02100000 fatload mmc 0:1 ${kernel_addr_r} boot/Image fatload mmc 0:1 ${ramdisk_addr_r} boot/initrd.img setenv initrdsize $filesize booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r} boot/Image - The Linux kernel we compile from Raspberry Pi 3 64-bit kernel and place under a folder boot. boot/initrd.img - Ramdisk image we created from Using Ubuntu-base arm64 rootfs for Raspberry Pi 3. If you dont have a Ramdisk yet, replace ${ramdisk_addr_r}:${initrdsize} with -. mkimage -T script -n &#39;Bootscript&#39; -C none -d ~/&lt;input_file&gt; ~/&lt;output_file&gt;.scr - Syntax for creating the bootscript Now to create a bootscript from the text file above : 1 $ sudo mkimage -A arm64 -O linux -T script -d ~/rpi3-bootscript.txt ~/boot.scr Copy boot.scr to your MicroSD card inside /boot folder. u-boot.bin - Can be renamed to any-name and modify it’s entry in config.txt kernel=boot/u-boot.bin-to-any-name. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 // config.txt # Serial console output! enable_uart=1 # 64bit-mode arm_control=0x200 # Use U-Boot kernel=boot/u-boot.bin device_tree_address=0x100 device_tree_end=0x8000 dtparam=i2c_arm=on dtparam=spi=on Then verify your MicroSD directory structure like below : 1 2 3 4 5 6 7 8 9 10 /boot/Image /boot/boot.scr /boot/u-boot.bin /boot/initrd.img bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt Boot it up to confirm that its working. Reference : http://www.denx.de/wiki/U-Boot/WebHome" />
-<meta property="og:description" content="This time let’s try to use U-Boot to load the Linux kernel and boot our Raspberry Pi 3. We need : U-Boot v.2017.11 file_download Get The SourceCode Get the source code by cloning the U-Boot git repository : 1 git clone --depth 1 --branch v2017.11 git://git.denx.de/u-boot.git v2017.11 or download the tar file : 1 wget ftp://ftp.denx.de/pub/u-boot/u-boot-2017.11.tar.bz2 Compile U-Boot rpi_3_defconfig - arm64 config RPi 3. -C source folder v2017.11 1 2 3 4 5 6 sudo make -C v2017.11/ CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig sudo make -C v2017.11/ CROSS_COMPILE=aarch64-linux-gnu- # For v2017.05 use below sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- After it has been built. Locate u-boot.bin in your output_path as this is the file we need. Create the Bootscript Create a rpi3-bootscript.txt file and copy paste the code below : 1 2 3 4 5 6 7 8 // rpi3-bootscript.txt setenv kernel_addr_r 0x01000000 setenv ramdisk_addr_r 0x02100000 fatload mmc 0:1 ${kernel_addr_r} boot/Image fatload mmc 0:1 ${ramdisk_addr_r} boot/initrd.img setenv initrdsize $filesize booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r} boot/Image - The Linux kernel we compile from Raspberry Pi 3 64-bit kernel and place under a folder boot. boot/initrd.img - Ramdisk image we created from Using Ubuntu-base arm64 rootfs for Raspberry Pi 3. If you dont have a Ramdisk yet, replace ${ramdisk_addr_r}:${initrdsize} with -. mkimage -T script -n &#39;Bootscript&#39; -C none -d ~/&lt;input_file&gt; ~/&lt;output_file&gt;.scr - Syntax for creating the bootscript Now to create a bootscript from the text file above : 1 $ sudo mkimage -A arm64 -O linux -T script -d ~/rpi3-bootscript.txt ~/boot.scr Copy boot.scr to your MicroSD card inside /boot folder. u-boot.bin - Can be renamed to any-name and modify it’s entry in config.txt kernel=boot/u-boot.bin-to-any-name. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 // config.txt # Serial console output! enable_uart=1 # 64bit-mode arm_control=0x200 # Use U-Boot kernel=boot/u-boot.bin device_tree_address=0x100 device_tree_end=0x8000 dtparam=i2c_arm=on dtparam=spi=on Then verify your MicroSD directory structure like below : 1 2 3 4 5 6 7 8 9 10 /boot/Image /boot/boot.scr /boot/u-boot.bin /boot/initrd.img bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt Boot it up to confirm that its working. Reference : http://www.denx.de/wiki/U-Boot/WebHome" />
-<link rel="canonical" href="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-uboot.html" />
-<meta property="og:url" content="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-uboot.html" />
+<meta name="description" content="This time let’s try to use U-Boot to load the Linux kernel and boot our Raspberry Pi 3. We need : U-Boot v.2017.11 file_download Get The SourceCode Get the source code by cloning the U-Boot git repository : 1 git clone --depth 1 --branch v2017.11 git://git.denx.de/u-boot.git v2017.11 or download the tar file : 1 wget ftp://ftp.denx.de/pub/u-boot/u-boot-2017.11.tar.bz2 Compile U-Boot rpi_3_defconfig - arm64 config RPi 3. -C source folder v2017.11 1 2 3 4 5 6 sudo make -C v2017.11/ CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig sudo make -C v2017.11/ CROSS_COMPILE=aarch64-linux-gnu- # For v2017.05 use below sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- After it has been built. Locate u-boot.bin in your output_path as this is the file we need. Default NetBoot Create the Bootscript Create a `rpi3-bootscript.txt` file and copy paste the code below : 1 2 3 4 5 6 7 8 // rpi3-bootscript.txt setenv kernel_addr_r 0x01000000 setenv ramdisk_addr_r 0x02100000 fatload mmc 0:1 ${kernel_addr_r} boot/Image fatload mmc 0:1 ${ramdisk_addr_r} boot/initrd.img setenv initrdsize $filesize booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r} boot/Image - The Linux kernel we compile from Raspberry Pi 3 64-bit kernel and place under a folder boot. boot/initrd.img - Ramdisk image we created from Using Ubuntu-base arm64 rootfs for Raspberry Pi 3. If you dont have a Ramdisk yet, replace ${ramdisk_addr_r}:${initrdsize} with -. mkimage -T script -n &#39;Bootscript&#39; -C none -d ~/&lt;input_file&gt; ~/&lt;output_file&gt;.scr - Syntax for creating the bootscript Now to create a bootscript from the text file above : 1 $ sudo mkimage -A arm64 -O linux -T script -d ~/rpi3-bootscript.txt ~/boot.scr Copy `boot.scr` to your MicroSD card inside `/boot` folder. u-boot.bin - Can be renamed to any-name and modify it’s entry in config.txt kernel=boot/u-boot.bin-to-any-name. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 // config.txt # Serial console output! enable_uart=1 # 64bit-mode arm_control=0x200 # Use U-Boot kernel=boot/u-boot.bin device_tree_address=0x100 device_tree_end=0x8000 dtparam=i2c_arm=on dtparam=spi=on Then verify your MicroSD directory structure like below : 1 2 3 4 5 6 7 8 9 10 /boot/Image /boot/boot.scr /boot/u-boot.bin /boot/initrd.img bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt Boot it up to confirm that its working. For revision... TO-Do Reference : [http://www.denx.de/wiki/U-Boot/WebHome](http://www.denx.de/wiki/U-Boot/WebHome)" />
+<meta property="og:description" content="This time let’s try to use U-Boot to load the Linux kernel and boot our Raspberry Pi 3. We need : U-Boot v.2017.11 file_download Get The SourceCode Get the source code by cloning the U-Boot git repository : 1 git clone --depth 1 --branch v2017.11 git://git.denx.de/u-boot.git v2017.11 or download the tar file : 1 wget ftp://ftp.denx.de/pub/u-boot/u-boot-2017.11.tar.bz2 Compile U-Boot rpi_3_defconfig - arm64 config RPi 3. -C source folder v2017.11 1 2 3 4 5 6 sudo make -C v2017.11/ CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig sudo make -C v2017.11/ CROSS_COMPILE=aarch64-linux-gnu- # For v2017.05 use below sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- After it has been built. Locate u-boot.bin in your output_path as this is the file we need. Default NetBoot Create the Bootscript Create a `rpi3-bootscript.txt` file and copy paste the code below : 1 2 3 4 5 6 7 8 // rpi3-bootscript.txt setenv kernel_addr_r 0x01000000 setenv ramdisk_addr_r 0x02100000 fatload mmc 0:1 ${kernel_addr_r} boot/Image fatload mmc 0:1 ${ramdisk_addr_r} boot/initrd.img setenv initrdsize $filesize booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r} boot/Image - The Linux kernel we compile from Raspberry Pi 3 64-bit kernel and place under a folder boot. boot/initrd.img - Ramdisk image we created from Using Ubuntu-base arm64 rootfs for Raspberry Pi 3. If you dont have a Ramdisk yet, replace ${ramdisk_addr_r}:${initrdsize} with -. mkimage -T script -n &#39;Bootscript&#39; -C none -d ~/&lt;input_file&gt; ~/&lt;output_file&gt;.scr - Syntax for creating the bootscript Now to create a bootscript from the text file above : 1 $ sudo mkimage -A arm64 -O linux -T script -d ~/rpi3-bootscript.txt ~/boot.scr Copy `boot.scr` to your MicroSD card inside `/boot` folder. u-boot.bin - Can be renamed to any-name and modify it’s entry in config.txt kernel=boot/u-boot.bin-to-any-name. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 // config.txt # Serial console output! enable_uart=1 # 64bit-mode arm_control=0x200 # Use U-Boot kernel=boot/u-boot.bin device_tree_address=0x100 device_tree_end=0x8000 dtparam=i2c_arm=on dtparam=spi=on Then verify your MicroSD directory structure like below : 1 2 3 4 5 6 7 8 9 10 /boot/Image /boot/boot.scr /boot/u-boot.bin /boot/initrd.img bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt Boot it up to confirm that its working. For revision... TO-Do Reference : [http://www.denx.de/wiki/U-Boot/WebHome](http://www.denx.de/wiki/U-Boot/WebHome)" />
+<link rel="canonical" href="http://0.0.0.0:5000/ubuntu/rpi3-setup-64bit-uboot.html" />
+<meta property="og:url" content="http://0.0.0.0:5000/ubuntu/rpi3-setup-64bit-uboot.html" />
 <meta property="og:site_name" content="My Personal Notes" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2017-11-03T00:00:00+08:00" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","url":"http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-uboot.html","headline":"Raspberry Pi 3 with 64-bit U-Boot","dateModified":"2017-11-03T00:00:00+08:00","datePublished":"2017-11-03T00:00:00+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-uboot.html"},"description":"This time let’s try to use U-Boot to load the Linux kernel and boot our Raspberry Pi 3. We need : U-Boot v.2017.11 file_download Get The SourceCode Get the source code by cloning the U-Boot git repository : 1 git clone --depth 1 --branch v2017.11 git://git.denx.de/u-boot.git v2017.11 or download the tar file : 1 wget ftp://ftp.denx.de/pub/u-boot/u-boot-2017.11.tar.bz2 Compile U-Boot rpi_3_defconfig - arm64 config RPi 3. -C source folder v2017.11 1 2 3 4 5 6 sudo make -C v2017.11/ CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig sudo make -C v2017.11/ CROSS_COMPILE=aarch64-linux-gnu- # For v2017.05 use below sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- After it has been built. Locate u-boot.bin in your output_path as this is the file we need. Create the Bootscript Create a rpi3-bootscript.txt file and copy paste the code below : 1 2 3 4 5 6 7 8 // rpi3-bootscript.txt setenv kernel_addr_r 0x01000000 setenv ramdisk_addr_r 0x02100000 fatload mmc 0:1 ${kernel_addr_r} boot/Image fatload mmc 0:1 ${ramdisk_addr_r} boot/initrd.img setenv initrdsize $filesize booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r} boot/Image - The Linux kernel we compile from Raspberry Pi 3 64-bit kernel and place under a folder boot. boot/initrd.img - Ramdisk image we created from Using Ubuntu-base arm64 rootfs for Raspberry Pi 3. If you dont have a Ramdisk yet, replace ${ramdisk_addr_r}:${initrdsize} with -. mkimage -T script -n &#39;Bootscript&#39; -C none -d ~/&lt;input_file&gt; ~/&lt;output_file&gt;.scr - Syntax for creating the bootscript Now to create a bootscript from the text file above : 1 $ sudo mkimage -A arm64 -O linux -T script -d ~/rpi3-bootscript.txt ~/boot.scr Copy boot.scr to your MicroSD card inside /boot folder. u-boot.bin - Can be renamed to any-name and modify it’s entry in config.txt kernel=boot/u-boot.bin-to-any-name. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 // config.txt # Serial console output! enable_uart=1 # 64bit-mode arm_control=0x200 # Use U-Boot kernel=boot/u-boot.bin device_tree_address=0x100 device_tree_end=0x8000 dtparam=i2c_arm=on dtparam=spi=on Then verify your MicroSD directory structure like below : 1 2 3 4 5 6 7 8 9 10 /boot/Image /boot/boot.scr /boot/u-boot.bin /boot/initrd.img bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt Boot it up to confirm that its working. Reference : http://www.denx.de/wiki/U-Boot/WebHome","@context":"http://schema.org"}</script>
+{"@type":"BlogPosting","dateModified":"2017-11-03T00:00:00+08:00","datePublished":"2017-11-03T00:00:00+08:00","headline":"Raspberry Pi 3 with 64-bit U-Boot","url":"http://0.0.0.0:5000/ubuntu/rpi3-setup-64bit-uboot.html","mainEntityOfPage":{"@type":"WebPage","@id":"http://0.0.0.0:5000/ubuntu/rpi3-setup-64bit-uboot.html"},"description":"This time let’s try to use U-Boot to load the Linux kernel and boot our Raspberry Pi 3. We need : U-Boot v.2017.11 file_download Get The SourceCode Get the source code by cloning the U-Boot git repository : 1 git clone --depth 1 --branch v2017.11 git://git.denx.de/u-boot.git v2017.11 or download the tar file : 1 wget ftp://ftp.denx.de/pub/u-boot/u-boot-2017.11.tar.bz2 Compile U-Boot rpi_3_defconfig - arm64 config RPi 3. -C source folder v2017.11 1 2 3 4 5 6 sudo make -C v2017.11/ CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig sudo make -C v2017.11/ CROSS_COMPILE=aarch64-linux-gnu- # For v2017.05 use below sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- After it has been built. Locate u-boot.bin in your output_path as this is the file we need. Default NetBoot Create the Bootscript Create a `rpi3-bootscript.txt` file and copy paste the code below : 1 2 3 4 5 6 7 8 // rpi3-bootscript.txt setenv kernel_addr_r 0x01000000 setenv ramdisk_addr_r 0x02100000 fatload mmc 0:1 ${kernel_addr_r} boot/Image fatload mmc 0:1 ${ramdisk_addr_r} boot/initrd.img setenv initrdsize $filesize booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r} boot/Image - The Linux kernel we compile from Raspberry Pi 3 64-bit kernel and place under a folder boot. boot/initrd.img - Ramdisk image we created from Using Ubuntu-base arm64 rootfs for Raspberry Pi 3. If you dont have a Ramdisk yet, replace ${ramdisk_addr_r}:${initrdsize} with -. mkimage -T script -n &#39;Bootscript&#39; -C none -d ~/&lt;input_file&gt; ~/&lt;output_file&gt;.scr - Syntax for creating the bootscript Now to create a bootscript from the text file above : 1 $ sudo mkimage -A arm64 -O linux -T script -d ~/rpi3-bootscript.txt ~/boot.scr Copy `boot.scr` to your MicroSD card inside `/boot` folder. u-boot.bin - Can be renamed to any-name and modify it’s entry in config.txt kernel=boot/u-boot.bin-to-any-name. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 // config.txt # Serial console output! enable_uart=1 # 64bit-mode arm_control=0x200 # Use U-Boot kernel=boot/u-boot.bin device_tree_address=0x100 device_tree_end=0x8000 dtparam=i2c_arm=on dtparam=spi=on Then verify your MicroSD directory structure like below : 1 2 3 4 5 6 7 8 9 10 /boot/Image /boot/boot.scr /boot/u-boot.bin /boot/initrd.img bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt Boot it up to confirm that its working. For revision... TO-Do Reference : [http://www.denx.de/wiki/U-Boot/WebHome](http://www.denx.de/wiki/U-Boot/WebHome)","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -129,8 +121,37 @@ sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-</span></pre><
 
 <p>After it has been built. Locate <code class="highlighter-rouge">u-boot.bin</code> in your output_path as this is the file we need.</p>
 
-<h4 id="create-the-bootscript">Create the Bootscript</h4>
-<p>Create a <code class="highlighter-rouge">rpi3-bootscript.txt</code> file and copy paste the code below :</p>
+<div class="mdc-tab-bar" role="tablist">
+  <div class="mdc-tab-scroller">
+    <div class="mdc-tab-scroller__scroll-area mdc-tab-scroller__scroll-area--scroll" style="margin-bottom: 0px;">
+      <div class="mdc-tab-scroller__scroll-content">
+        <button class="tab-item mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0" onclick="openGPIO('default')">
+          <span class="mdc-tab__content">
+            <span class="mdc-tab__text-label">Default</span>
+          </span>
+          <span class="mdc-tab-indicator mdc-tab-indicator--active">
+            <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+          </span>
+          <span class="mdc-tab__ripple mdc-ripple-upgraded"></span>
+        </button>
+        <button class="tab-item mdc-tab" role="tab" aria-selected="false" tabindex="-1" onclick="openGPIO('netboot')">
+          <span class="mdc-tab__content">
+            <span class="mdc-tab__text-label">NetBoot</span>
+          </span>
+          <span class="mdc-tab-indicator">
+            <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+          </span>
+          <span class="mdc-tab__ripple mdc-ripple-upgraded"></span>
+        </button>
+    </div>
+  </div>
+</div>
+
+<div id="default">
+<br />
+<h4> Create the Bootscript </h4>
+Create a `rpi3-bootscript.txt` file and copy paste the code below :
+
 
 <figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
@@ -149,6 +170,7 @@ setenv ramdisk_addr_r 0x02100000
 <span class="gp">setenv initrdsize $</span>filesize
 <span class="gp">booti $</span><span class="o">{</span>kernel_addr_r<span class="o">}</span> <span class="k">${</span><span class="nv">ramdisk_addr_r</span><span class="k">}</span>:<span class="k">${</span><span class="nv">initrdsize</span><span class="k">}</span> <span class="k">${</span><span class="nv">fdt_addr_r</span><span class="k">}</span></pre></td></tr></tbody></table></code></pre></figure>
 
+
 <div class="my-callout my-callout-note">
     <code class="highlighter-rouge">boot/Image</code> - The Linux kernel we compile from <a href="rpi3-setup-64bit-kernel">Raspberry Pi 3 64-bit kernel</a> and place under a folder <code class="highlighter-rouge">boot</code>. <br />
 <code class="highlighter-rouge">boot/initrd.img</code> - Ramdisk image we created from <a href="rpi3-setup-filesystem">Using Ubuntu-base arm64 rootfs for Raspberry Pi 3</a>. <br />
@@ -156,15 +178,19 @@ If you dont have a Ramdisk yet, replace <code class="highlighter-rouge">${ramdis
 <code class="highlighter-rouge">mkimage -T script -n 'Bootscript' -C none -d ~/&lt;input_file&gt; ~/&lt;output_file&gt;.scr</code> - Syntax for creating the bootscript
 </div>
 
-<p>Now to create a bootscript from the text file above :</p>
+
+Now to create a bootscript from the text file above :
+
 
 <figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 </pre></td><td class="code"><pre><span class="gp">$</span>   <span class="nb">sudo </span>mkimage <span class="nt">-A</span> arm64 <span class="nt">-O</span> linux <span class="nt">-T</span> script <span class="nt">-d</span> ~/rpi3-bootscript.txt ~/boot.scr</pre></td></tr></tbody></table></code></pre></figure>
 
-<p>Copy <code class="highlighter-rouge">boot.scr</code> to your MicroSD card inside <code class="highlighter-rouge">/boot</code> folder.</p>
+
+Copy `boot.scr` to your MicroSD card inside `/boot` folder.
 <div class="my-callout my-callout-note">
     <code class="highlighter-rouge">u-boot.bin</code> - Can be renamed to <code class="highlighter-rouge">any-name</code> and modify it’s entry in config.txt <code class="highlighter-rouge">kernel=boot/u-boot.bin-to-any-name</code>.
 </div>
+
 
 <figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
@@ -199,7 +225,10 @@ device_tree_end=0x8000
 dtparam=i2c_arm=on
 dtparam=spi=on</span></pre></td></tr></tbody></table></code></pre></figure>
 
-<p>Then verify your MicroSD directory structure like below :</p>
+
+
+Then verify your MicroSD directory structure like below :
+
 
 <figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
@@ -222,12 +251,58 @@ fixup.dat
 config.txt
 cmdline.txt</span></pre></td></tr></tbody></table></code></pre></figure>
 
-<p>Boot it up to confirm that its working.</p>
 
-<p><br /></p>
+Boot it up to confirm that its working.
 
-<h5 id="reference-">Reference :</h5>
-<p><a href="http://www.denx.de/wiki/U-Boot/WebHome">http://www.denx.de/wiki/U-Boot/WebHome</a></p>
+</div>
+
+<!-- NetBoot -->
+<div id="netboot">
+  For revision... TO-Do
+</div>
+
+<br />
+
+<h5>  Reference : </h5>
+[http://www.denx.de/wiki/U-Boot/WebHome](http://www.denx.de/wiki/U-Boot/WebHome)
+
+
+<!-- for tabs -->
+<script>
+  var demoItems = document.querySelectorAll('.tab-item');
+  var tabItems = document.getElementsByClassName('.tab-item');
+  
+  [].forEach.call(demoItems, function (demoItem) {
+    var activeIndicator = demoItem.querySelector('.mdc-tab-indicator');
+  
+    demoItem.addEventListener('click', function() {
+      console.log("Clicked Test " );
+      [].forEach.call(demoItems, function (demoItem) {
+        var indicatorEl = demoItem.querySelector('.mdc-tab-indicator');
+        indicatorEl.classList.remove('mdc-tab-indicator--active');
+      });
+      activeIndicator.classList.toggle('mdc-tab-indicator--active');
+
+      [].forEach.call(demoItems, function (demoItem) {
+        demoItem.classList.remove('mdc-tab--active');
+      });
+      demoItem.classList.toggle('mdc-tab--active');
+
+      
+
+    });
+
+  });
+
+document.getElementById("netboot").style.display = "none";
+
+  function openGPIO(AppName) {
+    document.getElementById("default").style.display = "none";
+    document.getElementById("netboot").style.display = "none";
+    document.getElementById(AppName).style.display = "block";
+  }
+</script>
+</div>
 
 
     <hr >
@@ -239,16 +314,6 @@ cmdline.txt</span></pre></td></tr></tbody></table></code></pre></figure>
     <script src="/assets/js/site.js" async></script>
 
     
-<!-- Google Analytics -->
-<script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-        ga('create', 'UA-99256627-1', 'auto');
-        ga('send', 'pageview');
-    </script>
-
     <amp-auto-ads type="adsense"
               data-ad-client="ca-pub-6013311002995151">
     </amp-auto-ads>
