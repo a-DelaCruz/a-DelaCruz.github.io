@@ -1,15 +1,45 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2018-10-13T20:17:56+08:00</updated><id>http://a-delacruz.github.io/feed.xml</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/debian/debian-arm64.html" rel="alternate" type="text/html" title="Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3" /><published>2018-10-13T00:00:00+08:00</published><updated>2018-10-13T00:00:00+08:00</updated><id>http://a-delacruz.github.io/debian/debian-arm64</id><content type="html" xml:base="http://a-delacruz.github.io/debian/debian-arm64.html">&lt;h4 id=&quot;extract-the-rootfs&quot;&gt;Extract the Rootfs&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2018-10-13T20:51:50+08:00</updated><id>http://a-delacruz.github.io/feed.xml</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/debian/debian-arm64.html" rel="alternate" type="text/html" title="Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3" /><published>2018-10-13T00:00:00+08:00</published><updated>2018-10-13T00:00:00+08:00</updated><id>http://a-delacruz.github.io/debian/debian-arm64</id><content type="html" xml:base="http://a-delacruz.github.io/debian/debian-arm64.html">&lt;h4 id=&quot;debootstrap-the-rootfs&quot;&gt;Debootstrap the Rootfs&lt;/h4&gt;
 &lt;p&gt;To create our bare filesystem, we need:&lt;/p&gt;
 
-&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
-    &lt;code class=&quot;highlighter-rouge&quot;&gt;TO DO the debootstrapping procedure&lt;/code&gt;
-&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;//make sure these are installed:
+debootstrap
+binfmt-support&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;h4 id=&quot;modifying-the-rootfs&quot;&gt;Modifying the Rootfs&lt;/h4&gt;
-&lt;p&gt;Going back from when we compile the Raspberry Pi 3 kernel, We are goig to install the kernel module and firmware into the rootfs folder that we just created above.&lt;/p&gt;
+&lt;p&gt;TO build the 1st stage of Debian rootfs:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$&lt;/span&gt;HOME/bo_4.14/ modules_install &lt;span class=&quot;nv&quot;&gt;INSTALL_MOD_PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$HOME&lt;/span&gt;/rootfs/&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;mkdir debianFS
+sudo debootstrap --arch=arm64 --foreign stretch debianFS&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Once the 1st sstage is done… onto next step below.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;// To chroot onto the rootfs
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;sudo cp -av /usr/bin/qemu-aarch64-static $&lt;/span&gt;HOME/debianFS/usr/bin&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;// To have internet access temporarily borrowing from host
+// If your host is Ubuntu 17.10
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;sudo cp -av /run/systemd/resolve/stub-resolv.conf $&lt;/span&gt;HOME/debianFS/etc/resolv.conf
+&lt;span class=&quot;go&quot;&gt;
+// For Ubuntu 16.04.3 below
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;sudo cp -av /run/resolvconf/resolv.conf $&lt;/span&gt;HOME/debianFS/etc/resolv.conf&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h4 id=&quot;modifying-the-rootfs&quot;&gt;Modifying the Rootfs&lt;/h4&gt;
+&lt;p&gt;Going back from when we compile the Raspberry Pi 3 kernel, We are goig to install the kernel module and firmware into the debianFS folder that we just created above.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$&lt;/span&gt;HOME/bo_4.14/ modules_install &lt;span class=&quot;nv&quot;&gt;INSTALL_MOD_PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$HOME&lt;/span&gt;/debianFS/&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Verify that it was installed correctly. And remove &lt;code class=&quot;highlighter-rouge&quot;&gt;build&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;source&lt;/code&gt; links.&lt;/p&gt;
 
@@ -22,40 +52,56 @@
 7
 8
 9
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;ls $&lt;/span&gt;HOME/rootfs/lib/modules/4.11~
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;ls $&lt;/span&gt;HOME/debianFS/lib/modules/4.11~
 &lt;span class=&quot;go&quot;&gt;
 modules.builtin     modules.devname        modules.symbols.bin  build
 kernel              modules.builtin.bin    modules.order        source
 modules.alias       modules.dep            modules.softdep
 modules.alias.bin   modules.dep.bin        modules.symbols
 
-&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;sudo find $&lt;/span&gt;HOME/rootfs/ &lt;span class=&quot;nt&quot;&gt;-name&lt;/span&gt; build | xargs &lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-rf&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;sudo find $&lt;/span&gt;HOME/rootfs/ &lt;span class=&quot;nt&quot;&gt;-name&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; | xargs &lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-rf&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;sudo find $&lt;/span&gt;HOME/debianFS/ &lt;span class=&quot;nt&quot;&gt;-name&lt;/span&gt; build | xargs &lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-rf&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;sudo find $&lt;/span&gt;HOME/debianFS/ &lt;span class=&quot;nt&quot;&gt;-name&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; | xargs &lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-rf&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;Well use &lt;code class=&quot;highlighter-rouge&quot;&gt;chroot&lt;/code&gt; to further setup our filesystem.&lt;/p&gt;
+&lt;p&gt;Then &lt;code class=&quot;highlighter-rouge&quot;&gt;chroot&lt;/code&gt; to further setup our filesystem.&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;sudo cp -av /usr/bin/qemu-aarch64-static $&lt;/span&gt;HOME/rootfs/usr/bin&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;sudo chroot debianFS&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;Then we need to copy &lt;code class=&quot;highlighter-rouge&quot;&gt;resolv.conf&lt;/code&gt; from our host machine for internet connection to &lt;code class=&quot;highlighter-rouge&quot;&gt;$HOME/rootfs/etc/&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;Now that you’re in the chroot environment, we are ready to setup the 2nd stage of debootstrap.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;export LANG=C
+
+/debootstrap/debootstrap --second-stage&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;After the installation has finished, add a debian repository&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
 2
 3
 4
 5
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; If your host is Ubuntu 17.10
-&lt;span class=&quot;gp&quot;&gt;sudo cp -av /run/systemd/resolve/stub-resolv.conf $&lt;/span&gt;HOME/rootfs/etc/resolv.conf
-&lt;span class=&quot;go&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; For Ubuntu 16.04.3 below
-&lt;span class=&quot;gp&quot;&gt;sudo cp -av /run/resolvconf/resolv.conf $&lt;/span&gt;HOME/rootfs/etc/resolv.conf&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;nano /etc/apt/sources.list
 
-&lt;p&gt;Enter chroot environment:&lt;/p&gt;
+// replace it with these below:
+
+deb http://deb.debian.org/debian stretch main&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Fetch the latest package lists from server then upgrade.&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;sudo chroot $&lt;/span&gt;HOME/rootfs/&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;apt-get update
+apt-get upgrade&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;Now that you’re in the chroot environment, we can now add an admin user with sudo permission.&lt;/p&gt;
+&lt;p&gt;Install minimal packages:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;apt-get install sudo ifupdown net-tools ethtool udev wireless-tools iputils-ping resolvconf wget apt-utils wpasupplicant&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;And we can now add an admin user with sudo permission.&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
 2
@@ -81,13 +127,6 @@ Change root password with these command:&lt;/p&gt;
 &lt;span class=&quot;gp&quot;&gt;echo 127.0.0.1	localhost &amp;gt;&lt;/span&gt; /etc/hosts
 &lt;span class=&quot;gp&quot;&gt;echo 127.0.1.1	U-Base_min &amp;gt;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /etc/hosts&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;Fetch the latest package lists from server then upgrade.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;apt-get update
-apt-get upgrade&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
 &lt;p&gt;Then install these first:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
@@ -104,24 +143,27 @@ apt-get upgrade&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;
             en_US.UTF-8... done
         Generation complete.&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;Install minimal packages:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;apt-get install sudo ifupdown net-tools ethtool udev wireless-tools iputils-ping resolvconf wget apt-utils wpasupplicant initramfs-tools&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
 &lt;div class=&quot;my-callout my-callout-note&quot;&gt;
     To-Do: gonna use Netplan for future network management
 &lt;/div&gt;
+
+&lt;p&gt;We need to add &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/fstab&lt;/code&gt; file entry below coz’ if not…it will run on read-only mode. Below are &lt;code class=&quot;highlighter-rouge&quot;&gt;Tab&lt;/code&gt; not &lt;code class=&quot;highlighter-rouge&quot;&gt;spacebar&lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;nano /etc/fstab
+
+// add these line below or your fs will be on read-only
+
+/dev/mmcblk0p2	/	ext4	defaults,noatime	0	1&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;When everything you want are done, exit chroot:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
 &lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;exit&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;We need to add &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/fstab&lt;/code&gt; file entry below coz’ if not…it will run on read-only mode. Below are &lt;code class=&quot;highlighter-rouge&quot;&gt;Tab&lt;/code&gt; not &lt;code class=&quot;highlighter-rouge&quot;&gt;spacebar&lt;/code&gt;&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;echo &quot;/dev/mmcblk0p2	/	ext4	defaults,noatime	0	1&quot; &amp;gt;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$HOME&lt;/span&gt;/rootfs/etc/fstab&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;h4 id=&quot;removing-unwanted-files&quot;&gt;Removing unwanted files&lt;/h4&gt;
 &lt;p&gt;To reduce the rootfs/ size we can remove some unwanted files.
@@ -157,7 +199,7 @@ sudo find rootfs/usr/share/doc -empty|xargs rmdir || true
 sudo rm -rf rootfs/usr/share/man/* rootfs/usr/share/groff/* rootfs/usr/share/info/*
 sudo rm -rf rootfs/usr/share/lintian/* rootfs/usr/share/linda/* rootfs/var/cache/man/*&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;Then copy the &lt;code class=&quot;highlighter-rouge&quot;&gt;$HOME/rootfs/*&lt;/code&gt; content to the 2nd partition of your MicroSD card.&lt;/p&gt;
+&lt;p&gt;Then copy the &lt;code class=&quot;highlighter-rouge&quot;&gt;$HOME/debianFS/*&lt;/code&gt; content to the 2nd partition of your MicroSD card.&lt;/p&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h4 id=&quot;creating-the-image-file-optional&quot;&gt;Creating the Image file (*Optional)&lt;/h4&gt;
@@ -229,9 +271,7 @@ Now boot it up and you should now be able to login.&lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;h5 id=&quot;reference-&quot;&gt;Reference :&lt;/h5&gt;
-&lt;p&gt;&lt;a href=&quot;http://docs.khadas.com/social/BuildUbuntuRootfsViaUbuntuBase/&quot;&gt;http://docs.khadas.com/social/BuildUbuntuRootfsViaUbuntuBase/&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://gnu-linux.org/building-ubuntu-rootfs-for-arm.html&quot;&gt;https://gnu-linux.org/building-ubuntu-rootfs-for-arm.html&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html&quot;&gt;http://manpages.ubuntu.com/manpages/xenial/man8/losetup.8.html&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="Debian" /><summary type="html">Extract the Rootfs To create our bare filesystem, we need:</summary></entry><entry><title type="html">QT 5.11.2 on a Raspberry Pi 3</title><link href="http://a-delacruz.github.io/topics/QT-on-pi.html" rel="alternate" type="text/html" title="QT 5.11.2 on a Raspberry Pi 3" /><published>2018-09-25T00:00:00+08:00</published><updated>2018-09-25T00:00:00+08:00</updated><id>http://a-delacruz.github.io/topics/QT-on-pi</id><content type="html" xml:base="http://a-delacruz.github.io/topics/QT-on-pi.html">&lt;p&gt;***To-Do&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://olimex.wordpress.com/2014/07/21/how-to-create-bare-minimum-debian-wheezy-rootfs-from-scratch/&quot;&gt;How to create bare minimum Debian Wheezy rootfs from scratch&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="Debian" /><summary type="html">Debootstrap the Rootfs To create our bare filesystem, we need:</summary></entry><entry><title type="html">QT 5.11.2 on a Raspberry Pi 3</title><link href="http://a-delacruz.github.io/topics/QT-on-pi.html" rel="alternate" type="text/html" title="QT 5.11.2 on a Raspberry Pi 3" /><published>2018-09-25T00:00:00+08:00</published><updated>2018-09-25T00:00:00+08:00</updated><id>http://a-delacruz.github.io/topics/QT-on-pi</id><content type="html" xml:base="http://a-delacruz.github.io/topics/QT-on-pi.html">&lt;p&gt;***To-Do&lt;/p&gt;
 
 &lt;p&gt;Since i need to make a GUI for my Raspberry Pi projects… I want something that ‘Does’ not require any desktop environment.
 And as a start should be c++. I’ve research the net and found 3 promising tools and one of them is QT.&lt;/p&gt;
