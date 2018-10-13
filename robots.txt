@@ -1,1 +1,1 @@
-Sitemap: http://a-delacruz.github.io/sitemap.xml
+Sitemap: /sitemap.xml
