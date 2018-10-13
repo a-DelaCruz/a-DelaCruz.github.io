@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2018-10-08T11:29:00+08:00</updated><id>http://a-delacruz.github.io/feed.xml</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">QT 5.11.2 on a Raspberry Pi 3</title><link href="http://a-delacruz.github.io/topics/QT-on-pi.html" rel="alternate" type="text/html" title="QT 5.11.2 on a Raspberry Pi 3" /><published>2018-09-25T00:00:00+08:00</published><updated>2018-09-25T00:00:00+08:00</updated><id>http://a-delacruz.github.io/topics/QT-on-pi</id><content type="html" xml:base="http://a-delacruz.github.io/topics/QT-on-pi.html">&lt;p&gt;***To-Do&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2018-10-13T10:35:51+08:00</updated><id>http://a-delacruz.github.io/feed.xml</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">QT 5.11.2 on a Raspberry Pi 3</title><link href="http://a-delacruz.github.io/topics/QT-on-pi.html" rel="alternate" type="text/html" title="QT 5.11.2 on a Raspberry Pi 3" /><published>2018-09-25T00:00:00+08:00</published><updated>2018-09-25T00:00:00+08:00</updated><id>http://a-delacruz.github.io/topics/QT-on-pi</id><content type="html" xml:base="http://a-delacruz.github.io/topics/QT-on-pi.html">&lt;p&gt;***To-Do&lt;/p&gt;
 
 &lt;p&gt;Since i need to make a GUI for my Raspberry Pi projects… I want something that ‘Does’ not require any desktop environment.
 And as a start should be c++. I’ve research the net and found 3 promising tools and one of them is QT.&lt;/p&gt;
@@ -299,12 +299,32 @@ document.getElementById(&quot;webapp-gpio&quot;).style.display = &quot;none&quot
 &lt;p&gt;For building our own 64-bit kernel fom scratch using the Raspberry Pi Foundation repository, a couple of dependencies are needed. You may however use the mainline kernel though i haven’t tried to use it.
 &lt;br /&gt;&lt;/p&gt;
 
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;18/10/13: Procedure for compiling the mainline kernel is the same for raspberry pi foundation except that mainline kernel doesn't create an overlays folder. For further research as to why...&lt;/code&gt;
+&lt;/div&gt;
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;Host machine: Ubuntu 18.04.1. Procedure for compiling kernel-4.18 is the same just replace the brach to rpi-4.18.y.&lt;/code&gt; &lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Removed initrd.img as is not needed to boot.&lt;/code&gt;
+&lt;/div&gt;
+
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
 2
 3
+4
+5
+6
+7
+8
+9
 &lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;//make sure these are installed:
-
-bc git make device-tree-compiler gcc-aarch64-linux-gnu build-essential u-boot-tools ncurses-dev qemu-user-static pkg-config&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+crossbuild-essential-arm64
+bison
+flex
+device-tree-compiler
+pkg-config
+ncurses-dev
+libssl-dev
+git&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;we also need:
 &lt;a href=&quot;https://github.com/raspberrypi/linux.git&quot; class=&quot;mdc-button mdc-button--compact&quot;&gt;
@@ -317,7 +337,7 @@ bc git make device-tree-compiler gcc-aarch64-linux-gnu build-essential u-boot-to
 &lt;/a&gt;&lt;/p&gt;
 
 &lt;div class=&quot;my-callout my-callout-note&quot;&gt;
-    &lt;code class=&quot;highlighter-rouge&quot;&gt;bootcode.bin&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;start.elf&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;fixup.dat&lt;/code&gt; as this are the min. files to boot. The rest of &lt;code class=&quot;highlighter-rouge&quot;&gt;star.* and fixup.*&lt;/code&gt; files for graphical desktop
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;bootcode.bin&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;start.elf&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;fixup.dat&lt;/code&gt; as this are the min. files to boot. The rest of &lt;code class=&quot;highlighter-rouge&quot;&gt;star.* and fixup.*&lt;/code&gt; files for graphical desktop or better yet include them all.
 &lt;/div&gt;
 
 &lt;h4 id=&quot;compile-the-kernel&quot;&gt;Compile the Kernel&lt;/h4&gt;
@@ -335,7 +355,13 @@ To get the kernel we need, we can either download it as a compressed file using 
 &lt;span class=&quot;gp&quot;&gt;sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$&lt;/span&gt;HOME/bo_4.14 &lt;span class=&quot;nt&quot;&gt;-j4&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;div class=&quot;my-callout my-callout-note&quot;&gt;
-    &lt;code class=&quot;highlighter-rouge&quot;&gt;bcmrpi3_defconfig&lt;/code&gt; - arm64 config. &lt;code class=&quot;highlighter-rouge&quot;&gt;-C source folder/&lt;/code&gt;. &lt;code class=&quot;highlighter-rouge&quot;&gt;O=$HOME/output-folder&lt;/code&gt; - Output directory. &lt;code class=&quot;highlighter-rouge&quot;&gt;-jX&lt;/code&gt; - build the kernel in a multithreaded way where: &lt;code class=&quot;highlighter-rouge&quot;&gt;X = [Num of core x 2]&lt;/code&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;bcmrpi3_defconfig&lt;/code&gt; - arm64 config using Raspberry Pi Foundation Kernel &lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;defconfig&lt;/code&gt; - arm64 config using mainline kernel
+&lt;/div&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;-C source folder/&lt;/code&gt;. &lt;code class=&quot;highlighter-rouge&quot;&gt;O=$HOME/output-folder&lt;/code&gt; - Output directory. &lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;-jX&lt;/code&gt; - build the kernel in a multithreaded way where: &lt;code class=&quot;highlighter-rouge&quot;&gt;X = [Num of core x 2]&lt;/code&gt;
 &lt;/div&gt;
 
 &lt;div class=&quot;my-callout my-callout-note&quot;&gt;
@@ -361,22 +387,26 @@ To get the kernel we need, we can either download it as a compressed file using 
 14
 15
 16
+17
+18
 &lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;//config.txt
 
 &lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; Serial console output!
 &lt;span class=&quot;go&quot;&gt;enable_uart=1
 
 &lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; 64bit-mode
-&lt;span class=&quot;go&quot;&gt;arm_control=0x200
+&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;arm_control&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0x200 is deprecated https://www.raspberrypi.org/documentation/configuration/config-txt/misc.md
+&lt;span class=&quot;go&quot;&gt;arm_64bit=1
 
-kernel=kernel8.img
-
-device_tree_address=0x100
-device_tree_end=0x8000
-
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; Uncomment below to use your custom named kernel
+&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;kernel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;your-kernel.img
+&lt;span class=&quot;go&quot;&gt;
 &lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; For i2c &amp;amp; spi
 &lt;span class=&quot;go&quot;&gt;dtparam=i2c_arm=on
-dtparam=spi=on&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+dtparam=spi=on
+
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; Enable audio &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;loads snd_bcm2835&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;dtparam=audio=on&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
 2
@@ -386,11 +416,6 @@ dtparam=spi=on&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/
 dwc_otg.lpm_enable=0 console=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;h4 id=&quot;transfer-the-necessary-files-to-the-microsd&quot;&gt;Transfer the necessary files to the MicroSD&lt;/h4&gt;
-&lt;p&gt;Since we dont have a Ramdisk yet, we are using this &lt;a href=&quot;https://www.finnie.org/software/raspberrypi/ubuntu-rpi3/&quot;&gt;20160517-raspi3-arm64-firmware-kernel.tar.xz&lt;/a&gt; for now and we’ll create a new one on our own.&lt;/p&gt;
-
-&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
-    To Do - i have to verify if this still works
-&lt;/div&gt;
 
 &lt;p&gt;Rename the &lt;code class=&quot;highlighter-rouge&quot;&gt;Image&lt;/code&gt; file we had earlier to &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel8.img&lt;/code&gt;. &lt;code class=&quot;highlighter-rouge&quot;&gt;start.elf&lt;/code&gt; file knows &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel8.img&lt;/code&gt; file is a kernel to load.&lt;/p&gt;
 
@@ -403,7 +428,6 @@ dwc_otg.lpm_enable=0 console=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 roo
 7
 8
 9
-10
 &lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;//MicroSD card should now contain these files below
 
 bootcode.bin
@@ -412,7 +436,6 @@ fixup.dat
 config.txt
 cmdline.txt
 kernel8.img
-initrd.img
 bcm2710-rpi-3-b.dtb&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;h4 id=&quot;boot-to-test&quot;&gt;Boot to test&lt;/h4&gt;
@@ -428,7 +451,7 @@ since we still do not have a filesystem.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3&quot;&gt;https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3&lt;/a&gt;&lt;br /&gt;
 &lt;a href=&quot;https://wiki.ubuntu.com/Base&quot;&gt;https://wiki.ubuntu.com/Base&lt;/a&gt;&lt;br /&gt;
 &lt;a href=&quot;https://www.raspberrypi.org/documentation/linux/kernel/building.md&quot;&gt;https://www.raspberrypi.org/documentation/linux/kernel/building.md&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://kernelnomicon.org/?p=682&quot;&gt;https://kernelnomicon.org/?p=682&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="Ubuntu" /><summary type="html">Cross-Build Prerequisites For building our own 64-bit kernel fom scratch using the Raspberry Pi Foundation repository, a couple of dependencies are needed. You may however use the mainline kernel though i haven’t tried to use it. 1 2 3 //make sure these are installed: bc git make device-tree-compiler gcc-aarch64-linux-gnu build-essential u-boot-tools ncurses-dev qemu-user-static pkg-config we also need: kernel RPi Repo file_download RPi firmware file_download bootcode.bin, start.elf, fixup.dat as this are the min. files to boot. The rest of star.* and fixup.* files for graphical desktop Compile the Kernel Use any Linux machine of your choice or Windows 10’s Bash to compile the kernel is all up to you. To get the kernel we need, we can either download it as a compressed file using the links above or we could use git to make it simpler. 1 git clone --depth 1 --branch rpi-4.14.y https://github.com/raspberrypi/linux.git rpi-4.14.70 1 2 3 mkdir bo_4.14 sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$HOME/bo_4.14 bcmrpi3_defconfig sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$HOME/bo_4.14 -j4 bcmrpi3_defconfig - arm64 config. -C source folder/. O=$HOME/output-folder - Output directory. -jX - build the kernel in a multithreaded way where: X = [Num of core x 2] Image file @ $HOME/bo_4.14/arch/arm64/boot/ bcm2710-rpi-3-b.dtb @ $HOME/bo_4.14/arch/arm64/boot/dts/broadcom/ Create config.txt and cmdline.txt For the config.txt and cmdline.txt, we have to create those files and add these lines. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 //config.txt # Serial console output! enable_uart=1 # 64bit-mode arm_control=0x200 kernel=kernel8.img device_tree_address=0x100 device_tree_end=0x8000 # For i2c &amp;amp; spi dtparam=i2c_arm=on dtparam=spi=on 1 2 3 //cmd.txt dwc_otg.lpm_enable=0 console=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait Transfer the necessary files to the MicroSD Since we dont have a Ramdisk yet, we are using this 20160517-raspi3-arm64-firmware-kernel.tar.xz for now and we’ll create a new one on our own. To Do - i have to verify if this still works Rename the Image file we had earlier to kernel8.img. start.elf file knows kernel8.img file is a kernel to load. 1 2 3 4 5 6 7 8 9 10 //MicroSD card should now contain these files below bootcode.bin start.elf fixup.dat config.txt cmdline.txt kernel8.img initrd.img bcm2710-rpi-3-b.dtb Boot to test Place the MicroSD on to the Raspberry Pi 3 and power it on. You can now then verify at this point that our kernel boot as well and will stop at some point since we still do not have a filesystem. If it did not boot or no display at all, we will use U-Boot. Next is Creating the filesystem for our Raspberry Pi 3 using Ubuntu Base. Reference : https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3 https://wiki.ubuntu.com/Base https://www.raspberrypi.org/documentation/linux/kernel/building.md https://kernelnomicon.org/?p=682</summary></entry><entry><title type="html">Raspberry Pi 3 with 64-bit U-Boot</title><link href="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-uboot.html" rel="alternate" type="text/html" title="Raspberry Pi 3 with 64-bit U-Boot" /><published>2017-11-03T00:00:00+08:00</published><updated>2017-11-03T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-uboot</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-uboot.html">&lt;p&gt;This time let’s try to use &lt;code class=&quot;highlighter-rouge&quot;&gt;U-Boot&lt;/code&gt; to load the Linux kernel and boot our Raspberry Pi 3.
+&lt;a href=&quot;https://kernelnomicon.org/?p=682&quot;&gt;https://kernelnomicon.org/?p=682&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="Ubuntu" /><summary type="html">Cross-Build Prerequisites For building our own 64-bit kernel fom scratch using the Raspberry Pi Foundation repository, a couple of dependencies are needed. You may however use the mainline kernel though i haven’t tried to use it. 18/10/13: Procedure for compiling the mainline kernel is the same for raspberry pi foundation except that mainline kernel doesn't create an overlays folder. For further research as to why... Host machine: Ubuntu 18.04.1. Procedure for compiling kernel-4.18 is the same just replace the brach to rpi-4.18.y. Removed initrd.img as is not needed to boot. 1 2 3 4 5 6 7 8 9 //make sure these are installed: crossbuild-essential-arm64 bison flex device-tree-compiler pkg-config ncurses-dev libssl-dev git we also need: kernel RPi Repo file_download RPi firmware file_download bootcode.bin, start.elf, fixup.dat as this are the min. files to boot. The rest of star.* and fixup.* files for graphical desktop or better yet include them all. Compile the Kernel Use any Linux machine of your choice or Windows 10’s Bash to compile the kernel is all up to you. To get the kernel we need, we can either download it as a compressed file using the links above or we could use git to make it simpler. 1 git clone --depth 1 --branch rpi-4.14.y https://github.com/raspberrypi/linux.git rpi-4.14.70 1 2 3 mkdir bo_4.14 sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$HOME/bo_4.14 bcmrpi3_defconfig sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$HOME/bo_4.14 -j4 bcmrpi3_defconfig - arm64 config using Raspberry Pi Foundation Kernel defconfig - arm64 config using mainline kernel -C source folder/. O=$HOME/output-folder - Output directory. -jX - build the kernel in a multithreaded way where: X = [Num of core x 2] Image file @ $HOME/bo_4.14/arch/arm64/boot/ bcm2710-rpi-3-b.dtb @ $HOME/bo_4.14/arch/arm64/boot/dts/broadcom/ Create config.txt and cmdline.txt For the config.txt and cmdline.txt, we have to create those files and add these lines. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 //config.txt # Serial console output! enable_uart=1 # 64bit-mode # arm_control=0x200 is deprecated https://www.raspberrypi.org/documentation/configuration/config-txt/misc.md arm_64bit=1 # Uncomment below to use your custom named kernel #kernel=your-kernel.img # For i2c &amp;amp; spi dtparam=i2c_arm=on dtparam=spi=on # Enable audio (loads snd_bcm2835) dtparam=audio=on 1 2 3 //cmd.txt dwc_otg.lpm_enable=0 console=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait Transfer the necessary files to the MicroSD Rename the Image file we had earlier to kernel8.img. start.elf file knows kernel8.img file is a kernel to load. 1 2 3 4 5 6 7 8 9 //MicroSD card should now contain these files below bootcode.bin start.elf fixup.dat config.txt cmdline.txt kernel8.img bcm2710-rpi-3-b.dtb Boot to test Place the MicroSD on to the Raspberry Pi 3 and power it on. You can now then verify at this point that our kernel boot as well and will stop at some point since we still do not have a filesystem. If it did not boot or no display at all, we will use U-Boot. Next is Creating the filesystem for our Raspberry Pi 3 using Ubuntu Base. Reference : https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3 https://wiki.ubuntu.com/Base https://www.raspberrypi.org/documentation/linux/kernel/building.md https://kernelnomicon.org/?p=682</summary></entry><entry><title type="html">Raspberry Pi 3 with 64-bit U-Boot</title><link href="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-uboot.html" rel="alternate" type="text/html" title="Raspberry Pi 3 with 64-bit U-Boot" /><published>2017-11-03T00:00:00+08:00</published><updated>2017-11-03T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-uboot</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/rpi3-setup-64bit-uboot.html">&lt;p&gt;This time let’s try to use &lt;code class=&quot;highlighter-rouge&quot;&gt;U-Boot&lt;/code&gt; to load the Linux kernel and boot our Raspberry Pi 3.
 &lt;br /&gt;We need :
 &lt;a href=&quot;ftp://ftp.denx.de/pub/u-boot/u-boot-2017.11.tar.bz2&quot; class=&quot;mdc-button mdc-button--compact&quot;&gt;
     U-Boot v.2017.11
