@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang=" en-US ">
+    <head>
+    <meta charset="utf-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="theme-color" content="#FFB74D" />
+    <meta name="keywords" content="Raspberry Pi 3 64bit Kernel">
+
+    <title>
+            Wifi firmware for Raspberry Pi 3
+        
+    </title>
+
+    <meta name="description" content="
+            To make the Raspberry pi 3 Wifi to work…we need to get or have atleast 2 files. But first we must create afolder inside the /lib/firmware/ and name it brcm. ...
+        ">
+
+    <link href="https://fonts.googleapis.com/css?family=Patrick+Hand+SC&effect=shadow-multiple" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+
+    <!-- Favicon head tag -->
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+
+    <!-- Syntax Highligther -->
+    <link href="/assets/css/syntax.css" rel="stylesheet" >
+
+    <!-- Google fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Orbitron:400,500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Mogra" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Spectral+SC:700" rel="stylesheet">
+
+    <!-- To DO-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+    
+    <!-- Google Adsense -->
+    
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-6013311002995151", enable_page_level_ads: true });
+        </script>
+        <script async custom-element="amp-auto-ads"
+            src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+        </script>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Wifi firmware for Raspberry Pi 3 | My Personal Notes</title>
+<meta name="generator" content="Jekyll v3.8.4" />
+<meta property="og:title" content="Wifi firmware for Raspberry Pi 3" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="To make the Raspberry pi 3 Wifi to work…we need to get or have atleast 2 files. But first we must create a folder inside the /lib/firmware/ and name it brcm. And in that folder we’ll put brcmfmac43430-sdio.bin and brcmfmac43430-sdio.txt." />
+<meta property="og:description" content="To make the Raspberry pi 3 Wifi to work…we need to get or have atleast 2 files. But first we must create a folder inside the /lib/firmware/ and name it brcm. And in that folder we’ll put brcmfmac43430-sdio.bin and brcmfmac43430-sdio.txt." />
+<link rel="canonical" href="http://a-delacruz.github.io/peripherals/wifi.html" />
+<meta property="og:url" content="http://a-delacruz.github.io/peripherals/wifi.html" />
+<meta property="og:site_name" content="My Personal Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-10-13T00:00:00+08:00" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","url":"http://a-delacruz.github.io/peripherals/wifi.html","headline":"Wifi firmware for Raspberry Pi 3","dateModified":"2018-10-13T00:00:00+08:00","datePublished":"2018-10-13T00:00:00+08:00","description":"To make the Raspberry pi 3 Wifi to work…we need to get or have atleast 2 files. But first we must create a folder inside the /lib/firmware/ and name it brcm. And in that folder we’ll put brcmfmac43430-sdio.bin and brcmfmac43430-sdio.txt.","mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/peripherals/wifi.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+<body>
+
+    <!-- To Do -->
+        <header class="mdc-top-app-bar mdc-top-app-bar--short mdc-top-app-bar--dense">
+                <div class="mdc-top-app-bar__row">
+                    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                    <a href="/" class="mdc-top-app-bar__navigation-icon my-logo"><img src="/assets/images/logo-bl.png"></a>
+                    </section>
+                    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end my-top-app-bar-btn">
+                        <a href="/about" class="mdc-button">about</a>
+                    </section>
+                </div>
+            </header>
+
+    <div class="posts">
+    <h5 class="mdc-typography--headline5 posts-title">Wifi firmware for Raspberry Pi 3</h5>
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- Ad-1 -->
+    <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-6013311002995151"
+        data-ad-slot="2377202477"
+        data-ad-format="auto"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+    <p>To make the Raspberry pi 3 Wifi to work…we need to get or have atleast 2 files. But first we must create a
+folder inside the <code class="highlighter-rouge">/lib/firmware/</code> and name it <code class="highlighter-rouge">brcm</code>. And in that folder we’ll put
+<code class="highlighter-rouge">brcmfmac43430-sdio.bin</code> and <code class="highlighter-rouge">brcmfmac43430-sdio.txt</code>.</p>
+
+<h4 id="prerequisite">Prerequisite:</h4>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="go">//make sure these are installed:
+wpa-supplicant
+wireless-tools</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p><a href="https://github.com/RPi-Distro/firmware-nonfree/raw/master/brcm/brcmfmac43430-sdio.bin" class="mdc-button mdc-button--compact">
+  brcmfmac43430-sdio.bin
+  <i class="material-icons mdc-button__icon">file_download</i>
+</a>
+<a href="https://raw.githubusercontent.com/RPi-Distro/firmware-nonfree/master/brcm/brcmfmac43430-sdio.txt" class="mdc-button mdc-button--compact">
+  brcmfmac43430-sdio.txt
+  <i class="material-icons mdc-button__icon">file_download</i>
+</a></p>
+
+<p>Download and place the <code class="highlighter-rouge">brcmfmac43430-sdio.bin</code> and <code class="highlighter-rouge">brcmfmac43430-sdio.txt</code> inside the <code class="highlighter-rouge">/lib/firmware/brcm</code> folder.
+If the file above doesn’t make your wifi to work get it directly from the <a href="git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git">Upstream linux</a></p>
+
+<p>Next we’ll modify <code class="highlighter-rouge">/etc/network/interfaces</code>.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">sudo nano /etc/network/interfaces</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Copy paste this following lines:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre></td><td class="code"><pre><span class="go">// For dynamic IP
+allow-hotplug wlan0
+  iface wlan0 inet dhcp
+  wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+  iface default inet dhcp
+
+// For Static IP
+allow-hotplug wlan0
+  iface wlan0 inet static
+  address 192.168.1.2
+  netmask 255.255.255.0
+  gateway 192.168.1.1
+  dns-nameservers 8.8.8.8 8.8.4.4</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>For this setup, my wifi interfaces id is  <code class="highlighter-rouge">wlan0</code>… yours might be named differently so replace it
+that matches yours.
+You can set your wifi to static…just browse the references at the bottom of this page..</p>
+
+<p>Then we’ll configure <code class="highlighter-rouge">/etc/wpa_supplicant/wpa_supplicant.conf</code> … so create/edit the file <code class="highlighter-rouge">wpa_supplicant.conf</code> and place this lines:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="go">network={
+        ssid="NetworkEssid"
+        scan_ssid=1
+        proto=RSN
+        key_mgmt=WPA-PSK
+        psk="NetworkPassword"
+        pairwise=CCMP
+        auth_alg=OPEN
+    }</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="my-callout my-callout-note">
+    <code class="highlighter-rouge">scan_ssid=1</code> - only needed if your access point uses a hidden ssid
+</div>
+
+<p>Reboot and verify that wifi is now working and connected to the network.
+or you could try this:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="go">sudo ifconfig wlan0 down
+sudo ifconfig wlan0 up</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h5 id="reference-">Reference :</h5>
+<blockquote>
+  <p><a href="https://github.com/RPi-Distro/firmware-nonfree/tree/master/brcm80211/brcm">https://github.com/RPi-Distro/firmware-nonfree/tree/master/brcm80211/brcm</a><br />
+  <a href="https://help.ubuntu.com/community/WifiDocs/WPAHowTo">https://help.ubuntu.com/community/WifiDocs/WPAHowTo</a><br />
+  <a href="https://w1.fi/cgit/hostap/plain/wpa_supplicant/wpa_supplicant.conf">https://w1.fi/cgit/hostap/plain/wpa_supplicant/wpa_supplicant.conf</a></p>
+</blockquote>
+
+<div class="my-callout my-callout-note">
+    <code class="highlighter-rouge">To Do using Netplan instead</code>
+</div>
+
+
+    <hr >
+
+</div>
+
+    <!-- Material Design -->
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js" async></script>
+    <script src="/assets/js/site.js" async></script>
+
+    
+<!-- Google Analytics -->
+<script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-99256627-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <amp-auto-ads type="adsense"
+              data-ad-client="ca-pub-6013311002995151">
+    </amp-auto-ads>
+    
+</body>
+
+</html>

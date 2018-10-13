@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2018-10-13T20:51:50+08:00</updated><id>http://a-delacruz.github.io/feed.xml</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/debian/debian-arm64.html" rel="alternate" type="text/html" title="Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3" /><published>2018-10-13T00:00:00+08:00</published><updated>2018-10-13T00:00:00+08:00</updated><id>http://a-delacruz.github.io/debian/debian-arm64</id><content type="html" xml:base="http://a-delacruz.github.io/debian/debian-arm64.html">&lt;h4 id=&quot;debootstrap-the-rootfs&quot;&gt;Debootstrap the Rootfs&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2018-10-13T22:31:22+08:00</updated><id>http://a-delacruz.github.io/feed.xml</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/debian/debian-arm64.html" rel="alternate" type="text/html" title="Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3" /><published>2018-10-13T00:00:00+08:00</published><updated>2018-10-13T00:00:00+08:00</updated><id>http://a-delacruz.github.io/debian/debian-arm64</id><content type="html" xml:base="http://a-delacruz.github.io/debian/debian-arm64.html">&lt;h4 id=&quot;debootstrap-the-rootfs&quot;&gt;Debootstrap the Rootfs&lt;/h4&gt;
 &lt;p&gt;To create our bare filesystem, we need:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
@@ -271,7 +271,158 @@ Now boot it up and you should now be able to login.&lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;h5 id=&quot;reference-&quot;&gt;Reference :&lt;/h5&gt;
-&lt;p&gt;&lt;a href=&quot;https://olimex.wordpress.com/2014/07/21/how-to-create-bare-minimum-debian-wheezy-rootfs-from-scratch/&quot;&gt;How to create bare minimum Debian Wheezy rootfs from scratch&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="Debian" /><summary type="html">Debootstrap the Rootfs To create our bare filesystem, we need:</summary></entry><entry><title type="html">QT 5.11.2 on a Raspberry Pi 3</title><link href="http://a-delacruz.github.io/topics/QT-on-pi.html" rel="alternate" type="text/html" title="QT 5.11.2 on a Raspberry Pi 3" /><published>2018-09-25T00:00:00+08:00</published><updated>2018-09-25T00:00:00+08:00</updated><id>http://a-delacruz.github.io/topics/QT-on-pi</id><content type="html" xml:base="http://a-delacruz.github.io/topics/QT-on-pi.html">&lt;p&gt;***To-Do&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://olimex.wordpress.com/2014/07/21/how-to-create-bare-minimum-debian-wheezy-rootfs-from-scratch/&quot;&gt;How to create bare minimum Debian Wheezy rootfs from scratch&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="Debian" /><summary type="html">Debootstrap the Rootfs To create our bare filesystem, we need:</summary></entry><entry><title type="html">BT firmware for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/peripherals/bt.html" rel="alternate" type="text/html" title="BT firmware for Raspberry Pi 3" /><published>2018-10-13T00:00:00+08:00</published><updated>2018-10-13T00:00:00+08:00</updated><id>http://a-delacruz.github.io/peripherals/bt</id><content type="html" xml:base="http://a-delacruz.github.io/peripherals/bt.html">&lt;p&gt;In order for the Bluetooth to work.. we need to have this file…&lt;/p&gt;
+
+&lt;h4 id=&quot;prerequisite&quot;&gt;Prerequisite:&lt;/h4&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;//make sure these are installed:
+bluetooth
+bluez&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/RPi-Distro/bluez-firmware/raw/master/broadcom/BCM43430A1.hcd&quot; class=&quot;mdc-button mdc-button--compact&quot;&gt;
+  BCM43430A1.hcd
+  &lt;i class=&quot;material-icons mdc-button__icon&quot;&gt;file_download&lt;/i&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;18/10/13: To Do - need to verify this steps...&lt;/code&gt;
+&lt;/div&gt;
+&lt;p&gt;then create a symlink of it in &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/firmware&lt;/code&gt; folder.&lt;/p&gt;
+
+&lt;p&gt;Then to test it.. run this &lt;code class=&quot;highlighter-rouge&quot;&gt;twice if 1st run failed&lt;/code&gt;:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;sudo /usr/bin/hciattach /dev/ttyAMA0 bc43xx 921600 noflow&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;First run we’ll encouter &lt;code class=&quot;highlighter-rouge&quot;&gt;Initialization timed out&lt;/code&gt;. But on the second time we’ll get this &lt;code class=&quot;highlighter-rouge&quot;&gt;Device setup complete&lt;/code&gt;.
+Then try it out now if our device is present.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;hcitool dev
+
+    Devices:
+        hci0   [your device id shows here]&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Then run your friendly &lt;code class=&quot;highlighter-rouge&quot;&gt;bluetoothctl&lt;/code&gt;. To automate this at boot, just follow the scripts from the reference below.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h4 id=&quot;reference-&quot;&gt;Reference :&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;http://www.adelpha.be/blog/index.php/2016/09/24/raspberry-pi-3-native-wifi-and-bluetooth/&quot;&gt;http://www.adelpha.be/blog/index.php/2016/09/24/raspberry-pi-3-native-wifi-and-bluetooth/&lt;/a&gt;&lt;br /&gt;
+  &lt;a href=&quot;https://github.com/xbianonpi/xbian/issues/813&quot;&gt;https://github.com/xbianonpi/xbian/issues/813&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name></name></author><category term="Peripherals" /><summary type="html">In order for the Bluetooth to work.. we need to have this file…</summary></entry><entry><title type="html">Wifi firmware for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/peripherals/wifi.html" rel="alternate" type="text/html" title="Wifi firmware for Raspberry Pi 3" /><published>2018-10-13T00:00:00+08:00</published><updated>2018-10-13T00:00:00+08:00</updated><id>http://a-delacruz.github.io/peripherals/wifi</id><content type="html" xml:base="http://a-delacruz.github.io/peripherals/wifi.html">&lt;p&gt;To make the Raspberry pi 3 Wifi to work…we need to get or have atleast 2 files. But first we must create a
+folder inside the &lt;code class=&quot;highlighter-rouge&quot;&gt;/lib/firmware/&lt;/code&gt; and name it &lt;code class=&quot;highlighter-rouge&quot;&gt;brcm&lt;/code&gt;. And in that folder we’ll put
+&lt;code class=&quot;highlighter-rouge&quot;&gt;brcmfmac43430-sdio.bin&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;brcmfmac43430-sdio.txt&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h4 id=&quot;prerequisite&quot;&gt;Prerequisite:&lt;/h4&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;//make sure these are installed:
+wpa-supplicant
+wireless-tools&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/RPi-Distro/firmware-nonfree/raw/master/brcm/brcmfmac43430-sdio.bin&quot; class=&quot;mdc-button mdc-button--compact&quot;&gt;
+  brcmfmac43430-sdio.bin
+  &lt;i class=&quot;material-icons mdc-button__icon&quot;&gt;file_download&lt;/i&gt;
+&lt;/a&gt;
+&lt;a href=&quot;https://raw.githubusercontent.com/RPi-Distro/firmware-nonfree/master/brcm/brcmfmac43430-sdio.txt&quot; class=&quot;mdc-button mdc-button--compact&quot;&gt;
+  brcmfmac43430-sdio.txt
+  &lt;i class=&quot;material-icons mdc-button__icon&quot;&gt;file_download&lt;/i&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Download and place the &lt;code class=&quot;highlighter-rouge&quot;&gt;brcmfmac43430-sdio.bin&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;brcmfmac43430-sdio.txt&lt;/code&gt; inside the &lt;code class=&quot;highlighter-rouge&quot;&gt;/lib/firmware/brcm&lt;/code&gt; folder.
+If the file above doesn’t make your wifi to work get it directly from the &lt;a href=&quot;git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git&quot;&gt;Upstream linux&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Next we’ll modify &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/network/interfaces&lt;/code&gt;.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;sudo nano /etc/network/interfaces&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Copy paste this following lines:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;// For dynamic IP
+allow-hotplug wlan0
+  iface wlan0 inet dhcp
+  wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+  iface default inet dhcp
+
+// For Static IP
+allow-hotplug wlan0
+  iface wlan0 inet static
+  address 192.168.1.2
+  netmask 255.255.255.0
+  gateway 192.168.1.1
+  dns-nameservers 8.8.8.8 8.8.4.4&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;For this setup, my wifi interfaces id is  &lt;code class=&quot;highlighter-rouge&quot;&gt;wlan0&lt;/code&gt;… yours might be named differently so replace it
+that matches yours.
+You can set your wifi to static…just browse the references at the bottom of this page..&lt;/p&gt;
+
+&lt;p&gt;Then we’ll configure &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/wpa_supplicant/wpa_supplicant.conf&lt;/code&gt; … so create/edit the file &lt;code class=&quot;highlighter-rouge&quot;&gt;wpa_supplicant.conf&lt;/code&gt; and place this lines:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;network={
+        ssid=&quot;NetworkEssid&quot;
+        scan_ssid=1
+        proto=RSN
+        key_mgmt=WPA-PSK
+        psk=&quot;NetworkPassword&quot;
+        pairwise=CCMP
+        auth_alg=OPEN
+    }&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;scan_ssid=1&lt;/code&gt; - only needed if your access point uses a hidden ssid
+&lt;/div&gt;
+
+&lt;p&gt;Reboot and verify that wifi is now working and connected to the network.
+or you could try this:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;sudo ifconfig wlan0 down
+sudo ifconfig wlan0 up&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h5 id=&quot;reference-&quot;&gt;Reference :&lt;/h5&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;https://github.com/RPi-Distro/firmware-nonfree/tree/master/brcm80211/brcm&quot;&gt;https://github.com/RPi-Distro/firmware-nonfree/tree/master/brcm80211/brcm&lt;/a&gt;&lt;br /&gt;
+  &lt;a href=&quot;https://help.ubuntu.com/community/WifiDocs/WPAHowTo&quot;&gt;https://help.ubuntu.com/community/WifiDocs/WPAHowTo&lt;/a&gt;&lt;br /&gt;
+  &lt;a href=&quot;https://w1.fi/cgit/hostap/plain/wpa_supplicant/wpa_supplicant.conf&quot;&gt;https://w1.fi/cgit/hostap/plain/wpa_supplicant/wpa_supplicant.conf&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;To Do using Netplan instead&lt;/code&gt;
+&lt;/div&gt;</content><author><name></name></author><category term="Peripherals" /><summary type="html">To make the Raspberry pi 3 Wifi to work…we need to get or have atleast 2 files. But first we must create a folder inside the /lib/firmware/ and name it brcm. And in that folder we’ll put brcmfmac43430-sdio.bin and brcmfmac43430-sdio.txt.</summary></entry><entry><title type="html">QT 5.11.2 on a Raspberry Pi 3</title><link href="http://a-delacruz.github.io/topics/QT-on-pi.html" rel="alternate" type="text/html" title="QT 5.11.2 on a Raspberry Pi 3" /><published>2018-09-25T00:00:00+08:00</published><updated>2018-09-25T00:00:00+08:00</updated><id>http://a-delacruz.github.io/topics/QT-on-pi</id><content type="html" xml:base="http://a-delacruz.github.io/topics/QT-on-pi.html">&lt;p&gt;***To-Do&lt;/p&gt;
 
 &lt;p&gt;Since i need to make a GUI for my Raspberry Pi projects… I want something that ‘Does’ not require any desktop environment.
 And as a start should be c++. I’ve research the net and found 3 promising tools and one of them is QT.&lt;/p&gt;
