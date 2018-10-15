@@ -349,8 +349,14 @@ Install <code class="highlighter-rouge">dosfstools</code> if cannot mount vfat</
 6
 7
 8
+9
+10
+11
 </pre></td><td class="code"><pre><span class="go">sudo mount /dev/loop14 /mnt/boot
 sudo mount /dev/loop15 /mnt/rootfs
+
+// run sync before umounting and after copying files are done
+sync
 
 </span><span class="gp">    #</span> Then umount and detach:
 <span class="go">sudo umount /dev/loop14
