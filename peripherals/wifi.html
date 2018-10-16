@@ -114,14 +114,36 @@ wireless-tools</span></pre></td></tr></tbody></table></code></pre></figure>
 </a></p>
 
 <p>Download and place the <code class="highlighter-rouge">brcmfmac43430-sdio.bin</code> and <code class="highlighter-rouge">brcmfmac43430-sdio.txt</code> inside the <code class="highlighter-rouge">/lib/firmware/brcm</code> folder.
-If the file above doesn’t make your wifi to work get it directly from the <a href="git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git">Upstream linux</a></p>
+If the file above doesn’t make your wifi to work get it directly from the <a href="git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git">Mainline linux</a></p>
 
-<p>Next we’ll modify <code class="highlighter-rouge">/etc/network/interfaces</code>.</p>
+<h4 id="connect-to-wpawpa2-wifi-network">Connect to WPA/WPA2 WiFi network</h4>
+<p>Generate a configuration file for <code class="highlighter-rouge">wpa_supplicant</code>.</p>
 
 <figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="go">sudo nano /etc/network/interfaces</span></pre></td></tr></tbody></table></code></pre></figure>
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="go">// This commands must be run as root and sudo alone won't work
+sudo su
+</span><span class="gp">wpa_passphrase MyWifi &gt;</span><span class="o">&gt;</span> /etc/wpa_supplicant.conf
+<span class="go">
+// a blinking underline cursor after pressing enter
+...type in your wifi password and hit enter again...
 
-<p>Copy paste this following lines:</p>
+// Then exit
+exit</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Now edit <code class="highlighter-rouge">/etc/wpa_supplicant/wpa_supplicant.conf</code>.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">sudo nano /etc/wpa_supplicant/wpa_supplicant.conf</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>You’ll see similar to this and modify accordingly.</p>
 
 <figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
@@ -134,58 +156,25 @@ If the file above doesn’t make your wifi to work get it directly from the <a h
 9
 10
 11
-12
-13
-</pre></td><td class="code"><pre><span class="go">// For dynamic IP
-allow-hotplug wlan0
-  iface wlan0 inet dhcp
-  wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
-  iface default inet dhcp
-
-// For Static IP
-allow-hotplug wlan0
-  iface wlan0 inet static
-  address 192.168.1.2
-  netmask 255.255.255.0
-  gateway 192.168.1.1
-  dns-nameservers 8.8.8.8 8.8.4.4</span></pre></td></tr></tbody></table></code></pre></figure>
-
-<p>For this setup, my wifi interfaces id is  <code class="highlighter-rouge">wlan0</code>… yours might be named differently so replace it
-that matches yours.
-You can set your wifi to static…just browse the references at the bottom of this page..</p>
-
-<p>Then we’ll configure <code class="highlighter-rouge">/etc/wpa_supplicant/wpa_supplicant.conf</code> … so create/edit the file <code class="highlighter-rouge">wpa_supplicant.conf</code> and place this lines:</p>
-
-<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-2
-3
-4
-5
-6
-7
-8
-9
-</pre></td><td class="code"><pre><span class="go">network={
-        ssid="NetworkEssid"
-        scan_ssid=1
-        proto=RSN
-        key_mgmt=WPA-PSK
-        psk="NetworkPassword"
-        pairwise=CCMP
-        auth_alg=OPEN
-    }</span></pre></td></tr></tbody></table></code></pre></figure>
+</pre></td><td class="code"><pre><span class="gp">#</span> reading passphrase from stdin
+<span class="go">network={
+  ssid="MyWifi"
+</span><span class="gp">  #</span><span class="nv">psk</span><span class="o">=</span><span class="s2">"testtest"</span> // You may now remove this line as the password are now hashed <span class="k">for </span>security
+<span class="go">  psk=4dfe1c985520d26a13e932bf0acb1d4580461dd854ed79ad1a88ec221a802061
+  scan_ssid=1
+  proto=RSN
+  key_mgmt=WPA-PSK
+  pairwise=CCMP
+  auth_alg=OPEN
+}</span></pre></td></tr></tbody></table></code></pre></figure>
 
 <div class="my-callout my-callout-note">
     <code class="highlighter-rouge">scan_ssid=1</code> - only needed if your access point uses a hidden ssid
 </div>
 
-<p>Reboot and verify that wifi is now working and connected to the network.
-or you could try this:</p>
+<p>You can set your wifi to static…just browse the references at the bottom of this page..</p>
 
-<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-2
-</pre></td><td class="code"><pre><span class="go">sudo ifconfig wlan0 down
-sudo ifconfig wlan0 up</span></pre></td></tr></tbody></table></code></pre></figure>
+<p>Reboot and verify that wifi is now working and connected to your network.</p>
 
 <h5 id="reference-">Reference :</h5>
 <blockquote>

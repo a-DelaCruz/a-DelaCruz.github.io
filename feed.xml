@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2018-10-16T00:51:39+08:00</updated><id>http://a-delacruz.github.io/feed.xml</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/debian/debian-arm64.html" rel="alternate" type="text/html" title="Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3" /><published>2018-10-13T00:00:00+08:00</published><updated>2018-10-13T00:00:00+08:00</updated><id>http://a-delacruz.github.io/debian/debian-arm64</id><content type="html" xml:base="http://a-delacruz.github.io/debian/debian-arm64.html">&lt;h4 id=&quot;debootstrap-the-rootfs&quot;&gt;Debootstrap the Rootfs&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2018-10-16T18:28:21+08:00</updated><id>http://a-delacruz.github.io/feed.xml</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/debian/debian-arm64.html" rel="alternate" type="text/html" title="Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3" /><published>2018-10-13T00:00:00+08:00</published><updated>2018-10-13T00:00:00+08:00</updated><id>http://a-delacruz.github.io/debian/debian-arm64</id><content type="html" xml:base="http://a-delacruz.github.io/debian/debian-arm64.html">&lt;h4 id=&quot;debootstrap-the-rootfs&quot;&gt;Debootstrap the Rootfs&lt;/h4&gt;
 &lt;p&gt;To create our bare filesystem, we need:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
@@ -346,14 +346,36 @@ wireless-tools&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/
 &lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;Download and place the &lt;code class=&quot;highlighter-rouge&quot;&gt;brcmfmac43430-sdio.bin&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;brcmfmac43430-sdio.txt&lt;/code&gt; inside the &lt;code class=&quot;highlighter-rouge&quot;&gt;/lib/firmware/brcm&lt;/code&gt; folder.
-If the file above doesn’t make your wifi to work get it directly from the &lt;a href=&quot;git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git&quot;&gt;Upstream linux&lt;/a&gt;&lt;/p&gt;
+If the file above doesn’t make your wifi to work get it directly from the &lt;a href=&quot;git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git&quot;&gt;Mainline linux&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;Next we’ll modify &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/network/interfaces&lt;/code&gt;.&lt;/p&gt;
+&lt;h4 id=&quot;connect-to-wpawpa2-wifi-network&quot;&gt;Connect to WPA/WPA2 WiFi network&lt;/h4&gt;
+&lt;p&gt;Generate a configuration file for &lt;code class=&quot;highlighter-rouge&quot;&gt;wpa_supplicant&lt;/code&gt;.&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;sudo nano /etc/network/interfaces&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;// This commands must be run as root and sudo alone won't work
+sudo su
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;wpa_passphrase MyWifi &amp;gt;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /etc/wpa_supplicant.conf
+&lt;span class=&quot;go&quot;&gt;
+// a blinking underline cursor after pressing enter
+...type in your wifi password and hit enter again...
 
-&lt;p&gt;Copy paste this following lines:&lt;/p&gt;
+// Then exit
+exit&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Now edit &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/wpa_supplicant/wpa_supplicant.conf&lt;/code&gt;.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;sudo nano /etc/wpa_supplicant/wpa_supplicant.conf&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;You’ll see similar to this and modify accordingly.&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
 2
@@ -366,58 +388,25 @@ If the file above doesn’t make your wifi to work get it directly from the &lt;
 9
 10
 11
-12
-13
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;// For dynamic IP
-allow-hotplug wlan0
-  iface wlan0 inet dhcp
-  wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
-  iface default inet dhcp
-
-// For Static IP
-allow-hotplug wlan0
-  iface wlan0 inet static
-  address 192.168.1.2
-  netmask 255.255.255.0
-  gateway 192.168.1.1
-  dns-nameservers 8.8.8.8 8.8.4.4&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;For this setup, my wifi interfaces id is  &lt;code class=&quot;highlighter-rouge&quot;&gt;wlan0&lt;/code&gt;… yours might be named differently so replace it
-that matches yours.
-You can set your wifi to static…just browse the references at the bottom of this page..&lt;/p&gt;
-
-&lt;p&gt;Then we’ll configure &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/wpa_supplicant/wpa_supplicant.conf&lt;/code&gt; … so create/edit the file &lt;code class=&quot;highlighter-rouge&quot;&gt;wpa_supplicant.conf&lt;/code&gt; and place this lines:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;network={
-        ssid=&quot;NetworkEssid&quot;
-        scan_ssid=1
-        proto=RSN
-        key_mgmt=WPA-PSK
-        psk=&quot;NetworkPassword&quot;
-        pairwise=CCMP
-        auth_alg=OPEN
-    }&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;gp&quot;&gt;#&lt;/span&gt; reading passphrase from stdin
+&lt;span class=&quot;go&quot;&gt;network={
+  ssid=&quot;MyWifi&quot;
+&lt;/span&gt;&lt;span class=&quot;gp&quot;&gt;  #&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;psk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;testtest&quot;&lt;/span&gt; // You may now remove this line as the password are now hashed &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;security
+&lt;span class=&quot;go&quot;&gt;  psk=4dfe1c985520d26a13e932bf0acb1d4580461dd854ed79ad1a88ec221a802061
+  scan_ssid=1
+  proto=RSN
+  key_mgmt=WPA-PSK
+  pairwise=CCMP
+  auth_alg=OPEN
+}&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;div class=&quot;my-callout my-callout-note&quot;&gt;
     &lt;code class=&quot;highlighter-rouge&quot;&gt;scan_ssid=1&lt;/code&gt; - only needed if your access point uses a hidden ssid
 &lt;/div&gt;
 
-&lt;p&gt;Reboot and verify that wifi is now working and connected to the network.
-or you could try this:&lt;/p&gt;
+&lt;p&gt;You can set your wifi to static…just browse the references at the bottom of this page..&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;sudo ifconfig wlan0 down
-sudo ifconfig wlan0 up&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;Reboot and verify that wifi is now working and connected to your network.&lt;/p&gt;
 
 &lt;h5 id=&quot;reference-&quot;&gt;Reference :&lt;/h5&gt;
 &lt;blockquote&gt;
