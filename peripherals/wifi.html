@@ -130,7 +130,7 @@ If the file above doesn’t make your wifi to work get it directly from the <a h
 9
 </pre></td><td class="code"><pre><span class="go">// This commands must be run as root and sudo alone won't work
 sudo su
-</span><span class="gp">wpa_passphrase MyWifi &gt;</span><span class="o">&gt;</span> /etc/wpa_supplicant.conf
+</span><span class="gp">wpa_passphrase MyWifi &gt;</span><span class="o">&gt;</span> /etc/wpa_supplicant/wpa_supplicant.conf
 <span class="go">
 // a blinking underline cursor after pressing enter
 ...type in your wifi password and hit enter again...
@@ -171,6 +171,16 @@ exit</span></pre></td></tr></tbody></table></code></pre></figure>
 <div class="my-callout my-callout-note">
     <code class="highlighter-rouge">scan_ssid=1</code> - only needed if your access point uses a hidden ssid
 </div>
+
+<h4 id="configure-etcnetworkinterfaces">Configure /etc/network/interfaces</h4>
+<p>Configure or add these line:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="go">allow-hotplug wlan0
+iface wlan0 inet dhcp
+wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf</span></pre></td></tr></tbody></table></code></pre></figure>
 
 <p>You can set your wifi to static…just browse the references at the bottom of this page..</p>
 
