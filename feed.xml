@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2018-10-25T22:49:15+08:00</updated><id>http://a-delacruz.github.io/feed.xml</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/debian/debian-arm64.html" rel="alternate" type="text/html" title="Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3" /><published>2018-10-13T00:00:00+08:00</published><updated>2018-10-13T00:00:00+08:00</updated><id>http://a-delacruz.github.io/debian/debian-arm64</id><content type="html" xml:base="http://a-delacruz.github.io/debian/debian-arm64.html">&lt;h4 id=&quot;debootstrap-the-rootfs&quot;&gt;Debootstrap the Rootfs&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2018-10-26T19:41:16+08:00</updated><id>http://a-delacruz.github.io/feed.xml</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/debian/debian-arm64.html" rel="alternate" type="text/html" title="Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3" /><published>2018-10-13T00:00:00+08:00</published><updated>2018-10-13T00:00:00+08:00</updated><id>http://a-delacruz.github.io/debian/debian-arm64</id><content type="html" xml:base="http://a-delacruz.github.io/debian/debian-arm64.html">&lt;h4 id=&quot;debootstrap-the-rootfs&quot;&gt;Debootstrap the Rootfs&lt;/h4&gt;
 &lt;p&gt;To create our bare filesystem, we need:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
@@ -404,17 +404,24 @@ exit&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&
     &lt;code class=&quot;highlighter-rouge&quot;&gt;scan_ssid=1&lt;/code&gt; - only needed if your access point uses a hidden ssid
 &lt;/div&gt;
 
-&lt;h4 id=&quot;configure-etcnetworkinterfaces&quot;&gt;Configure /etc/network/interfaces&lt;/h4&gt;
-&lt;p&gt;Configure or add these line:&lt;/p&gt;
+&lt;p&gt;Then run &lt;code class=&quot;highlighter-rouge&quot;&gt;wpa_cli -i wlan0 reconfigure&lt;/code&gt; and verify with &lt;code class=&quot;highlighter-rouge&quot;&gt;ifconfig wlan0&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h4 id=&quot;configure-for-static-ip&quot;&gt;Configure For Static IP&lt;/h4&gt;
+&lt;p&gt;Edit &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/dhcpcd.conf&lt;/code&gt; and add these lines at the very bottom.&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
 2
 3
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;allow-hotplug wlan0
-iface wlan0 inet dhcp
-wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+4
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;interface wlan0
+static ip_address=192.168.10.13
+static routers=192.168.10.1
+static domain_name_servers=8.8.8.8&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;You can set your wifi to static…just browse the references at the bottom of this page..&lt;/p&gt;
+&lt;p&gt;There are several ways for configuration and i decided to stick with this one for now.&lt;/p&gt;
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;To Do using Netplan instead&lt;/code&gt;
+&lt;/div&gt;
 
 &lt;p&gt;Reboot and verify that wifi is now working and connected to your network.&lt;/p&gt;
 
@@ -422,12 +429,9 @@ wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf&lt;/span&gt;&lt;/pre&gt;&lt;/td
 &lt;blockquote&gt;
   &lt;p&gt;&lt;a href=&quot;https://github.com/RPi-Distro/firmware-nonfree/tree/master/brcm80211/brcm&quot;&gt;https://github.com/RPi-Distro/firmware-nonfree/tree/master/brcm80211/brcm&lt;/a&gt;&lt;br /&gt;
   &lt;a href=&quot;https://help.ubuntu.com/community/WifiDocs/WPAHowTo&quot;&gt;https://help.ubuntu.com/community/WifiDocs/WPAHowTo&lt;/a&gt;&lt;br /&gt;
-  &lt;a href=&quot;https://w1.fi/cgit/hostap/plain/wpa_supplicant/wpa_supplicant.conf&quot;&gt;https://w1.fi/cgit/hostap/plain/wpa_supplicant/wpa_supplicant.conf&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
-    &lt;code class=&quot;highlighter-rouge&quot;&gt;To Do using Netplan instead&lt;/code&gt;
-&lt;/div&gt;</content><author><name></name></author><category term="Peripherals" /><summary type="html">To make the Raspberry pi 3 Wifi to work…we need to get or have atleast 2 files. But first we must create a folder inside the /lib/firmware/ and name it brcm. And in that folder we’ll put brcmfmac43430-sdio.bin and brcmfmac43430-sdio.txt.</summary></entry><entry><title type="html">QT 5.11.2 on a Raspberry Pi 3</title><link href="http://a-delacruz.github.io/topics/QT-on-pi.html" rel="alternate" type="text/html" title="QT 5.11.2 on a Raspberry Pi 3" /><published>2018-09-25T00:00:00+08:00</published><updated>2018-09-25T00:00:00+08:00</updated><id>http://a-delacruz.github.io/topics/QT-on-pi</id><content type="html" xml:base="http://a-delacruz.github.io/topics/QT-on-pi.html">&lt;p&gt;***To-Do&lt;/p&gt;
+  &lt;a href=&quot;https://w1.fi/cgit/hostap/plain/wpa_supplicant/wpa_supplicant.conf&quot;&gt;https://w1.fi/cgit/hostap/plain/wpa_supplicant/wpa_supplicant.conf&lt;/a&gt;&lt;br /&gt;
+  &lt;a href=&quot;https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md&quot;&gt;SETTING WIFI UP VIA THE COMMAND LINE&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name></name></author><category term="Peripherals" /><summary type="html">To make the Raspberry pi 3 Wifi to work…we need to get or have atleast 2 files. But first we must create a folder inside the /lib/firmware/ and name it brcm. And in that folder we’ll put brcmfmac43430-sdio.bin and brcmfmac43430-sdio.txt.</summary></entry><entry><title type="html">QT 5.11.2 on a Raspberry Pi 3</title><link href="http://a-delacruz.github.io/topics/QT-on-pi.html" rel="alternate" type="text/html" title="QT 5.11.2 on a Raspberry Pi 3" /><published>2018-09-25T00:00:00+08:00</published><updated>2018-09-25T00:00:00+08:00</updated><id>http://a-delacruz.github.io/topics/QT-on-pi</id><content type="html" xml:base="http://a-delacruz.github.io/topics/QT-on-pi.html">&lt;p&gt;***To-Do&lt;/p&gt;
 
 &lt;p&gt;Since i need to make a GUI for my Raspberry Pi projects… I want something that ‘Does’ not require any desktop environment.
 And as a start should be c++. I’ve research the net and found 3 promising tools and one of them is QT.&lt;/p&gt;
