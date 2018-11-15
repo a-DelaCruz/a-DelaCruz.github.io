@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="theme-color" content="#FFB74D" />
+    <meta name="keywords" content="Raspberry Pi 3 64bit Kernel">
+    <meta name="description" content="
+            In order for the Bluetooth to work.. we need to have this file…
+        ">
+
+    <title>
+                BT firmware for Raspberry Pi 3
+            
+    </title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+
+    <!-- Favicon head tag -->
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+
+    <link href="https://fonts.googleapis.com/css?family=Patrick+Hand+SC&effect=shadow-multiple" rel="stylesheet">
+    <link href="/assets/css/styles.css" rel="stylesheet">
+
+    <!-- Syntax Highligther -->
+    <link href="/assets/css/syntax.css" rel="stylesheet">
+
+    <!-- Google Adsense -->
+    
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-6013311002995151", enable_page_level_ads: true });
+        </script>
+        <script async custom-element="amp-auto-ads"
+            src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+        </script>
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>BT firmware for Raspberry Pi 3 | My Personal Notes</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="BT firmware for Raspberry Pi 3" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="In order for the Bluetooth to work.. we need to have this file…" />
+<meta property="og:description" content="In order for the Bluetooth to work.. we need to have this file…" />
+<link rel="canonical" href="http://a-delacruz.github.io/peripherals/bt.html" />
+<meta property="og:url" content="http://a-delacruz.github.io/peripherals/bt.html" />
+<meta property="og:site_name" content="My Personal Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-10-13T00:00:00+08:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/peripherals/bt.html"},"@type":"BlogPosting","url":"http://a-delacruz.github.io/peripherals/bt.html","headline":"BT firmware for Raspberry Pi 3","dateModified":"2018-10-13T00:00:00+08:00","datePublished":"2018-10-13T00:00:00+08:00","description":"In order for the Bluetooth to work.. we need to have this file…","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    
+
+  </head>
+  
+  <body class="mdc-typography">
+    <section class="back-wall"></section>
+    <header class="header mdc-top-app-bar mdc-top-app-bar--short mdc-top-app-bar--dense">
+    <div class="mdc-top-app-bar__row">
+        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                <a href="/"><img src="/assets/images/logo-bl.png"></a>
+            </section>
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end my-top-app-bar-btn">
+                <a href="/project" class="mdc-button">projects</a>
+                <a href="https://github.com/a-DelaCruz/a-DelaCruz.github.io" class="ink-color mdc-button">github</a>
+                <a href="/about" class="mdc-button">about</a>
+                <button class="hire-me mdc-button" disabled>hire me</button>
+        </section>
+    </div>
+</header><section class="posts">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- Ad-1 -->
+    <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-6013311002995151"
+        data-ad-slot="2377202477"
+        data-ad-format="auto"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+    <h5 class="mdc-typography--headline5 posts-title">BT firmware for Raspberry Pi 3</h5>
+    <p>In order for the Bluetooth to work.. we need to have this file…</p>
+
+<h4 id="prerequisite">Prerequisite:</h4>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="go">//make sure these are installed:
+bluetooth
+bluez</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p><a href="https://github.com/RPi-Distro/bluez-firmware/raw/master/broadcom/BCM43430A1.hcd" class="mdc-button mdc-button--compact">
+  BCM43430A1.hcd
+  <i class="material-icons mdc-button__icon">file_download</i>
+</a></p>
+
+<div class="my-callout my-callout-note">
+    <code class="highlighter-rouge">18/10/13: To Do - need to verify this steps...</code>
+</div>
+<p>then create a symlink of it in <code class="highlighter-rouge">/etc/firmware</code> folder.</p>
+
+<p>Then to test it.. run this <code class="highlighter-rouge">twice if 1st run failed</code>:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">sudo /usr/bin/hciattach /dev/ttyAMA0 bc43xx 921600 noflow</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>First run we’ll encouter <code class="highlighter-rouge">Initialization timed out</code>. But on the second time we’ll get this <code class="highlighter-rouge">Device setup complete</code>.
+Then try it out now if our device is present.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="go">hcitool dev
+
+    Devices:
+        hci0   [your device id shows here]</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Then run your friendly <code class="highlighter-rouge">bluetoothctl</code>. To automate this at boot, just follow the scripts from the reference below.</p>
+
+<p><br /></p>
+<h4 id="reference-">Reference :</h4>
+
+<blockquote>
+  <p><a href="http://www.adelpha.be/blog/index.php/2016/09/24/raspberry-pi-3-native-wifi-and-bluetooth/">http://www.adelpha.be/blog/index.php/2016/09/24/raspberry-pi-3-native-wifi-and-bluetooth/</a><br />
+  <a href="https://github.com/xbianonpi/xbian/issues/813">https://github.com/xbianonpi/xbian/issues/813</a></p>
+</blockquote>
+
+    <hr >
+
+</section>
+  </body>
+</html>
