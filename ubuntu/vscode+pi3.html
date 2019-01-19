@@ -28,6 +28,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
 
+    <link href="https://fonts.googleapis.com/css?family=Mogra" rel="stylesheet">
+
     <!-- Syntax Highligther -->
     <link href="/assets/css/syntax.css" rel="stylesheet">
 
@@ -48,11 +50,13 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Been using nano editor to create a c++ app on Raspberry Pi 3. And just last month decided to use Visual Studio Code instead. Not sure if really possible at first and haven’t tried it before when i’m trying out .Net Core 2, so i search the net for clues. Primarily running on Ubuntu 18.10 this time around." />
 <meta property="og:description" content="Been using nano editor to create a c++ app on Raspberry Pi 3. And just last month decided to use Visual Studio Code instead. Not sure if really possible at first and haven’t tried it before when i’m trying out .Net Core 2, so i search the net for clues. Primarily running on Ubuntu 18.10 this time around." />
+<link rel="canonical" href="http://a-delacruz.github.io/ubuntu/vscode+pi3.html" />
+<meta property="og:url" content="http://a-delacruz.github.io/ubuntu/vscode+pi3.html" />
 <meta property="og:site_name" content="My Personal Notes" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-01-18T00:00:00+08:00" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/ubuntu/vscode+pi3.html"},"url":"/ubuntu/vscode+pi3.html","headline":"Using Visual Studio Code to Run and Cross-Compile a C++ App for Raspberry Pi 3","dateModified":"2019-01-18T00:00:00+08:00","datePublished":"2019-01-18T00:00:00+08:00","description":"Been using nano editor to create a c++ app on Raspberry Pi 3. And just last month decided to use Visual Studio Code instead. Not sure if really possible at first and haven’t tried it before when i’m trying out .Net Core 2, so i search the net for clues. Primarily running on Ubuntu 18.10 this time around.","@context":"http://schema.org"}</script>
+{"headline":"Using Visual Studio Code to Run and Cross-Compile a C++ App for Raspberry Pi 3","dateModified":"2019-01-18T00:00:00+08:00","datePublished":"2019-01-18T00:00:00+08:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/ubuntu/vscode+pi3.html"},"url":"http://a-delacruz.github.io/ubuntu/vscode+pi3.html","description":"Been using nano editor to create a c++ app on Raspberry Pi 3. And just last month decided to use Visual Studio Code instead. Not sure if really possible at first and haven’t tried it before when i’m trying out .Net Core 2, so i search the net for clues. Primarily running on Ubuntu 18.10 this time around.","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
   </head>
@@ -160,8 +164,10 @@ Easy C++ projects</span></pre></td></tr></tbody></table></code></pre></figure>
 <figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
 3
+4
 </pre></td><td class="code"><pre><span class="go">// Makefile
 // edit this line with
+CXX := g++  to  CXX   := arm-linux-gnueabihf-g++
 EXECUTABLE  := main  to  EXECUTABLE := app  // or any name for your application</span></pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
@@ -268,7 +274,8 @@ EXECUTABLE  := main  to  EXECUTABLE := app  // or any name for your application<
     <code class="highlighter-rouge">Make sure that you are able to ssh into the Pi before running an app or you'll encounter a connection error</code>
 </div>
 
-<p><img src="/assets/images/ubuntu/vscode/vscode-easy4.jpg" alt="" class="responsive-img" style="width:420px;height:380px;" /></p>
+<p><img src="/assets/images/ubuntu/vscode/vscode-easy4.jpg" alt="" class="responsive-img" style="width:420px;height:380px;" />
+<img src="/assets/images/ubuntu/vscode/vscode-easy5.jpg" alt="" class="responsive-img" /></p>
 
     <hr />
 </section>
