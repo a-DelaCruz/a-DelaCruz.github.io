@@ -214,13 +214,19 @@ EXECUTABLE  := main  to  EXECUTABLE := app  // or any name for your application<
 35
 36
 37
+38
+39
+40
+41
+42
+43
 </pre></td><td class="code"><pre><span class="go">// task.json
 // edit this line with
 {
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build C++ project",
+            "label": "Build",
             "type": "shell",
             "group": {
                 "kind": "build",
@@ -230,24 +236,30 @@ EXECUTABLE  := main  to  EXECUTABLE := app  // or any name for your application<
         },
         {
             "label": "Upload",
+            "dependsOn": ["Build"],
             "type": "shell",
             "command": "sshpass",
             "args": [
-                "-p", "pi-password", "rsync", "./bin/*", "pi@192.x.x.x:/home/pi"
+                "-p", "pi", "rsync", "./bin/*", "pi@192.168.254.201:/home/pi"
             ]
         },
         {
-            "label": "Upload C++ project",
-            "dependsOn": ["Build C++ project", "Upload"],
+            "label": "Run",
+            "dependsOn": ["Upload"],
+            "type": "shell",
+            "command": "sshpass",
+            "args": [
+                "-p", "pi", "ssh", "pi@192.168.254.201", "/home/pi/app"
+            ]
+        },
+        {
+            "label": "Build &amp; Run C++ project",
+            "dependsOn": ["Run"],
             "type": "shell",
             "group": {
                 "kind": "test",
                 "isDefault": true
-            },
-            "command": "sshpass",
-            "args": [
-                "-p", "pi-password", "ssh", "pi@192.x.x.x", "/home/pi/app"
-            ]
+            }
         }
     ]
 }</span></pre></td></tr></tbody></table></code></pre></figure>

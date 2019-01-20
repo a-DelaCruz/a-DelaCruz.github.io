@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2019-01-19T19:53:45+08:00</updated><id>http://a-delacruz.github.io/feed.xml</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">Using Visual Studio Code to Run and Cross-Compile a C++ App for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/ubuntu/vscode+pi3.html" rel="alternate" type="text/html" title="Using Visual Studio Code to Run and Cross-Compile a C++ App for Raspberry Pi 3" /><published>2019-01-18T00:00:00+08:00</published><updated>2019-01-18T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/vscode+pi3</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/vscode+pi3.html">&lt;p&gt;Been using nano editor to create a c++ app on Raspberry Pi 3. And just last month decided to use Visual Studio Code instead.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2019-01-20T17:54:17+08:00</updated><id>http://a-delacruz.github.io/feed.xml</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">Using Visual Studio Code to Run and Cross-Compile a C++ App for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/ubuntu/vscode+pi3.html" rel="alternate" type="text/html" title="Using Visual Studio Code to Run and Cross-Compile a C++ App for Raspberry Pi 3" /><published>2019-01-18T00:00:00+08:00</published><updated>2019-01-18T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/vscode+pi3</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/vscode+pi3.html">&lt;p&gt;Been using nano editor to create a c++ app on Raspberry Pi 3. And just last month decided to use Visual Studio Code instead.
 Not sure if really possible at first and haven’t tried it before when i’m trying out .Net Core 2, so i search the net for clues.
 Primarily running on Ubuntu 18.10 this time around.&lt;/p&gt;
 
@@ -126,13 +126,19 @@ EXECUTABLE  := main  to  EXECUTABLE := app  // or any name for your application&
 35
 36
 37
+38
+39
+40
+41
+42
+43
 &lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;// task.json
 // edit this line with
 {
     &quot;version&quot;: &quot;2.0.0&quot;,
     &quot;tasks&quot;: [
         {
-            &quot;label&quot;: &quot;Build C++ project&quot;,
+            &quot;label&quot;: &quot;Build&quot;,
             &quot;type&quot;: &quot;shell&quot;,
             &quot;group&quot;: {
                 &quot;kind&quot;: &quot;build&quot;,
@@ -142,24 +148,30 @@ EXECUTABLE  := main  to  EXECUTABLE := app  // or any name for your application&
         },
         {
             &quot;label&quot;: &quot;Upload&quot;,
+            &quot;dependsOn&quot;: [&quot;Build&quot;],
             &quot;type&quot;: &quot;shell&quot;,
             &quot;command&quot;: &quot;sshpass&quot;,
             &quot;args&quot;: [
-                &quot;-p&quot;, &quot;pi-password&quot;, &quot;rsync&quot;, &quot;./bin/*&quot;, &quot;pi@192.x.x.x:/home/pi&quot;
+                &quot;-p&quot;, &quot;pi&quot;, &quot;rsync&quot;, &quot;./bin/*&quot;, &quot;pi@192.168.254.201:/home/pi&quot;
             ]
         },
         {
-            &quot;label&quot;: &quot;Upload C++ project&quot;,
-            &quot;dependsOn&quot;: [&quot;Build C++ project&quot;, &quot;Upload&quot;],
+            &quot;label&quot;: &quot;Run&quot;,
+            &quot;dependsOn&quot;: [&quot;Upload&quot;],
+            &quot;type&quot;: &quot;shell&quot;,
+            &quot;command&quot;: &quot;sshpass&quot;,
+            &quot;args&quot;: [
+                &quot;-p&quot;, &quot;pi&quot;, &quot;ssh&quot;, &quot;pi@192.168.254.201&quot;, &quot;/home/pi/app&quot;
+            ]
+        },
+        {
+            &quot;label&quot;: &quot;Build &amp;amp; Run C++ project&quot;,
+            &quot;dependsOn&quot;: [&quot;Run&quot;],
             &quot;type&quot;: &quot;shell&quot;,
             &quot;group&quot;: {
                 &quot;kind&quot;: &quot;test&quot;,
                 &quot;isDefault&quot;: true
-            },
-            &quot;command&quot;: &quot;sshpass&quot;,
-            &quot;args&quot;: [
-                &quot;-p&quot;, &quot;pi-password&quot;, &quot;ssh&quot;, &quot;pi@192.x.x.x&quot;, &quot;/home/pi/app&quot;
-            ]
+            }
         }
     ]
 }&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
