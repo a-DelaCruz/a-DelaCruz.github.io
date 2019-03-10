@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2019-03-08T13:50:44+08:00</updated><id>http://a-delacruz.github.io/feed.xml</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">Using Visual Studio Code to Run and Cross-Compile a C++ App for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/ubuntu/vscode+pi3.html" rel="alternate" type="text/html" title="Using Visual Studio Code to Run and Cross-Compile a C++ App for Raspberry Pi 3" /><published>2019-01-18T00:00:00+08:00</published><updated>2019-01-18T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/vscode+pi3</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/vscode+pi3.html">&lt;p&gt;Been using nano editor to create a c++ app on Raspberry Pi 3. And just last month decided to use Visual Studio Code instead.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2019-03-10T10:10:41+08:00</updated><id>http://a-delacruz.github.io/feed.xml</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">Using Visual Studio Code to Run and Cross-Compile a C++ App for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/ubuntu/vscode+pi3.html" rel="alternate" type="text/html" title="Using Visual Studio Code to Run and Cross-Compile a C++ App for Raspberry Pi 3" /><published>2019-01-18T00:00:00+08:00</published><updated>2019-01-18T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/vscode+pi3</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/vscode+pi3.html">&lt;p&gt;Been using nano editor to create a c++ app on Raspberry Pi 3. And just last month decided to use Visual Studio Code instead.
 Not sure if really possible at first and haven’t tried it before when i’m trying out .Net Core 2, so i search the net for clues.
 Primarily running on Ubuntu 18.10 this time around.&lt;/p&gt;
 
@@ -1070,7 +1070,7 @@ since we still do not have a filesystem.&lt;/p&gt;
 
 &lt;p&gt;Next is &lt;a href=&quot;/ubuntu/rpi3-setup-filesystem.html&quot;&gt;Creating the filesystem&lt;/a&gt; for our Raspberry Pi 3 using Ubuntu Base.&lt;/p&gt;
 
-&lt;h5 id=&quot;reference-&quot;&gt;Reference :&lt;/h5&gt;
+&lt;h4 id=&quot;reference-&quot;&gt;Reference :&lt;/h4&gt;
 &lt;p&gt;&lt;a href=&quot;https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3&quot;&gt;https://wiki.ubuntu.com/ARM/RaspberryPi/RaspberryPi3&lt;/a&gt;&lt;br /&gt;
 &lt;a href=&quot;https://wiki.ubuntu.com/Base&quot;&gt;https://wiki.ubuntu.com/Base&lt;/a&gt;&lt;br /&gt;
 &lt;a href=&quot;https://www.raspberrypi.org/documentation/linux/kernel/building.md&quot;&gt;https://www.raspberrypi.org/documentation/linux/kernel/building.md&lt;/a&gt;&lt;br /&gt;
@@ -1256,38 +1256,14 @@ Boot it up to confirm that its working.
 
 &lt;br /&gt;
 
-&lt;h5&gt;  Reference : &lt;/h5&gt;
-[http://www.denx.de/wiki/U-Boot/WebHome](http://www.denx.de/wiki/U-Boot/WebHome)
+&lt;h4&gt;  Reference : &lt;/h4&gt;
+&lt;a href=&quot;http://www.denx.de/wiki/U-Boot/WebHome&quot;&gt; http://www.denx.de/wiki/U-Boot/WebHome &lt;/a&gt;
 
 
 &lt;!-- for tabs --&gt;
 &lt;script&gt;
-  var demoItems = document.querySelectorAll('.tab-item');
-  var tabItems = document.getElementsByClassName('.tab-item');
-  
-  [].forEach.call(demoItems, function (demoItem) {
-    var activeIndicator = demoItem.querySelector('.mdc-tab-indicator');
-  
-    demoItem.addEventListener('click', function() {
-      console.log(&quot;Clicked Test &quot; );
-      [].forEach.call(demoItems, function (demoItem) {
-        var indicatorEl = demoItem.querySelector('.mdc-tab-indicator');
-        indicatorEl.classList.remove('mdc-tab-indicator--active');
-      });
-      activeIndicator.classList.toggle('mdc-tab-indicator--active');
-
-      [].forEach.call(demoItems, function (demoItem) {
-        demoItem.classList.remove('mdc-tab--active');
-      });
-      demoItem.classList.toggle('mdc-tab--active');
-
-      
-
-    });
-
-  });
-
-document.getElementById(&quot;netboot&quot;).style.display = &quot;none&quot;;
+  const tabBar = mdc.tabBar.MDCTabBar.attachTo(document.querySelector('.mdc-tab-bar'));
+  document.getElementById(&quot;netboot&quot;).style.display = &quot;none&quot;;
 
   function openGPIO(AppName) {
     document.getElementById(&quot;defaultTab&quot;).style.display = &quot;none&quot;;
@@ -1295,7 +1271,7 @@ document.getElementById(&quot;netboot&quot;).style.display = &quot;none&quot;;
     document.getElementById(AppName).style.display = &quot;block&quot;;
   }
 &lt;/script&gt;
-&lt;/div&gt;</content><author><name></name></author><category term="Ubuntu" /><summary type="html">This time let’s try to use U-Boot to load the Linux kernel and boot our Raspberry Pi 3. We need : U-Boot v.2017.11 file_download Get The SourceCode Get the source code by cloning the U-Boot git repository : 1 git clone --depth 1 --branch v2017.11 git://git.denx.de/u-boot.git v2017.11 or download the tar file : 1 wget ftp://ftp.denx.de/pub/u-boot/u-boot-2017.11.tar.bz2 Compile U-Boot rpi_3_defconfig - arm64 config RPi 3. -C source folder v2017.11 1 2 3 4 5 6 sudo make -C v2017.11/ CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig sudo make -C v2017.11/ CROSS_COMPILE=aarch64-linux-gnu- # For v2017.05 use below sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- After it has been built. Locate u-boot.bin in your output_path as this is the file we need. Default NetBoot Create the Bootscript Create a `rpi3-bootscript.txt` file and copy paste the code below : 1 2 3 4 5 6 7 8 // rpi3-bootscript.txt setenv kernel_addr_r 0x01000000 setenv ramdisk_addr_r 0x02100000 fatload mmc 0:1 ${kernel_addr_r} boot/Image fatload mmc 0:1 ${ramdisk_addr_r} boot/initrd.img setenv initrdsize $filesize booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r} boot/Image - The Linux kernel we compile from Raspberry Pi 3 64-bit kernel and place under a folder boot. boot/initrd.img - Ramdisk image we created from Using Ubuntu-base arm64 rootfs for Raspberry Pi 3. If you dont have a Ramdisk yet, replace ${ramdisk_addr_r}:${initrdsize} with -. mkimage -T script -n 'Bootscript' -C none -d ~/&amp;lt;input_file&amp;gt; ~/&amp;lt;output_file&amp;gt;.scr - Syntax for creating the bootscript Now to create a bootscript from the text file above : 1 $ sudo mkimage -A arm64 -O linux -T script -d ~/rpi3-bootscript.txt ~/boot.scr Copy `boot.scr` to your MicroSD card inside `/boot` folder. u-boot.bin - Can be renamed to any-name and modify it’s entry in config.txt kernel=boot/u-boot.bin-to-any-name. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 // config.txt # Serial console output! enable_uart=1 # 64bit-mode arm_control=0x200 # Use U-Boot kernel=boot/u-boot.bin device_tree_address=0x100 device_tree_end=0x8000 dtparam=i2c_arm=on dtparam=spi=on Then verify your MicroSD directory structure like below : 1 2 3 4 5 6 7 8 9 10 /boot/Image /boot/boot.scr /boot/u-boot.bin /boot/initrd.img bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt Boot it up to confirm that its working. For revision... TO-Do Net booting only works via ethernet connection... Reference : [http://www.denx.de/wiki/U-Boot/WebHome](http://www.denx.de/wiki/U-Boot/WebHome)</summary></entry><entry><title type="html">Using Ubuntu-base arm64 rootfs for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/ubuntu/rpi3-setup-filesystem.html" rel="alternate" type="text/html" title="Using Ubuntu-base arm64 rootfs for Raspberry Pi 3" /><published>2017-11-03T00:00:00+08:00</published><updated>2017-11-03T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/rpi3-setup-filesystem</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/rpi3-setup-filesystem.html">&lt;h4 id=&quot;extract-the-rootfs&quot;&gt;Extract the Rootfs&lt;/h4&gt;
+&lt;/div&gt;</content><author><name></name></author><category term="Ubuntu" /><summary type="html">This time let’s try to use U-Boot to load the Linux kernel and boot our Raspberry Pi 3. We need : U-Boot v.2017.11 file_download Get The SourceCode Get the source code by cloning the U-Boot git repository : 1 git clone --depth 1 --branch v2017.11 git://git.denx.de/u-boot.git v2017.11 or download the tar file : 1 wget ftp://ftp.denx.de/pub/u-boot/u-boot-2017.11.tar.bz2 Compile U-Boot rpi_3_defconfig - arm64 config RPi 3. -C source folder v2017.11 1 2 3 4 5 6 sudo make -C v2017.11/ CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig sudo make -C v2017.11/ CROSS_COMPILE=aarch64-linux-gnu- # For v2017.05 use below sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- rpi_3_defconfig sudo make -C v2017.05/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- After it has been built. Locate u-boot.bin in your output_path as this is the file we need. Default NetBoot Create the Bootscript Create a `rpi3-bootscript.txt` file and copy paste the code below : 1 2 3 4 5 6 7 8 // rpi3-bootscript.txt setenv kernel_addr_r 0x01000000 setenv ramdisk_addr_r 0x02100000 fatload mmc 0:1 ${kernel_addr_r} boot/Image fatload mmc 0:1 ${ramdisk_addr_r} boot/initrd.img setenv initrdsize $filesize booti ${kernel_addr_r} ${ramdisk_addr_r}:${initrdsize} ${fdt_addr_r} boot/Image - The Linux kernel we compile from Raspberry Pi 3 64-bit kernel and place under a folder boot. boot/initrd.img - Ramdisk image we created from Using Ubuntu-base arm64 rootfs for Raspberry Pi 3. If you dont have a Ramdisk yet, replace ${ramdisk_addr_r}:${initrdsize} with -. mkimage -T script -n 'Bootscript' -C none -d ~/&amp;lt;input_file&amp;gt; ~/&amp;lt;output_file&amp;gt;.scr - Syntax for creating the bootscript Now to create a bootscript from the text file above : 1 $ sudo mkimage -A arm64 -O linux -T script -d ~/rpi3-bootscript.txt ~/boot.scr Copy `boot.scr` to your MicroSD card inside `/boot` folder. u-boot.bin - Can be renamed to any-name and modify it’s entry in config.txt kernel=boot/u-boot.bin-to-any-name. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 // config.txt # Serial console output! enable_uart=1 # 64bit-mode arm_control=0x200 # Use U-Boot kernel=boot/u-boot.bin device_tree_address=0x100 device_tree_end=0x8000 dtparam=i2c_arm=on dtparam=spi=on Then verify your MicroSD directory structure like below : 1 2 3 4 5 6 7 8 9 10 /boot/Image /boot/boot.scr /boot/u-boot.bin /boot/initrd.img bcm2710-rpi-3-b.dtb bootcode.bin start.elf fixup.dat config.txt cmdline.txt Boot it up to confirm that its working. For revision... TO-Do Net booting only works via ethernet connection... Reference : http://www.denx.de/wiki/U-Boot/WebHome</summary></entry><entry><title type="html">Using Ubuntu-base arm64 rootfs for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/ubuntu/rpi3-setup-filesystem.html" rel="alternate" type="text/html" title="Using Ubuntu-base arm64 rootfs for Raspberry Pi 3" /><published>2017-11-03T00:00:00+08:00</published><updated>2017-11-03T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/rpi3-setup-filesystem</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/rpi3-setup-filesystem.html">&lt;h4 id=&quot;extract-the-rootfs&quot;&gt;Extract the Rootfs&lt;/h4&gt;
 &lt;div class=&quot;my-callout my-callout-note&quot;&gt;
     &lt;code class=&quot;highlighter-rouge&quot;&gt;18/10/13: [mkinitramfs -o /boot/initrd.img /lib/modules/4.x.x] Remove creating initrd.img not needed... Will boot with/without uboot&lt;/code&gt;
 &lt;/div&gt;
