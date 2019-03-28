@@ -1,4 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2019-03-10T10:10:41+08:00</updated><id>http://a-delacruz.github.io/feed.xml</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">Using Visual Studio Code to Run and Cross-Compile a C++ App for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/ubuntu/vscode+pi3.html" rel="alternate" type="text/html" title="Using Visual Studio Code to Run and Cross-Compile a C++ App for Raspberry Pi 3" /><published>2019-01-18T00:00:00+08:00</published><updated>2019-01-18T00:00:00+08:00</updated><id>http://a-delacruz.github.io/ubuntu/vscode+pi3</id><content type="html" xml:base="http://a-delacruz.github.io/ubuntu/vscode+pi3.html">&lt;p&gt;Been using nano editor to create a c++ app on Raspberry Pi 3. And just last month decided to use Visual Studio Code instead.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2019-03-28T21:07:59+08:00</updated><id>http://a-delacruz.github.io/feed.xml</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">Build and Compile a Cross-Toolchain for Raspberry Pi 3 from source</title><link href="http://a-delacruz.github.io/tools/cross-pi-gcc.html" rel="alternate" type="text/html" title="Build and Compile a Cross-Toolchain for Raspberry Pi 3 from source" /><published>2019-03-28T00:00:00+08:00</published><updated>2019-03-28T00:00:00+08:00</updated><id>http://a-delacruz.github.io/tools/cross-pi-gcc</id><content type="html" xml:base="http://a-delacruz.github.io/tools/cross-pi-gcc.html">&lt;h1 id=&quot;cross-pi-gcc&quot;&gt;cross-pi-gcc&lt;/h1&gt;
+&lt;p&gt;Build a Cross-Toolchain for Raspberry Pi 3 from source&lt;/p&gt;
+
+&lt;p&gt;Because  this is from a project that i failed to submit on time… I decided to take it as a personal goal to make this work.&lt;/p&gt;
+
+&lt;p&gt;As a result of ~2-months research, trials and errors along the way… I finally been able to achieve what i need for my use case, 
+ and now i’ll share with everyone that may or may not be useful for you.&lt;/p&gt;
+
+&lt;p&gt;This is in no-way near to what a Linaro-Toolchain could do, but enough for my needs which are:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;A latest C/C++ cross-compiler for armhf Raspberry Pi 3.&lt;/li&gt;
+  &lt;li&gt;This must be able to be use as an alternative compiler for QT for Raspberry Pi. Linaro-7.4.1 which i use to previous projects.
+    (also used the raspberrypi tools).&lt;/li&gt;
+  &lt;li&gt;Usable for &lt;code class=&quot;highlighter-rouge&quot;&gt;Part III - Make the Cross-Compile Tools&lt;/code&gt; of &lt;code class=&quot;highlighter-rouge&quot;&gt;Cross-LFS&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;future-supportcapability-plans&quot;&gt;Future support/capability plans:&lt;/h4&gt;
+&lt;ol&gt;
+  &lt;li&gt;Arm64&lt;/li&gt;
+  &lt;li&gt;Golang&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;features&quot;&gt;Features:&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;BINUTILS_VER=&lt;strong&gt;2.32&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;GCC_VER=&lt;strong&gt;8.3.0&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;GLIBC_VER=&lt;strong&gt;2.28&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;LINUX_VER=&lt;strong&gt;rpi-4.19.y&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;go&quot;&gt;git clone https://github.com/a-DelaCruz/cross-pi-gcc.git&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;To-Do: Instructions on How-To... to follow&lt;/code&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;h4 id=&quot;donation&quot;&gt;Donation&lt;/h4&gt;
+&lt;p&gt;You get the best out of others when you give the best of yourself. :)&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;amp;hosted_button_id=MFLAEY2CXYTXG&quot;&gt;&lt;img src=&quot;https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif&quot; alt=&quot;paypal&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/tools/QR_Code.png&quot; alt=&quot;Doante&quot; /&gt;&lt;/p&gt;</content><author><name></name></author><category term="Tools" /><summary type="html">cross-pi-gcc Build a Cross-Toolchain for Raspberry Pi 3 from source</summary></entry><entry><title type="html">Using Visual Studio Code to Run and Cross-Compile a C++ App for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/tools/vscode+pi3.html" rel="alternate" type="text/html" title="Using Visual Studio Code to Run and Cross-Compile a C++ App for Raspberry Pi 3" /><published>2019-01-18T00:00:00+08:00</published><updated>2019-01-18T00:00:00+08:00</updated><id>http://a-delacruz.github.io/tools/vscode+pi3</id><content type="html" xml:base="http://a-delacruz.github.io/tools/vscode+pi3.html">&lt;p&gt;Been using nano editor to create a c++ app on Raspberry Pi 3. And just last month decided to use Visual Studio Code instead.
 Not sure if really possible at first and haven’t tried it before when i’m trying out .Net Core 2, so i search the net for clues.
 Primarily running on Ubuntu 18.10 this time around.&lt;/p&gt;
 
@@ -217,7 +264,7 @@ EXECUTABLE  := main  to  EXECUTABLE := app  // or any name for your application&
 &lt;/div&gt;
 
 &lt;p&gt;&lt;img src=&quot;/assets/images/ubuntu/vscode/vscode-easy4.jpg&quot; alt=&quot;&quot; class=&quot;responsive-img&quot; style=&quot;width:420px;height:380px;&quot; /&gt;
-&lt;img src=&quot;/assets/images/ubuntu/vscode/vscode-easy5.jpg&quot; alt=&quot;&quot; class=&quot;responsive-img&quot; /&gt;&lt;/p&gt;</content><author><name></name></author><category term="Ubuntu" /><summary type="html">Been using nano editor to create a c++ app on Raspberry Pi 3. And just last month decided to use Visual Studio Code instead. Not sure if really possible at first and haven’t tried it before when i’m trying out .Net Core 2, so i search the net for clues. Primarily running on Ubuntu 18.10 this time around.</summary></entry><entry><title type="html">Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/debian/debian-arm64.html" rel="alternate" type="text/html" title="Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3" /><published>2018-10-13T00:00:00+08:00</published><updated>2018-10-13T00:00:00+08:00</updated><id>http://a-delacruz.github.io/debian/debian-arm64</id><content type="html" xml:base="http://a-delacruz.github.io/debian/debian-arm64.html">&lt;h4 id=&quot;debootstrap-the-rootfs&quot;&gt;Debootstrap the Rootfs&lt;/h4&gt;
+&lt;img src=&quot;/assets/images/ubuntu/vscode/vscode-easy5.jpg&quot; alt=&quot;&quot; class=&quot;responsive-img&quot; /&gt;&lt;/p&gt;</content><author><name></name></author><category term="Tools" /><summary type="html">Been using nano editor to create a c++ app on Raspberry Pi 3. And just last month decided to use Visual Studio Code instead. Not sure if really possible at first and haven’t tried it before when i’m trying out .Net Core 2, so i search the net for clues. Primarily running on Ubuntu 18.10 this time around.</summary></entry><entry><title type="html">Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/debian/debian-arm64.html" rel="alternate" type="text/html" title="Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3" /><published>2018-10-13T00:00:00+08:00</published><updated>2018-10-13T00:00:00+08:00</updated><id>http://a-delacruz.github.io/debian/debian-arm64</id><content type="html" xml:base="http://a-delacruz.github.io/debian/debian-arm64.html">&lt;h4 id=&quot;debootstrap-the-rootfs&quot;&gt;Debootstrap the Rootfs&lt;/h4&gt;
 &lt;p&gt;To create our bare filesystem, we need:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1

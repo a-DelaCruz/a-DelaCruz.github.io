@@ -7,11 +7,11 @@
     <meta name="theme-color" content="#FFB74D" />
     <meta name="keywords" content="Raspberry Pi 3 64bit Kernel, arm64 kernel, Raspberry Pi 3B/3B+, arm64, arn64 Raspberry Pi 3, Raspberry Pi 3 arm64, .net core2, qt 5.11.2">
     <meta name="description" content="
-            In order for the Bluetooth to work.. we need to have this file…
+            cross-pi-gccBuild a Cross-Toolchain for Raspberry Pi 3 from source
         ">
 
     <title>
-                BT firmware for Raspberry Pi 3
+                Build and Compile a Cross-Toolchain for Raspberry Pi 3 from source
             
     </title>
 
@@ -46,19 +46,19 @@
         </script>
     
     <!-- Begin Jekyll SEO tag v2.6.0 -->
-<title>BT firmware for Raspberry Pi 3 | My Personal Notes</title>
+<title>Build and Compile a Cross-Toolchain for Raspberry Pi 3 from source | My Personal Notes</title>
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="BT firmware for Raspberry Pi 3" />
+<meta property="og:title" content="Build and Compile a Cross-Toolchain for Raspberry Pi 3 from source" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="In order for the Bluetooth to work.. we need to have this file…" />
-<meta property="og:description" content="In order for the Bluetooth to work.. we need to have this file…" />
-<link rel="canonical" href="http://a-delacruz.github.io/peripherals/bt.html" />
-<meta property="og:url" content="http://a-delacruz.github.io/peripherals/bt.html" />
+<meta name="description" content="cross-pi-gcc Build a Cross-Toolchain for Raspberry Pi 3 from source" />
+<meta property="og:description" content="cross-pi-gcc Build a Cross-Toolchain for Raspberry Pi 3 from source" />
+<link rel="canonical" href="http://a-delacruz.github.io/tools/cross-pi-gcc.html" />
+<meta property="og:url" content="http://a-delacruz.github.io/tools/cross-pi-gcc.html" />
 <meta property="og:site_name" content="My Personal Notes" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2018-10-13T00:00:00+08:00" />
+<meta property="article:published_time" content="2019-03-28T00:00:00+08:00" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","url":"http://a-delacruz.github.io/peripherals/bt.html","headline":"BT firmware for Raspberry Pi 3","dateModified":"2018-10-13T00:00:00+08:00","datePublished":"2018-10-13T00:00:00+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/peripherals/bt.html"},"description":"In order for the Bluetooth to work.. we need to have this file…","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","url":"http://a-delacruz.github.io/tools/cross-pi-gcc.html","headline":"Build and Compile a Cross-Toolchain for Raspberry Pi 3 from source","dateModified":"2019-03-28T00:00:00+08:00","datePublished":"2019-03-28T00:00:00+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/tools/cross-pi-gcc.html"},"description":"cross-pi-gcc Build a Cross-Toolchain for Raspberry Pi 3 from source","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
   </head>
@@ -87,54 +87,55 @@
     (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
 
-    <h5 class="mdc-typography--headline5 posts-title">BT firmware for Raspberry Pi 3</h5>
-    <p>In order for the Bluetooth to work.. we need to have this file…</p>
+    <h5 class="mdc-typography--headline5 posts-title">Build and Compile a Cross-Toolchain for Raspberry Pi 3 from source</h5>
+    <h1 id="cross-pi-gcc">cross-pi-gcc</h1>
+<p>Build a Cross-Toolchain for Raspberry Pi 3 from source</p>
 
-<h4 id="prerequisite">Prerequisite:</h4>
+<p>Because  this is from a project that i failed to submit on time… I decided to take it as a personal goal to make this work.</p>
+
+<p>As a result of ~2-months research, trials and errors along the way… I finally been able to achieve what i need for my use case, 
+ and now i’ll share with everyone that may or may not be useful for you.</p>
+
+<p>This is in no-way near to what a Linaro-Toolchain could do, but enough for my needs which are:</p>
+<ol>
+  <li>A latest C/C++ cross-compiler for armhf Raspberry Pi 3.</li>
+  <li>This must be able to be use as an alternative compiler for QT for Raspberry Pi. Linaro-7.4.1 which i use to previous projects.
+    (also used the raspberrypi tools).</li>
+  <li>Usable for <code class="highlighter-rouge">Part III - Make the Cross-Compile Tools</code> of <code class="highlighter-rouge">Cross-LFS</code>.</li>
+</ol>
+
+<h4 id="future-supportcapability-plans">Future support/capability plans:</h4>
+<ol>
+  <li>Arm64</li>
+  <li>Golang</li>
+</ol>
+
+<h4 id="features">Features:</h4>
+<ul>
+  <li>BINUTILS_VER=<strong>2.32</strong></li>
+  <li>GCC_VER=<strong>8.3.0</strong></li>
+  <li>GLIBC_VER=<strong>2.28</strong></li>
+  <li>LINUX_VER=<strong>rpi-4.19.y</strong></li>
+</ul>
 
 <figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-2
-3
-</pre></td><td class="code"><pre><span class="go">//make sure these are installed:
-bluetooth
-bluez</span></pre></td></tr></tbody></table></code></pre></figure>
-
-<p><a href="https://github.com/RPi-Distro/bluez-firmware/raw/master/broadcom/BCM43430A1.hcd" class="mdc-button mdc-button--compact">
-  BCM43430A1.hcd
-  <i class="material-icons mdc-button__icon">file_download</i>
-</a></p>
+</pre></td><td class="code"><pre><span class="go">git clone https://github.com/a-DelaCruz/cross-pi-gcc.git</span></pre></td></tr></tbody></table></code></pre></figure>
 
 <div class="my-callout my-callout-note">
-    <code class="highlighter-rouge">18/10/13: To Do - need to verify this steps...</code>
+    <code class="highlighter-rouge">To-Do: Instructions on How-To... to follow</code>
 </div>
-<p>then create a symlink of it in <code class="highlighter-rouge">/etc/firmware</code> folder.</p>
 
-<p>Then to test it.. run this <code class="highlighter-rouge">twice if 1st run failed</code>:</p>
+<p><br />
+<br />
+<br />
+<br />
+<br /></p>
+<h4 id="donation">Donation</h4>
+<p>You get the best out of others when you give the best of yourself. :)</p>
 
-<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="go">sudo /usr/bin/hciattach /dev/ttyAMA0 bc43xx 921600 noflow</span></pre></td></tr></tbody></table></code></pre></figure>
+<p><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=MFLAEY2CXYTXG"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" alt="paypal" /></a></p>
 
-<p>First run we’ll encouter <code class="highlighter-rouge">Initialization timed out</code>. But on the second time we’ll get this <code class="highlighter-rouge">Device setup complete</code>.
-Then try it out now if our device is present.</p>
-
-<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-2
-3
-4
-</pre></td><td class="code"><pre><span class="go">hcitool dev
-
-    Devices:
-        hci0   [your device id shows here]</span></pre></td></tr></tbody></table></code></pre></figure>
-
-<p>Then run your friendly <code class="highlighter-rouge">bluetoothctl</code>. To automate this at boot, just follow the scripts from the reference below.</p>
-
-<p><br /></p>
-<h4 id="reference-">Reference :</h4>
-
-<blockquote>
-  <p><a href="http://www.adelpha.be/blog/index.php/2016/09/24/raspberry-pi-3-native-wifi-and-bluetooth/">http://www.adelpha.be/blog/index.php/2016/09/24/raspberry-pi-3-native-wifi-and-bluetooth/</a><br />
-  <a href="https://github.com/xbianonpi/xbian/issues/813">https://github.com/xbianonpi/xbian/issues/813</a></p>
-</blockquote>
+<p><img src="/assets/images/tools/QR_Code.png" alt="Doante" /></p>
 
     <hr />
 </section>
