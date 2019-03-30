@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang=" en-US ">
+  <head>
+    <meta charset="utf-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="theme-color" content="#FFB74D" />
+    <meta name="keywords" content="Raspberry Pi 3 64bit Kernel, arm64 kernel, Raspberry Pi 3B/3B+, arm64, arn64 Raspberry Pi 3, Raspberry Pi 3 arm64, .net core2, qt 5.11.2">
+    <meta name="description" content="
+            Debootstrap the RootfsTo create our bare filesystem, we need:
+        ">
+
+    <title>
+                Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3
+            
+    </title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+
+    <!-- Favicon head tag -->
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+
+    <link href="https://fonts.googleapis.com/css?family=Patrick+Hand+SC&effect=shadow-multiple" rel="stylesheet">
+    <link href="/assets/css/styles.css" rel="stylesheet">
+
+    <!-- Google fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+
+    <link href="https://fonts.googleapis.com/css?family=Mogra" rel="stylesheet">
+
+    <!-- Syntax Highligther -->
+    <link href="/assets/css/syntax.css" rel="stylesheet">
+
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+
+    <!-- Google Adsense -->
+    
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-6013311002995151", enable_page_level_ads: true });
+        </script>
+        <script async custom-element="amp-auto-ads"
+            src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+        </script>
+    
+    <!-- Begin Jekyll SEO tag v2.6.0 -->
+<title>Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3 | My Personal Notes</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Debootstrap the Rootfs To create our bare filesystem, we need:" />
+<meta property="og:description" content="Debootstrap the Rootfs To create our bare filesystem, we need:" />
+<link rel="canonical" href="http://a-delacruz.github.io/debian/debian-arm64.html" />
+<meta property="og:url" content="http://a-delacruz.github.io/debian/debian-arm64.html" />
+<meta property="og:site_name" content="My Personal Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-10-13T00:00:00+08:00" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","url":"http://a-delacruz.github.io/debian/debian-arm64.html","headline":"Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3","dateModified":"2018-10-13T00:00:00+08:00","datePublished":"2018-10-13T00:00:00+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/debian/debian-arm64.html"},"description":"Debootstrap the Rootfs To create our bare filesystem, we need:","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+  
+  <body id="default" class="mdc-typography"><header class="header mdc-top-app-bar mdc-top-app-bar--short mdc-top-app-bar--dense">
+    <div class="mdc-top-app-bar__row">
+        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                <a href="/"><img src="/assets/images/logo-bl.png"></a>
+            </section>
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end my-top-app-bar-btn">
+                <a href="/projects" class="mdc-button">projects</a>
+                <a href="https://github.com/a-DelaCruz/a-DelaCruz.github.io" class="ink-color mdc-button">github</a>
+                <a href="/about" class="mdc-button">about</a>
+                <button class="hire-me mdc-button" disabled>hire me</button>
+        </section>
+    </div>
+</header><section class="posts">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- Ad-1 -->
+    <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-6013311002995151"
+        data-ad-slot="2377202477"
+        data-ad-format="auto"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+    <h5 class="mdc-typography--headline5 posts-title">Deboostraping Debian Stretch arm64 rootfs for Raspberry Pi 3</h5>
+    <h4 id="debootstrap-the-rootfs">Debootstrap the Rootfs</h4>
+<p>To create our bare filesystem, we need:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="go">//make sure these are installed:
+debootstrap
+binfmt-support</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>TO build the 1st stage of Debian rootfs:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="go">mkdir debianFS
+sudo debootstrap --arch=arm64 --foreign stretch debianFS</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Once the 1st sstage is done… onto next step below.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="go">// To chroot onto the rootfs
+</span><span class="gp">sudo cp -av /usr/bin/qemu-aarch64-static $</span>HOME/debianFS/usr/bin</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="go">// To have internet access temporarily borrowing from host
+// If your host is Ubuntu 17.10
+</span><span class="gp">sudo cp -av /run/systemd/resolve/stub-resolv.conf $</span>HOME/debianFS/etc/resolv.conf
+<span class="go">
+// For Ubuntu 16.04.3 below
+</span><span class="gp">sudo cp -av /run/resolvconf/resolv.conf $</span>HOME/debianFS/etc/resolv.conf</pre></td></tr></tbody></table></code></pre></figure>
+
+<h4 id="modifying-the-rootfs">Modifying the Rootfs</h4>
+<p>Going back from when we compile the Raspberry Pi 3 kernel, We are goig to install the kernel module and firmware into the debianFS folder that we just created above.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="gp">sudo make -C rpi-4.14.70/ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$</span>HOME/bo_4.14/ modules_install <span class="nv">INSTALL_MOD_PATH</span><span class="o">=</span><span class="nv">$HOME</span>/debianFS/</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Verify that it was installed correctly. And remove <code class="highlighter-rouge">build</code> and <code class="highlighter-rouge">source</code> links.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="gp">ls $</span>HOME/debianFS/lib/modules/4.11~
+<span class="go">
+modules.builtin     modules.devname        modules.symbols.bin  build
+kernel              modules.builtin.bin    modules.order        source
+modules.alias       modules.dep            modules.softdep
+modules.alias.bin   modules.dep.bin        modules.symbols
+
+</span><span class="gp">sudo find $</span>HOME/debianFS/ <span class="nt">-name</span> build | xargs <span class="nb">rm</span> <span class="nt">-rf</span>
+<span class="gp">sudo find $</span>HOME/debianFS/ <span class="nt">-name</span> <span class="nb">source</span> | xargs <span class="nb">rm</span> <span class="nt">-rf</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Then <code class="highlighter-rouge">chroot</code> to further setup our filesystem.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">sudo chroot debianFS</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Now that you’re in the chroot environment, we are ready to setup the 2nd stage of debootstrap.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="go">export LANG=C
+
+/debootstrap/debootstrap --second-stage</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>After the installation has finished, add a debian repository</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="go">nano /etc/apt/sources.list
+
+// replace it with these below:
+
+deb http://deb.debian.org/debian stretch main</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Fetch the latest package lists from server then upgrade.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="go">apt-get update
+apt-get upgrade</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Install minimal packages:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">apt-get install sudo ifupdown net-tools ethtool udev wireless-tools iputils-ping resolvconf wget apt-utils wpasupplicant</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>And we can now add an admin user with sudo permission.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="go">useradd -G sudo -m -s /bin/bash pi3
+echo pi3:pi3 | chpasswd</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="my-callout my-callout-note">
+    <code class="highlighter-rouge">The format input line of chpasswd is: user_name:password.</code>
+</div>
+
+<p><br />
+Change root password with these command:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">passwd root</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>You can setup your <code class="highlighter-rouge">hostname</code> here for your target device or in the kernel configuration making sure that the hostname is empty.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="gp">echo U-Base_min &gt;</span> /etc/hostname
+<span class="gp">echo 127.0.0.1	localhost &gt;</span> /etc/hosts
+<span class="gp">echo 127.0.1.1	U-Base_min &gt;</span><span class="o">&gt;</span> /etc/hosts</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Then install these first:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">apt-get install dialog perl</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>We need those installed first to correct some error messages about locale: If <code class="highlighter-rouge">locale-gen</code> command is missing, <code class="highlighter-rouge">apt-get install locales</code> first.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="go">locale-gen "en_US.UTF-8"
+        Generating locales...
+            en_US.UTF-8... done
+        Generation complete.</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="my-callout my-callout-note">
+    To-Do: gonna use Netplan for future network management
+</div>
+
+<p>We need to add <code class="highlighter-rouge">/etc/fstab</code> file entry below coz’ if not…it will run on read-only mode. Below are <code class="highlighter-rouge">Tab</code> not <code class="highlighter-rouge">spacebar</code></p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="go">nano /etc/fstab
+
+// add these line below or your fs will be on read-only
+
+/dev/mmcblk0p2	/	ext4	defaults,noatime	0	1</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>When everything you want are done, exit chroot:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="go">exit</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<h4 id="removing-unwanted-files">Removing unwanted files</h4>
+<p>To reduce the rootfs/ size we can remove some unwanted files.
+Create a file <code class="highlighter-rouge">/etc/dpkg/dpkg.cfg.d/01_nodoc</code> which specifies the desired filters. Example:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="go">path-exclude /usr/share/doc/*
+</span><span class="gp">#</span> we need to keep copyright files <span class="k">for </span>legal reasons
+<span class="go">path-include /usr/share/doc/*/copyright
+path-exclude /usr/share/man/*
+path-exclude /usr/share/groff/*
+path-exclude /usr/share/info/*
+</span><span class="gp">#</span> lintian stuff is small, but really unnecessary
+<span class="go">path-exclude /usr/share/lintian/*
+path-exclude /usr/share/linda/*</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Then you can manually remove any documentation already installed:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="go">sudo find rootfs/usr/share/doc -depth -type f ! -name copyright|xargs rm || true
+sudo find rootfs/usr/share/doc -empty|xargs rmdir || true
+sudo rm -rf rootfs/usr/share/man/* rootfs/usr/share/groff/* rootfs/usr/share/info/*
+sudo rm -rf rootfs/usr/share/lintian/* rootfs/usr/share/linda/* rootfs/var/cache/man/*</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Then copy the <code class="highlighter-rouge">$HOME/debianFS/*</code> content to the 2nd partition of your MicroSD card.</p>
+
+<p><br /></p>
+<h4 id="creating-the-image-file-optional">Creating the Image file (*Optional)</h4>
+<p>We could make an image file with several partition on it. 
+We will create a 700M empty img file:</p>
+<div class="my-callout my-callout-note">
+    Modify the desired image size according to your needs. I use <code class="highlighter-rouge">resize2fs</code> after i boot this up
+</div>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><span class="go">sudo dd if=/dev/zero of=myimage.img bs=700K count=1024</span></code></pre></figure>
+
+<p>Then partition it using <code class="highlighter-rouge">fdisk</code> in my case:</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="go">sudo fdisk -l myimage.img
+        Result:
+        | Device     w| Boot | Start 	| End	  | Sectors |
+        |:-----------|:-----|:----------|:--------|:--------|
+        | myimage1   |      | 2048  	| 264191  | 1024000 | Fat32
+        | myimage2   |      | 264192 	| 1433599 | 3168256 | Linux</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="my-callout my-callout-note">
+    For <code class="highlighter-rouge">32Bit</code> - kernel bootup message sometimes do not show up. But using a usb-serial with putty you’ll know the kernel boots up…
+</div>
+
+<p>To assign a loopback device and be able to format it.</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="gp">sudo losetup -o $</span><span class="o">((</span>512<span class="k">*</span>2048<span class="o">))</span> <span class="nt">--sizelimit</span> <span class="k">$((</span><span class="m">512</span><span class="o">*</span><span class="m">264191</span><span class="k">))</span> /dev/loop14 myimage.img 
+<span class="gp">sudo losetup -o $</span><span class="o">((</span>512<span class="k">*</span>264192<span class="o">))</span> <span class="nt">--sizelimit</span> <span class="k">$((</span><span class="m">512</span><span class="o">*</span><span class="m">1433599</span><span class="k">))</span> /dev/loop15 myimage.img
+<span class="go">sudo mkfs.vfat -F 32 -n 'SYS-BOOT' /dev/loop14
+sudo mkfs.ext4 /dev/loop15</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="my-callout my-callout-note">
+    mkfs.vfat -n <code class="highlighter-rouge">partition name</code> /dev/loop1.
+</div>
+
+<p>Mount and Copy those necessary files that we need to their respected partition.
+Install <code class="highlighter-rouge">dosfstools</code> if cannot mount vfat</p>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="code"><pre><span class="go">sudo mount /dev/loop14 /mnt/boot
+sudo mount /dev/loop15 /mnt/rootfs
+
+// run sync before umounting and after copying files are done
+sync
+
+</span><span class="gp">    #</span> Then umount and detach:
+<span class="go">sudo umount /dev/loop14
+sudo umount /dev/loop15
+sudo losetup --detach /dev/loop14
+sudo losetup --detach /dev/loop15</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>You can now burn that myimage.img to yor MicoSD card.
+Now boot it up and you should now be able to login.</p>
+
+<p><br /></p>
+
+<h5 id="reference-">Reference :</h5>
+<p><a href="https://olimex.wordpress.com/2014/07/21/how-to-create-bare-minimum-debian-wheezy-rootfs-from-scratch/">How to create bare minimum Debian Wheezy rootfs from scratch</a></p>
+
+    <hr />
+</section>
+<!-- Google Analytics -->
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-99256627-1', 'auto');
+    ga('send', 'pageview');
+</script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang=" en-US ">
+  <head>
+    <meta charset="utf-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="theme-color" content="#FFB74D" />
+    <meta name="keywords" content="Raspberry Pi 3 64bit Kernel, arm64 kernel, Raspberry Pi 3B/3B+, arm64, arn64 Raspberry Pi 3, Raspberry Pi 3 arm64, .net core2, qt 5.11.2">
+    <meta name="description" content="
+            This will be entirely based on Cross Linux From Scratch with some modificantions… So all credits goes to them.
+        ">
+
+    <title>
+                Cross Linux From Scratch for Raspberry Pi 3
+            
+    </title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+
+    <!-- Favicon head tag -->
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+
+    <link href="https://fonts.googleapis.com/css?family=Patrick+Hand+SC&effect=shadow-multiple" rel="stylesheet">
+    <link href="/assets/css/styles.css" rel="stylesheet">
+
+    <!-- Google fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+
+    <link href="https://fonts.googleapis.com/css?family=Mogra" rel="stylesheet">
+
+    <!-- Syntax Highligther -->
+    <link href="/assets/css/syntax.css" rel="stylesheet">
+
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+
+    <!-- Google Adsense -->
+    
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-6013311002995151", enable_page_level_ads: true });
+        </script>
+        <script async custom-element="amp-auto-ads"
+            src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+        </script>
+    
+    <!-- Begin Jekyll SEO tag v2.6.0 -->
+<title>Cross Linux From Scratch for Raspberry Pi 3 | My Personal Notes</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Cross Linux From Scratch for Raspberry Pi 3" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="This will be entirely based on Cross Linux From Scratch with some modificantions… So all credits goes to them." />
+<meta property="og:description" content="This will be entirely based on Cross Linux From Scratch with some modificantions… So all credits goes to them." />
+<link rel="canonical" href="http://a-delacruz.github.io/system/cross-lfs.html" />
+<meta property="og:url" content="http://a-delacruz.github.io/system/cross-lfs.html" />
+<meta property="og:site_name" content="My Personal Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-03-30T00:00:00+08:00" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","url":"http://a-delacruz.github.io/system/cross-lfs.html","headline":"Cross Linux From Scratch for Raspberry Pi 3","dateModified":"2019-03-30T00:00:00+08:00","datePublished":"2019-03-30T00:00:00+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/system/cross-lfs.html"},"description":"This will be entirely based on Cross Linux From Scratch with some modificantions… So all credits goes to them.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+  
+  <body id="default" class="mdc-typography"><header class="header mdc-top-app-bar mdc-top-app-bar--short mdc-top-app-bar--dense">
+    <div class="mdc-top-app-bar__row">
+        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                <a href="/"><img src="/assets/images/logo-bl.png"></a>
+            </section>
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end my-top-app-bar-btn">
+                <a href="/projects" class="mdc-button">projects</a>
+                <a href="https://github.com/a-DelaCruz/a-DelaCruz.github.io" class="ink-color mdc-button">github</a>
+                <a href="/about" class="mdc-button">about</a>
+                <button class="hire-me mdc-button" disabled>hire me</button>
+        </section>
+    </div>
+</header><section class="posts">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- Ad-1 -->
+    <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-6013311002995151"
+        data-ad-slot="2377202477"
+        data-ad-format="auto"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+    <h5 class="mdc-typography--headline5 posts-title">Cross Linux From Scratch for Raspberry Pi 3</h5>
+    <p>This will be entirely based on <a href="https://trac.clfs.org/wiki/read">Cross Linux From Scratch</a> with some modificantions… So all credits goes to them.</p>
+
+<h4 id="part-i-host-system-requirements">Part I. Host System Requirements</h4>
+
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="go">flex
+bison
+gawk
+texinfo
+pkg-config
+</span><span class="gp">libncurses5         #</span>gdb
+<span class="gp">libpython2.7-dev    #</span>gdb</pre></td></tr></tbody></table></code></pre></figure>
+
+<h4 id="part-ii-preparing-for-the-build">Part II. Preparing for the Build</h4>
+<h4 id="part-iii---make-the-cross-compile-tools">Part III - Make the Cross-Compile Tools</h4>
+
+<p><a href="/system/cross-lfs.html">Build and Compile a Cross-Toolchain for Raspberry Pi 3 from source</a></p>
+
+<h4 id="part-iv-building-the-clfs-system">Part IV. Building the CLFS System</h4>
+
+<p><br /></p>
+<h4 id="refference">Refference:</h4>
+<p><a href="https://trac.clfs.org/wiki/read">Cross Linux From Scratch</a></p>
+
+    <hr />
+</section>
+<!-- Google Analytics -->
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-99256627-1', 'auto');
+    ga('send', 'pageview');
+</script>
+</body>
+</html>
