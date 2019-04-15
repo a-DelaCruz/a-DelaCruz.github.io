@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2019-03-31T00:09:06+08:00</updated><id>http://a-delacruz.github.io/feed.xml</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">Cross Linux From Scratch for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/system/cross-lfs.html" rel="alternate" type="text/html" title="Cross Linux From Scratch for Raspberry Pi 3" /><published>2019-03-30T00:00:00+08:00</published><updated>2019-03-30T00:00:00+08:00</updated><id>http://a-delacruz.github.io/system/cross-lfs</id><content type="html" xml:base="http://a-delacruz.github.io/system/cross-lfs.html">&lt;p&gt;This will be entirely based on &lt;a href=&quot;https://trac.clfs.org/wiki/read&quot;&gt;Cross Linux From Scratch&lt;/a&gt; with some modificantions… So all credits goes to them.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://a-delacruz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://a-delacruz.github.io/" rel="alternate" type="text/html" /><updated>2019-04-15T20:42:05+08:00</updated><id>http://a-delacruz.github.io/feed.xml</id><title type="html">My Personal Notes</title><subtitle>Raspberry Pi 3 64-Bit kernel and arm64 rootfs</subtitle><entry><title type="html">Cross Linux From Scratch for Raspberry Pi 3</title><link href="http://a-delacruz.github.io/system/cross-lfs.html" rel="alternate" type="text/html" title="Cross Linux From Scratch for Raspberry Pi 3" /><published>2019-03-30T00:00:00+08:00</published><updated>2019-03-30T00:00:00+08:00</updated><id>http://a-delacruz.github.io/system/cross-lfs</id><content type="html" xml:base="http://a-delacruz.github.io/system/cross-lfs.html">&lt;p&gt;This will be entirely based on &lt;a href=&quot;https://trac.clfs.org/wiki/read&quot;&gt;Cross Linux From Scratch&lt;/a&gt; with some modificantions… So all credits goes to them.&lt;/p&gt;
 
 &lt;h4 id=&quot;part-i-host-system-requirements&quot;&gt;Part I. Host System Requirements&lt;/h4&gt;
 
@@ -19,10 +19,16 @@ pkg-config
 
 &lt;h4 id=&quot;part-ii-preparing-for-the-build&quot;&gt;Part II. Preparing for the Build&lt;/h4&gt;
 &lt;h4 id=&quot;part-iii---make-the-cross-compile-tools&quot;&gt;Part III - Make the Cross-Compile Tools&lt;/h4&gt;
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;This link can be also use to for cross-compiling QT for pi.&lt;/code&gt;
+&lt;/div&gt;
 
 &lt;p&gt;&lt;a href=&quot;/system/cross-lfs.html&quot;&gt;Build and Compile a Cross-Toolchain for Raspberry Pi 3 from source&lt;/a&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;part-iv-building-the-clfs-system&quot;&gt;Part IV. Building the CLFS System&lt;/h4&gt;
+&lt;div class=&quot;my-callout my-callout-note&quot;&gt;
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;In-Progress&lt;/code&gt;
+&lt;/div&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h4 id=&quot;refference&quot;&gt;Refference:&lt;/h4&gt;
