@@ -45,20 +45,18 @@
             src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
         </script>
     
-    <!-- Begin Jekyll SEO tag v2.6.0 -->
+    <!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>BT firmware for Raspberry Pi 3 | My Personal Notes</title>
-<meta name="generator" content="Jekyll v3.8.5" />
+<meta name="generator" content="Jekyll v3.8.6" />
 <meta property="og:title" content="BT firmware for Raspberry Pi 3" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="In order for the Bluetooth to work.. we need to have this file…" />
 <meta property="og:description" content="In order for the Bluetooth to work.. we need to have this file…" />
-<link rel="canonical" href="http://a-delacruz.github.io/peripherals/bt.html" />
-<meta property="og:url" content="http://a-delacruz.github.io/peripherals/bt.html" />
 <meta property="og:site_name" content="My Personal Notes" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-10-13T00:00:00+08:00" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/peripherals/bt.html"},"@type":"BlogPosting","url":"http://a-delacruz.github.io/peripherals/bt.html","headline":"BT firmware for Raspberry Pi 3","dateModified":"2018-10-13T00:00:00+08:00","datePublished":"2018-10-13T00:00:00+08:00","description":"In order for the Bluetooth to work.. we need to have this file…","@context":"https://schema.org"}</script>
+{"datePublished":"2018-10-13T00:00:00+08:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/peripherals/bt.html"},"url":"/peripherals/bt.html","headline":"BT firmware for Raspberry Pi 3","description":"In order for the Bluetooth to work.. we need to have this file…","dateModified":"2018-10-13T00:00:00+08:00","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
   </head>
@@ -97,7 +95,8 @@
 3
 </pre></td><td class="code"><pre><span class="go">//make sure these are installed:
 bluetooth
-bluez</span></pre></td></tr></tbody></table></code></pre></figure>
+bluez</span>
+</pre></td></tr></tbody></table></code></pre></figure>
 
 <p><a href="https://github.com/RPi-Distro/bluez-firmware/raw/master/broadcom/BCM43430A1.hcd" class="mdc-button mdc-button--compact">
   BCM43430A1.hcd
@@ -112,7 +111,8 @@ bluez</span></pre></td></tr></tbody></table></code></pre></figure>
 <p>Then to test it.. run this <code class="highlighter-rouge">twice if 1st run failed</code>:</p>
 
 <figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="go">sudo /usr/bin/hciattach /dev/ttyAMA0 bc43xx 921600 noflow</span></pre></td></tr></tbody></table></code></pre></figure>
+</pre></td><td class="code"><pre><span class="go">sudo /usr/bin/hciattach /dev/ttyAMA0 bc43xx 921600 noflow</span>
+</pre></td></tr></tbody></table></code></pre></figure>
 
 <p>First run we’ll encouter <code class="highlighter-rouge">Initialization timed out</code>. But on the second time we’ll get this <code class="highlighter-rouge">Device setup complete</code>.
 Then try it out now if our device is present.</p>
@@ -124,7 +124,8 @@ Then try it out now if our device is present.</p>
 </pre></td><td class="code"><pre><span class="go">hcitool dev
 
     Devices:
-        hci0   [your device id shows here]</span></pre></td></tr></tbody></table></code></pre></figure>
+        hci0   [your device id shows here]</span>
+</pre></td></tr></tbody></table></code></pre></figure>
 
 <p>Then run your friendly <code class="highlighter-rouge">bluetoothctl</code>. To automate this at boot, just follow the scripts from the reference below.</p>
 

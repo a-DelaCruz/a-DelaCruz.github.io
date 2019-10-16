@@ -45,20 +45,18 @@
             src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
         </script>
     
-    <!-- Begin Jekyll SEO tag v2.6.0 -->
+    <!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>Using Visual Studio Code to Run and Cross-Compile a C++ App for Raspberry Pi 3 | My Personal Notes</title>
-<meta name="generator" content="Jekyll v3.8.5" />
+<meta name="generator" content="Jekyll v3.8.6" />
 <meta property="og:title" content="Using Visual Studio Code to Run and Cross-Compile a C++ App for Raspberry Pi 3" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Been using nano editor to create a c++ app on Raspberry Pi 3. And just last month decided to use Visual Studio Code instead. Not sure if really possible at first and haven’t tried it before when i’m trying out .Net Core 2, so i search the net for clues. Primarily running on Ubuntu 18.10 this time around." />
 <meta property="og:description" content="Been using nano editor to create a c++ app on Raspberry Pi 3. And just last month decided to use Visual Studio Code instead. Not sure if really possible at first and haven’t tried it before when i’m trying out .Net Core 2, so i search the net for clues. Primarily running on Ubuntu 18.10 this time around." />
-<link rel="canonical" href="http://a-delacruz.github.io/tools/vscode+pi3.html" />
-<meta property="og:url" content="http://a-delacruz.github.io/tools/vscode+pi3.html" />
 <meta property="og:site_name" content="My Personal Notes" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-01-18T00:00:00+08:00" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/tools/vscode+pi3.html"},"@type":"BlogPosting","url":"http://a-delacruz.github.io/tools/vscode+pi3.html","headline":"Using Visual Studio Code to Run and Cross-Compile a C++ App for Raspberry Pi 3","dateModified":"2019-01-18T00:00:00+08:00","datePublished":"2019-01-18T00:00:00+08:00","description":"Been using nano editor to create a c++ app on Raspberry Pi 3. And just last month decided to use Visual Studio Code instead. Not sure if really possible at first and haven’t tried it before when i’m trying out .Net Core 2, so i search the net for clues. Primarily running on Ubuntu 18.10 this time around.","@context":"https://schema.org"}</script>
+{"datePublished":"2019-01-18T00:00:00+08:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/tools/vscode+pi3.html"},"url":"/tools/vscode+pi3.html","headline":"Using Visual Studio Code to Run and Cross-Compile a C++ App for Raspberry Pi 3","description":"Been using nano editor to create a c++ app on Raspberry Pi 3. And just last month decided to use Visual Studio Code instead. Not sure if really possible at first and haven’t tried it before when i’m trying out .Net Core 2, so i search the net for clues. Primarily running on Ubuntu 18.10 this time around.","dateModified":"2019-01-18T00:00:00+08:00","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
   </head>
@@ -101,7 +99,8 @@ Primarily running on Ubuntu 18.10 this time around.</p>
 3
 </pre></td><td class="code"><pre><span class="go">visual studio code for Linux
 cross-toolchain - either Linaro / GNU ARM Embedded Toolchain / From ubuntu Repo
-sshpass - also install this additional package</span></pre></td></tr></tbody></table></code></pre></figure>
+sshpass - also install this additional package</span>
+</pre></td></tr></tbody></table></code></pre></figure>
 
 <div class="my-callout my-callout-note">
     <code class="highlighter-rouge">I'm using the GNU ARM Embedded Toolchain for arm32</code>
@@ -111,7 +110,8 @@ sshpass - also install this additional package</span></pre></td></tr></tbody></t
 <p>Get the Visual Studio Code <code class="highlighter-rouge">deb</code> file from the main site.. <a href="https://code.visualstudio.com/download">https://code.visualstudio.com/download</a> and install using the code below:</p>
 
 <figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="go">sudo apt install ./code_1.30.1-1545156774_amd64.deb</span></pre></td></tr></tbody></table></code></pre></figure>
+</pre></td><td class="code"><pre><span class="go">sudo apt install ./code_1.30.1-1545156774_amd64.deb</span>
+</pre></td></tr></tbody></table></code></pre></figure>
 
 <p>For the toolchain any of the three i mention above will do and the procedure is also the same when configuring the Visual Studio Code for our purpose. Same for arm64.</p>
 
@@ -128,7 +128,8 @@ wget https://developer.arm.com/-/media/Files/downloads/gnu-a/8.2-2019.01/gcc-arm
 tar xvf gcc-arm-8.2-2019.01-x86_64-arm-linux-gnueabihf.tar.xz
 
 // Or extract to your desired folder
-tar xvf gcc-arm-8.2-2019.01-x86_64-arm-linux-gnueabihf.tar.xz -C desired-path</span></pre></td></tr></tbody></table></code></pre></figure>
+tar xvf gcc-arm-8.2-2019.01-x86_64-arm-linux-gnueabihf.tar.xz -C desired-path</span>
+</pre></td></tr></tbody></table></code></pre></figure>
 
 <p>After Visual Studio Code installation, Run it and install these VSCode extensions…</p>
 
@@ -137,7 +138,8 @@ tar xvf gcc-arm-8.2-2019.01-x86_64-arm-linux-gnueabihf.tar.xz -C desired-path</s
 3
 </pre></td><td class="code"><pre><span class="go">c/c++
 c++ intellisense
-Easy C++ projects</span></pre></td></tr></tbody></table></code></pre></figure>
+Easy C++ projects</span>
+</pre></td></tr></tbody></table></code></pre></figure>
 
 <p><img src="/assets/images/ubuntu/vscode/vscode-extensions.jpg" alt="" class="responsive-img" style="width:320px;height:280px;" /></p>
 
@@ -147,7 +149,8 @@ Easy C++ projects</span></pre></td></tr></tbody></table></code></pre></figure>
 <p>1). First is to have our desired project folder or if none create one.</p>
 
 <figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="go">mkdir sample-app</span></pre></td></tr></tbody></table></code></pre></figure>
+</pre></td><td class="code"><pre><span class="go">mkdir sample-app</span>
+</pre></td></tr></tbody></table></code></pre></figure>
 
 <p>2). Then on VSCode open our project folder</p>
 
@@ -170,14 +173,20 @@ Easy C++ projects</span></pre></td></tr></tbody></table></code></pre></figure>
 </pre></td><td class="code"><pre><span class="go">// Makefile
 // edit this line with
 CXX := g++  to  CXX   := arm-linux-gnueabihf-g++
-EXECUTABLE  := main  to  EXECUTABLE := app  // or any name for your application</span></pre></td></tr></tbody></table></code></pre></figure>
+EXECUTABLE  := main  to  EXECUTABLE := app  // or any name for your application</span>
+</pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
 3
 </pre></td><td class="code"><pre><span class="go">// launch.json
 // edit this line with
-"miDebuggerPath": "/usr/bin/gdb"  to  "miDebuggerPath": "/file-path/gcc-arm-8.2-2019.01-x86_64-arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gdb"</span></pre></td></tr></tbody></table></code></pre></figure>
+"miDebuggerPath": "/usr/bin/gdb"  to  "miDebuggerPath": "/file-path/gcc-arm-8.2-2019.01-x86_64-arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gdb"</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="my-callout my-callout-note">
+    <code class="highlighter-rouge">10/16/19 - Updated to run with sudo priveleged. Take note on these line#: 41 &amp; 42</code>
+</div>
 
 <figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
@@ -231,6 +240,7 @@ EXECUTABLE  := main  to  EXECUTABLE := app  // or any name for your application<
 50
 51
 52
+53
 </pre></td><td class="code"><pre><span class="go">// task.json
 // edit this line with
 {
@@ -271,7 +281,8 @@ EXECUTABLE  := main  to  EXECUTABLE := app  // or any name for your application<
                 "pi",
                 "ssh",
                 "pi@raspberrypi.local",
-                "/home/pi/app"
+                "sudo",
+                "'/home/pi/app'"
             ],
             "group": {
                 "kind": "test",
@@ -282,7 +293,8 @@ EXECUTABLE  := main  to  EXECUTABLE := app  // or any name for your application<
             }  
         }
     ]
-}</span></pre></td></tr></tbody></table></code></pre></figure>
+}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
 
 <div class="my-callout my-callout-note">
     <code class="highlighter-rouge">What the above lines do is compile, upload, then remotely run the app in exact order</code>
@@ -299,7 +311,8 @@ EXECUTABLE  := main  to  EXECUTABLE := app  // or any name for your application<
 3
 </pre></td><td class="code"><pre><span class="go">// c_cpp_properties.json
 // edit this line with
-"compilerPath": "/usr/bin/gcc"  to  "compilerPath": "/file-path/gcc-arm-8.2-2019.01-x86_64-arm-linux-gnueabihf/bin/arm-linux-gnueabihf-g++"</span></pre></td></tr></tbody></table></code></pre></figure>
+"compilerPath": "/usr/bin/gcc"  to  "compilerPath": "/file-path/gcc-arm-8.2-2019.01-x86_64-arm-linux-gnueabihf/bin/arm-linux-gnueabihf-g++"</span>
+</pre></td></tr></tbody></table></code></pre></figure>
 
 <p>7). Press the <code class="highlighter-rouge">Build &amp; Run</code> button on the lower left corner of the VSCode window… or press <code class="highlighter-rouge">F7</code> and the result will be printed out on the <code class="highlighter-rouge">vscode integrated terminal</code>…</p>
 <div class="my-callout my-callout-note">

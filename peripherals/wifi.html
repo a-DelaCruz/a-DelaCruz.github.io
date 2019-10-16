@@ -45,20 +45,18 @@
             src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
         </script>
     
-    <!-- Begin Jekyll SEO tag v2.6.0 -->
+    <!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>Wifi firmware for Raspberry Pi 3 | My Personal Notes</title>
-<meta name="generator" content="Jekyll v3.8.5" />
+<meta name="generator" content="Jekyll v3.8.6" />
 <meta property="og:title" content="Wifi firmware for Raspberry Pi 3" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="To make the Raspberry pi 3 Wifi to work…we need to get or have atleast 2 files. But first we must create a folder inside the /lib/firmware/ and name it brcm. And in that folder we’ll put brcmfmac43430-sdio.bin and brcmfmac43430-sdio.txt." />
 <meta property="og:description" content="To make the Raspberry pi 3 Wifi to work…we need to get or have atleast 2 files. But first we must create a folder inside the /lib/firmware/ and name it brcm. And in that folder we’ll put brcmfmac43430-sdio.bin and brcmfmac43430-sdio.txt." />
-<link rel="canonical" href="http://a-delacruz.github.io/peripherals/wifi.html" />
-<meta property="og:url" content="http://a-delacruz.github.io/peripherals/wifi.html" />
 <meta property="og:site_name" content="My Personal Notes" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-10-13T00:00:00+08:00" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"http://a-delacruz.github.io/peripherals/wifi.html"},"@type":"BlogPosting","url":"http://a-delacruz.github.io/peripherals/wifi.html","headline":"Wifi firmware for Raspberry Pi 3","dateModified":"2018-10-13T00:00:00+08:00","datePublished":"2018-10-13T00:00:00+08:00","description":"To make the Raspberry pi 3 Wifi to work…we need to get or have atleast 2 files. But first we must create a folder inside the /lib/firmware/ and name it brcm. And in that folder we’ll put brcmfmac43430-sdio.bin and brcmfmac43430-sdio.txt.","@context":"https://schema.org"}</script>
+{"datePublished":"2018-10-13T00:00:00+08:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/peripherals/wifi.html"},"url":"/peripherals/wifi.html","headline":"Wifi firmware for Raspberry Pi 3","description":"To make the Raspberry pi 3 Wifi to work…we need to get or have atleast 2 files. But first we must create a folder inside the /lib/firmware/ and name it brcm. And in that folder we’ll put brcmfmac43430-sdio.bin and brcmfmac43430-sdio.txt.","dateModified":"2018-10-13T00:00:00+08:00","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
   </head>
@@ -99,7 +97,8 @@ folder inside the <code class="highlighter-rouge">/lib/firmware/</code> and name
 3
 </pre></td><td class="code"><pre><span class="go">//make sure these are installed:
 wpa-supplicant
-wireless-tools</span></pre></td></tr></tbody></table></code></pre></figure>
+wireless-tools</span>
+</pre></td></tr></tbody></table></code></pre></figure>
 
 <p><a href="https://github.com/RPi-Distro/firmware-nonfree/raw/master/brcm/brcmfmac43430-sdio.bin" class="mdc-button mdc-button--compact">
   brcmfmac43430-sdio.bin
@@ -133,12 +132,14 @@ sudo su
 ...type in your wifi password and hit enter again...
 
 // Then exit
-exit</span></pre></td></tr></tbody></table></code></pre></figure>
+exit</span>
+</pre></td></tr></tbody></table></code></pre></figure>
 
 <p>Now edit <code class="highlighter-rouge">/etc/wpa_supplicant/wpa_supplicant.conf</code>.</p>
 
 <figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="go">sudo nano /etc/wpa_supplicant/wpa_supplicant.conf</span></pre></td></tr></tbody></table></code></pre></figure>
+</pre></td><td class="code"><pre><span class="go">sudo nano /etc/wpa_supplicant/wpa_supplicant.conf</span>
+</pre></td></tr></tbody></table></code></pre></figure>
 
 <p>You’ll see similar to this and modify accordingly.</p>
 
@@ -153,7 +154,7 @@ exit</span></pre></td></tr></tbody></table></code></pre></figure>
 9
 10
 11
-</pre></td><td class="code"><pre><span class="gp">#</span> reading passphrase from stdin
+</pre></td><td class="code"><pre><span class="gp">#</span><span class="w"> </span>reading passphrase from stdin
 <span class="go">network={
   ssid="MyWifi"
 </span><span class="gp">  #</span><span class="nv">psk</span><span class="o">=</span><span class="s2">"testtest"</span> // You may now remove this line as the password are now hashed <span class="k">for </span>security
@@ -163,7 +164,8 @@ exit</span></pre></td></tr></tbody></table></code></pre></figure>
   key_mgmt=WPA-PSK
   pairwise=CCMP
   auth_alg=OPEN
-}</span></pre></td></tr></tbody></table></code></pre></figure>
+}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
 
 <div class="my-callout my-callout-note">
     <code class="highlighter-rouge">scan_ssid=1</code> - only needed if your access point uses a hidden ssid
@@ -181,7 +183,8 @@ exit</span></pre></td></tr></tbody></table></code></pre></figure>
 </pre></td><td class="code"><pre><span class="go">interface wlan0
 static ip_address=192.168.10.13
 static routers=192.168.10.1
-static domain_name_servers=8.8.8.8</span></pre></td></tr></tbody></table></code></pre></figure>
+static domain_name_servers=8.8.8.8</span>
+</pre></td></tr></tbody></table></code></pre></figure>
 
 <p>There are several ways for configuration and i decided to stick with this one for now.</p>
 <div class="my-callout my-callout-note">
